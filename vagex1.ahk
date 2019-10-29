@@ -12,6 +12,11 @@ SetTimer, RunVagex, 123580
 Return
 
 RunVagex:
+IfWinExist, Vagex.exe - EXCEPTION
+{
+    WinClose
+}
+
 Process, Exist , WerFault.exe
 if ErrorLevel
 {
