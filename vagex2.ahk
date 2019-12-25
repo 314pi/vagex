@@ -8,7 +8,7 @@ DetectHiddenWindows, On
 ;=====================================
 
 #Persistent
-SetTimer, CloseVagex, 7200000
+SetTimer, CloseVagex, 3600000
 Return
 
 CloseVagex:

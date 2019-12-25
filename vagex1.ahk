@@ -5,6 +5,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;=====================================
 #SingleInstance Force
 DetectHiddenWindows, On
+SetTitleMatchMode, 2
+SetTitleMatchMode, slow
 ;=====================================
 
 #Persistent
@@ -13,6 +15,22 @@ Return
 
 RunVagex:
 IfWinExist, Vagex.exe - EXCEPTION
+{
+    WinClose
+}
+
+IfWinExist,Script Error
+{
+    ControlSend, ,{Enter},Script Error
+}
+
+IfWinExist,Update Available
+{
+    ControlSend, ,{Enter},Update Available
+	Sleep, 120000
+}
+
+IfWinExist, Alert
 {
     WinClose
 }
@@ -26,9 +44,10 @@ if ErrorLevel
 Process, Exist , vagex.exe
 if !ErrorLevel
 {
-	RunWait, "C:\Users\kmc\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Vagex\Vagex Viewer.appref-ms"
+	RunWait, "%A_Programs%\Vagex\Vagex Viewer.appref-ms"
 	Sleep, 60000
-	WinMinimizeAll
+	WinMinimize,Vagex Viewer
+	;WinHide,Vagex Viewer
 }
 
 Process, Exist , firefox.exe
@@ -36,6 +55,14 @@ if !ErrorLevel
 {
 	RunWait, "firefox.exe"
 	Sleep, 30000
-	WinMinimizeAll
+	;WinMinimize,Mozilla Firefox
+	;WinHide,Mozilla Firefox
+	;WinMinimizeAll
 }
+Return
+
+^1:: WinHide,Vagex Viewer
+^2:: WinShow,Vagex Viewer
+^3:: WinHide,Mozilla Firefox
+^4:: WinShow,Mozilla Firefox
 Return
