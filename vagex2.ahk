@@ -16,7 +16,8 @@ Process, Exist , vagex.exe
 if ErrorLevel
 {
 	Process, Close , %ErrorLevel%
-	NoTrayOrphans()
+	; NoTrayOrphans()
+	; Tray_Refresh()
 }
 
 Process, Exist , firefox.exe
@@ -24,6 +25,7 @@ if ErrorLevel
 {
 	Process, Close , %ErrorLevel%
 }
+Tray_Refresh()
 Return
 
 NoTrayOrphans() {
@@ -103,3 +105,43 @@ GetTrayBar() {
 StrX( H,BS="",ES="",Tr=1,ByRef OS=1) {
     return,(SP := InStr(H,BS,0,OS)) && (L := InStr(H,ES,0,SP+StrLen(BS))) && (OS := L + StrLen(ES)) ? SubStr(H,SP := Tr ? SP + StrLen(BS) : SP ,(Tr ? L : L + StrLen(ES))-SP) : ""
     }
+Tray_Refresh() {
+/*		Remove any dead icon from the tray menu
+ *		Should work both for W7 & W10
+ */
+	WM_MOUSEMOVE := 0x200
+	detectHiddenWin := A_DetectHiddenWindows
+	DetectHiddenWindows, On
+
+	allTitles := ["ahk_class Shell_TrayWnd"
+			, "ahk_class NotifyIconOverflowWindow"]
+	allControls := ["ToolbarWindow321"
+				,"ToolbarWindow322"
+				,"ToolbarWindow323"
+				,"ToolbarWindow324"]
+	allIconSizes := [24,32]
+
+	for id, title in allTitles {
+		for id, controlName in allControls
+		{
+			for id, iconSize in allIconSizes
+			{
+				ControlGetPos, xTray,yTray,wdTray,htTray,% controlName,% title
+				y := htTray - 10
+				While (y > 0)
+				{
+					x := wdTray - iconSize/2
+					While (x > 0)
+					{
+						point := (y << 16) + x
+						PostMessage,% WM_MOUSEMOVE, 0,% point,% controlName,% title
+						x -= iconSize/2
+					}
+					y -= iconSize/2
+				}
+			}
+		}
+	}
+
+	DetectHiddenWindows, %detectHiddenWin%
+}
