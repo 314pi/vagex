@@ -4,13 +4,13 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;=====================================
 #SingleInstance Force
-; #NoTrayIcon
 DetectHiddenWindows, On
 SetTitleMatchMode, 2
 SetTitleMatchMode, slow
 ;=====================================
 #Persistent
-Sleep, 123580
+Toggle=1
+Sleep, 123456
 Gosub, Start
 SetTimer, Check, 312345
 Return
@@ -29,7 +29,7 @@ IfWinExist,Script Error
 IfWinExist,Update Available
 {
     ControlSend, ,{Enter},Update Available
-	Sleep, 120000
+	Sleep, 234567
 }
 
 IfWinExist,Alert
@@ -48,59 +48,52 @@ Process, Exist ,vagex.exe
 if !ErrorLevel
 {
 	RunWait, "%A_Programs%\Vagex\Vagex Viewer.appref-ms"
-	Sleep, 30000
+	Sleep, 31234
 	WinMove, ahk_exe Vagex.exe, , %A_ScreenWidth%, 0
-	WinMinimize,Vagex Viewer
 	;WinHide,Vagex Viewer
 } else {
 	BlockInput, On
-	MouseMove, %A_ScreenWidth%, %A_ScreenHeight%
-	Sleep, 1000
-	TrayIcon_Button("Vagex.exe", "R")
-	WinWait, ahk_exe Vagex.exe
-	ControlSend,,{Up 2}{Enter},ahk_exe Vagex.exe
-	Sleep, 5000
+	WinShow,Vagex Viewer
+	Sleep, 1234
 	ControlGet, OutputVar, Visible,,Watch,Vagex Viewer
 	if (OutputVar)
 		ControlClick,Watch,Vagex Viewer
-	Sleep, 5000
-	WinMinimize,Vagex Viewer
+	Sleep, 1234
+	;WinHide,Vagex Viewer
 	BlockInput, Off
 }
-Sleep, 10000
+Sleep, 12345
 Process, Exist ,firefox.exe
 if !ErrorLevel
 {
 	RunWait, "firefox.exe"
-	Sleep, 30000
+	Sleep, 31234
 	WinMove, ahk_exe firefox.exe, , %A_ScreenWidth%, 0
-	WinMinimize,Mozilla Firefox
-	WinHide,Mozilla Firefox
-	;WinMinimizeAll
+	;WinMinimize,Mozilla Firefox
+	;WinHide,Mozilla Firefox
 } else {
 
 }
 Return
-
+^0::
+	Toggle:=!Toggle
+	if Toggle
+		Menu, tray, icon
+	else
+		Menu, Tray, NoIcon
+Return
 ^1::
 	WinMove, ahk_exe Vagex.exe, , %A_ScreenWidth%, 0
-	WinMinimize,Vagex Viewer
-	; WinHide,Vagex Viewer
+	;WinHide,Vagex Viewer
 Return
 ^2:: 
-	BlockInput, On
-	MouseMove, %A_ScreenWidth%, 0
-	TrayIcon_Button("Vagex.exe", "R")
-	WinWait, ahk_exe Vagex.exe
-	ControlSend,,{Up 2}{Enter},ahk_exe Vagex.exe
-	Sleep, 5000
 	WinMove, ahk_exe Vagex.exe, , 0, 0
-	BlockInput, Off
+	WinShow,Vagex Viewer
 Return
 ^3::
 	WinMove, ahk_exe firefox.exe, , %A_ScreenWidth%, 0
-	WinMinimize,Mozilla Firefox
-	WinHide,Mozilla Firefox
+	;WinMinimize,Mozilla Firefox
+	;WinHide,Mozilla Firefox
 Return
 ^4::
 	WinMove, ahk_exe firefox.exe, , 0, 0
