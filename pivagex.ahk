@@ -10,9 +10,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 Main_Toggle=1
 Tray_Toggle=1
 Check_Ini()
-Gosub, Startup
-SetTimer, Main_Timmer, 312345
-SetTimer, Firefox_Restart_Timmer, %RestartFirefoxPeriod%
+SetTimer, Main_Timmer, Off
+SetTimer, Firefox_Restart_Timmer, Off
 Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x65 y278 w80 h23, &Hide
 Gui Add, CheckBox, hWndhAutoClickWatchButton vAutoClickWatchButton gAutoClickWatchButton x18 y116 w158 h23, Auto click Watch button
 Gui Add, CheckBox, hWndhKeepFirefoxRunning vKeepFirefoxRunning gKeepFirefoxRunning x18 y186 w158 h25, Keep Firefox running
@@ -28,18 +27,58 @@ Gui Add, Text, x117 y237 w50 h23 +0x200, second(s)
 Gui Add, Text, x18 y169 w88 h23 +0x200, Firefox Installed
 Gui Add, Text, x18 y69 w88 h23 +0x200, Vagex Installed
 Gui Add, Text, x5 y4 w188 h23 +0x200 +Center, Press Ctrl+0 to Hide/Unhide tray icon
+
 Check_Program_Installed()
-
-GuiControl,, AutoClickWatchButton , %AutoClickWatchButton%
-GuiControl,, KeepFirefoxRunning , %KeepFirefoxRunning%
-GuiControl,, KeepVagexRunning , %KeepVagexRunning%
-GuiControl,, RestartFirefox , %RestartFirefox%
-GuiControl,, StartWithWindows , %StartWithWindows%
-GuiControl,, RestartFirefoxPeriod , %RestartFirefoxPeriod%
-
-SetTimer, Main_Timmer, Off
+Gui_Update()
 Gui Show, w210 h318, Pi Tools
 Return
+Gui_Update() {
+	IniRead, AutoClickWatchButton, pi.ini, Vagex, AutoClickWatchButton
+	IniRead, KeepFirefoxRunning, pi.ini, Vagex, KeepFirefoxRunning
+	IniRead, KeepVagexRunning, pi.ini, Vagex, KeepVagexRunning
+	IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox
+	IniRead, RestartFirefoxPeriod, pi.ini, Vagex, RestartFirefoxPeriod
+	IniRead, StartWithWindows, pi.ini, General, StartWithWindows
+	
+	GuiControl,, AutoClickWatchButton , %AutoClickWatchButton%
+	GuiControl,, KeepFirefoxRunning , %KeepFirefoxRunning%
+	GuiControl,, KeepVagexRunning , %KeepVagexRunning%
+	GuiControl,, RestartFirefox , %RestartFirefox%
+	GuiControl,, RestartFirefoxPeriod , %RestartFirefoxPeriod%
+	GuiControl,, StartWithWindows , %StartWithWindows%
+	Return
+}
+Gui_Submit() {
+	GuiControlGet, AutoClickWatchButton ,, AutoClickWatchButton
+	GuiControlGet, KeepFirefoxRunning ,, KeepFirefoxRunning
+	GuiControlGet, KeepVagexRunning ,, KeepVagexRunning
+	GuiControlGet, RestartFirefox ,, RestartFirefox
+	GuiControlGet, RestartFirefoxPeriod ,, RestartFirefoxPeriod
+	GuiControlGet, StartWithWindows ,, StartWithWindows
+	
+	IniWrite, %AutoClickWatchButton%, pi.ini, Vagex, AutoClickWatchButton
+	IniWrite, %KeepFirefoxRunning%, pi.ini, Vagex, KeepFirefoxRunning
+	IniWrite, %KeepVagexRunning%, pi.ini, Vagex, KeepVagexRunning
+	IniWrite, %RestartFirefox%, pi.ini, Vagex, RestartFirefox
+	IniWrite, %RestartFirefoxPeriod%, pi.ini, Vagex, RestartFirefoxPeriod
+	IniWrite, %StartWithWindows%, pi.ini, General, StartWithWindows
+
+	If StartWithWindows
+	{
+		SplitPath, A_Scriptname, , , , OutNameNoExt
+		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
+		IfNotExist, %LinkFile%
+			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile% ; Admin right ?
+	}
+	Else
+		FileDelete, %LinkFile%
+
+	If RestartFirefox
+		SetTimer, Firefox_Restart_Timmer, % RestartFirefoxPeriod*1000
+	Else
+		SetTimer, Firefox_Restart_Timmer, Off
+	Return
+}
 Firefox_Restart_Timmer:
 	IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox,0
 	If RestartFirefox
@@ -79,7 +118,7 @@ Check_Ini() {
 vDefault_ini=
 (
 ;pi tools
-[General]`nStartWithWindows=1`n
+[General]`nStartWithWindows=0`n
 [Vagex]`nAutoClickWatchButton=1`nKeepFirefoxRunning=1`nKeepVagexRunning=1`nRestartFirefox=1`nRestartFirefoxPeriod=3600`n
 )
 IfNotExist, pi.ini
@@ -144,30 +183,13 @@ General_Task() {
 	Tray_Refresh()
 	Return
 }
-Startup:
-IniRead, AutoClickWatchButton, pi.ini, Vagex, AutoClickWatchButton,1
-IniRead, KeepFirefoxRunning, pi.ini, Vagex, KeepFirefoxRunning,1
-IniRead, KeepVagexRunning, pi.ini, Vagex, KeepVagexRunning,1
-IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox,1
-IniRead, RestartFirefoxPeriod, pi.ini, Vagex, RestartFirefoxPeriod,3600
-IniRead, StartWithWindows, pi.ini, General, StartWithWindows,1
-If StartWithWindows
-{
-	SplitPath, A_Scriptname, , , , OutNameNoExt
-	LinkFile=%A_Startup%\%OutNameNoExt%.lnk
-	IfNotExist, %LinkFile%
-		FileCreateShortcut, %A_ScriptFullPath%, %LinkFile% ; Admin right ?
-}
-Else {
-	FileDelete, %LinkFile%
-}
-Return
 GuiClose:
     ExitApp
 Return
 BtnHide:
 GuiEscape:
 	Gui, Submit
+	Gui_Submit()
 	Tray_Toggle=1
 	Menu, Tray, Icon
 	SetTimer, Main_Timmer, 312345
@@ -182,8 +204,10 @@ Return
 Return
 ^1::
 	SetTimer, Main_Timmer, Off
+	SetTimer, Firefox_Restart_Timmer, Off
 	Tray_Toggle=1
 	Menu, Tray, Icon
+	Gui_Update()
 	Gui, Show
 Return
 StartWithWindows:
@@ -209,15 +233,6 @@ RestartFirefoxPeriod:
 	GuiControlGet, GuiName ,Name, %A_GuiControl%
 	GuiControlGet, GuiValue ,, %A_GuiControl%
 	IniWrite, %GuiValue%, pi.ini, Vagex, %GuiName%
-	IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox,1
-	If RestartFirefox
-	{
-		IniRead, RestartFirefoxPeriod, pi.ini, Vagex, RestartFirefoxPeriod,3600
-		SetTimer, Firefox_Restart_Timmer, % RestartFirefoxPeriod*1000
-	}
-	Else {
-		SetTimer, Firefox_Restart_Timmer, Off
-	}
 Return
 Tray_Refresh() {
 /*		Remove any dead icon from the tray menu
