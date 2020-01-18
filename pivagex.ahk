@@ -74,8 +74,11 @@ Gui_Submit() {
 		IfNotExist, %LinkFile%
 			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile% ; Admin right ?
 	}
-	Else
+	Else {
+		SplitPath, A_Scriptname, , , , OutNameNoExt
+		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
 		FileDelete, %LinkFile%
+	}
 	If RestartFirefox
 		SetTimer, Firefox_Restart_Timmer, % RestartFirefoxPeriod*1000
 	Else
@@ -217,16 +220,6 @@ StartMinimized:
 	GuiControlGet, GuiName , Name , %A_GuiControl%
 	GuiControlGet, GuiValue ,, %A_GuiControl%
 	IniWrite, %GuiValue%, pi.ini, General, %GuiName%
-	If GuiValue
-	{
-		SplitPath, A_Scriptname, , , , OutNameNoExt
-		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
-		IfNotExist, %LinkFile%
-		  FileCreateShortcut, %A_ScriptFullPath%, %LinkFile% ; Admin right ?
-	}
-	Else {
-		FileDelete, %LinkFile%
-	}
 Return
 AutoClickWatchButton:
 KeepFirefoxRunning:
