@@ -23,12 +23,14 @@ Gui Add, Edit, hWndhRestartFirefoxPeriod vRestartFirefoxPeriod gRestartFirefoxPe
 Gui Add, GroupBox, x10 y100 w190 h115, Firefox Addons Viewer
 Gui Add, GroupBox, x10 y220 w190 h90, General
 Gui Add, GroupBox, x10 y5 w190 h90, Vagex Viewer
+Gui Font, Bold cRed
 Gui Add, Text, hWndhTxtFirefoxInstalled vTxtFirefoxInstalled  x115 y120 w35 h20 +0x200, NO
 Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x115 y20 w35 h20 +0x200, NO
+Gui Font
 Gui Add, Text, x115 y180 w50 h20 +0x200, second(s)
 Gui Add, Text, x15 y240 w180 h20 +0x200 +Center, Press Ctrl+0 to Hide/Unhide tray icon
-Gui Add, Text, x20 y120 w90 h20 +0x200, Firefox Installed
-Gui Add, Text, x20 y20 w90 h20 +0x200, Vagex Installed
+Gui Add, Text, x20 y120 w90 h20 +0x200, Firefox Installed :
+Gui Add, Text, x20 y20 w90 h20 +0x200, Vagex Installed :
 Check_Program_Installed()
 Gui_Update()
 IniRead, StartMinimized, pi.ini, General, StartMinimized
