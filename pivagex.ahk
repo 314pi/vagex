@@ -27,7 +27,6 @@ Gui Add, Text, x117 y237 w50 h23 +0x200, second(s)
 Gui Add, Text, x18 y169 w88 h23 +0x200, Firefox Installed
 Gui Add, Text, x18 y69 w88 h23 +0x200, Vagex Installed
 Gui Add, Text, x5 y4 w188 h23 +0x200 +Center, Press Ctrl+0 to Hide/Unhide tray icon
-
 Check_Program_Installed()
 Gui_Update()
 Gui Show, w210 h318, Pi Tools
@@ -39,7 +38,6 @@ Gui_Update() {
 	IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox
 	IniRead, RestartFirefoxPeriod, pi.ini, Vagex, RestartFirefoxPeriod
 	IniRead, StartWithWindows, pi.ini, General, StartWithWindows
-	
 	GuiControl,, AutoClickWatchButton , %AutoClickWatchButton%
 	GuiControl,, KeepFirefoxRunning , %KeepFirefoxRunning%
 	GuiControl,, KeepVagexRunning , %KeepVagexRunning%
@@ -55,14 +53,12 @@ Gui_Submit() {
 	GuiControlGet, RestartFirefox ,, RestartFirefox
 	GuiControlGet, RestartFirefoxPeriod ,, RestartFirefoxPeriod
 	GuiControlGet, StartWithWindows ,, StartWithWindows
-	
 	IniWrite, %AutoClickWatchButton%, pi.ini, Vagex, AutoClickWatchButton
 	IniWrite, %KeepFirefoxRunning%, pi.ini, Vagex, KeepFirefoxRunning
 	IniWrite, %KeepVagexRunning%, pi.ini, Vagex, KeepVagexRunning
 	IniWrite, %RestartFirefox%, pi.ini, Vagex, RestartFirefox
 	IniWrite, %RestartFirefoxPeriod%, pi.ini, Vagex, RestartFirefoxPeriod
 	IniWrite, %StartWithWindows%, pi.ini, General, StartWithWindows
-
 	If StartWithWindows
 	{
 		SplitPath, A_Scriptname, , , , OutNameNoExt
@@ -72,7 +68,6 @@ Gui_Submit() {
 	}
 	Else
 		FileDelete, %LinkFile%
-
 	If RestartFirefox
 		SetTimer, Firefox_Restart_Timmer, % RestartFirefoxPeriod*1000
 	Else
@@ -193,7 +188,6 @@ GuiEscape:
 	Tray_Toggle=1
 	Menu, Tray, Icon
 	SetTimer, Main_Timmer, 312345
-	
 Return
 ^0::
 	Tray_Toggle:=!Tray_Toggle
