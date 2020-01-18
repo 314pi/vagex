@@ -19,13 +19,13 @@ Gui Add, CheckBox, hWndhKeepFirefoxRunning vKeepFirefoxRunning gKeepFirefoxRunni
 Gui Add, CheckBox, hWndhKeepVagexRunning vKeepVagexRunning gKeepVagexRunning x20 y40 w160 h20, Keep Vagex running
 Gui Add, CheckBox, hWndhRestartFirefox vRestartFirefox gRestartFirefox x40 y160 w140 h20, Restart affter every
 Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x20 y280 w120 h20, Start with Windows
-Gui Add, Edit, hWndhRestartFirefoxPeriod vRestartFirefoxPeriod gRestartFirefoxPeriod x60 y190 w50 h20 +Right, 3600
+Gui Add, Edit, hWndhRestartFirefoxPeriod vRestartFirefoxPeriod gRestartFirefoxPeriod x60 y180 w50 h20 +Right, 3600
 Gui Add, GroupBox, x10 y100 w190 h115, Firefox Addons Viewer
 Gui Add, GroupBox, x10 y230 w190 h100, General
 Gui Add, GroupBox, x10 y5 w190 h90, Vagex Viewer
 Gui Add, Text, hWndhTxtFirefoxInstalled vTxtFirefoxInstalled  x115 y120 w35 h20 +0x200, NO
 Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x115 y20 w35 h20 +0x200, NO
-Gui Add, Text, x115 y190 w50 h20 +0x200, second(s)
+Gui Add, Text, x115 y180 w50 h20 +0x200, second(s)
 Gui Add, Text, x10 y255 w190 h20 +0x200 +Center, Press Ctrl+0 to Hide/Unhide tray icon
 Gui Add, Text, x20 y120 w90 h20 +0x200, Firefox Installed
 Gui Add, Text, x20 y20 w90 h20 +0x200, Vagex Installed
@@ -50,6 +50,14 @@ Gui_Update() {
 	GuiControl,, RestartFirefoxPeriod , %RestartFirefoxPeriod%
 	GuiControl,, StartMinimized , %StartMinimized%
 	GuiControl,, StartWithWindows , %StartWithWindows%
+	If !KeepFirefoxRunning
+	{
+		GuiControl,Disable, RestartFirefox
+		GuiControl,Disable, RestartFirefoxPeriod
+	} Else {
+		GuiControl,Enable, RestartFirefox
+		GuiControl,Enable, RestartFirefoxPeriod
+	}
 	Return
 }
 Gui_Submit() {
@@ -222,6 +230,8 @@ StartMinimized:
 	GuiControlGet, GuiName , Name , %A_GuiControl%
 	GuiControlGet, GuiValue ,, %A_GuiControl%
 	IniWrite, %GuiValue%, pi.ini, General, %GuiName%
+	Gui_Submit()
+	Gui_Update()
 Return
 AutoClickWatchButton:
 KeepFirefoxRunning:
@@ -231,6 +241,8 @@ RestartFirefoxPeriod:
 	GuiControlGet, GuiName ,Name, %A_GuiControl%
 	GuiControlGet, GuiValue ,, %A_GuiControl%
 	IniWrite, %GuiValue%, pi.ini, Vagex, %GuiName%
+	Gui_Submit()
+	Gui_Update()
 Return
 Tray_Refresh() {
 /*		Remove any dead icon from the tray menu
