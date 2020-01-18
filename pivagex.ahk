@@ -190,6 +190,8 @@ General_Task() {
 	Return
 }
 GuiClose:
+	Gui, Submit
+	Gui_Submit()
     ExitApp
 Return
 BtnHide:
@@ -213,7 +215,7 @@ Return
 	Tray_Toggle=1
 	Menu, Tray, Icon
 	Gui_Update()
-	Gui, Show
+	Gui Show, w210 h370, Pi Tools
 Return
 StartWithWindows:
 StartMinimized:
