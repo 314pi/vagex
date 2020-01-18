@@ -12,24 +12,28 @@ Tray_Toggle=1
 Check_Ini()
 SetTimer, Main_Timmer, Off
 SetTimer, Firefox_Restart_Timmer, Off
-Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x65 y278 w80 h23, &Hide
-Gui Add, CheckBox, hWndhAutoClickWatchButton vAutoClickWatchButton gAutoClickWatchButton x18 y116 w158 h23, Auto click Watch button
-Gui Add, CheckBox, hWndhKeepFirefoxRunning vKeepFirefoxRunning gKeepFirefoxRunning x18 y186 w158 h25, Keep Firefox running
-Gui Add, CheckBox, hWndhKeepVagexRunning vKeepVagexRunning gKeepVagexRunning x18 y90 w158 h23, Keep Vagex running
-Gui Add, CheckBox, hWndhRestartFirefox vRestartFirefox gRestartFirefox x38 y211 w141 h23, Restart affter every
-Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x18 y29 w120 h23, Start with Windows
-Gui Add, Edit, hWndhRestartFirefoxPeriod vRestartFirefoxPeriod gRestartFirefoxPeriod x62 y237 w50 h23 +Right, 3600
-Gui Add, GroupBox, x10 y154 w187 h117, Firefox Addons Viewer
-Gui Add, GroupBox, x10 y54 w187 h92, Vagex Viewer
-Gui Add, Text, hWndhTxtFirefoxInstalled vTxtFirefoxInstalled  x115 y169 w38 h23 +0x200, NO
-Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x115 y69 w38 h23 +0x200, NO
-Gui Add, Text, x117 y237 w50 h23 +0x200, second(s)
-Gui Add, Text, x18 y169 w88 h23 +0x200, Firefox Installed
-Gui Add, Text, x18 y69 w88 h23 +0x200, Vagex Installed
-Gui Add, Text, x5 y4 w188 h23 +0x200 +Center, Press Ctrl+0 to Hide/Unhide tray icon
+Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x65 y338 w80 h23, &Hide
+Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x20 y303 w120 h23, Start Minimized
+Gui Add, CheckBox, hWndhAutoClickWatchButton vAutoClickWatchButton gAutoClickWatchButton x19 y66 w158 h23, Auto click Watch button
+Gui Add, CheckBox, hWndhKeepFirefoxRunning vKeepFirefoxRunning gKeepFirefoxRunning x19 y138 w158 h25, Keep Firefox running
+Gui Add, CheckBox, hWndhKeepVagexRunning vKeepVagexRunning gKeepVagexRunning x19 y40 w158 h23, Keep Vagex running
+Gui Add, CheckBox, hWndhRestartFirefox vRestartFirefox gRestartFirefox x38 y161 w141 h23, Restart affter every
+Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x20 y280 w120 h23, Start with Windows
+Gui Add, Edit, hWndhRestartFirefoxPeriod vRestartFirefoxPeriod gRestartFirefoxPeriod x62 y187 w50 h23 +Right, 3600
+Gui Add, GroupBox, x11 y103 w187 h117, Firefox Addons Viewer
+Gui Add, GroupBox, x11 y228 w187 h105, General
+Gui Add, GroupBox, x11 y4 w187 h92, Vagex Viewer
+Gui Add, Text, hWndhTxtFirefoxInstalled vTxtFirefoxInstalled  x115 y119 w38 h23 +0x200, NO
+Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x115 y19 w38 h23 +0x200, NO
+Gui Add, Text, x117 y187 w50 h23 +0x200, second(s)
+Gui Add, Text, x12 y254 w188 h23 +0x200 +Center, Press Ctrl+0 to Hide/Unhide tray icon
+Gui Add, Text, x20 y119 w88 h23 +0x200, Firefox Installed
+Gui Add, Text, x20 y19 w88 h23 +0x200, Vagex Installed
 Check_Program_Installed()
 Gui_Update()
-Gui Show, w210 h318, Pi Tools
+IniRead, StartMinimized, pi.ini, General, StartMinimized
+If !StartMinimized
+	Gui Show, w210 h374, Pi Tools
 Return
 Gui_Update() {
 	IniRead, AutoClickWatchButton, pi.ini, Vagex, AutoClickWatchButton
@@ -37,12 +41,14 @@ Gui_Update() {
 	IniRead, KeepVagexRunning, pi.ini, Vagex, KeepVagexRunning
 	IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox
 	IniRead, RestartFirefoxPeriod, pi.ini, Vagex, RestartFirefoxPeriod
+	IniRead, StartMinimized, pi.ini, General, StartMinimized
 	IniRead, StartWithWindows, pi.ini, General, StartWithWindows
 	GuiControl,, AutoClickWatchButton , %AutoClickWatchButton%
 	GuiControl,, KeepFirefoxRunning , %KeepFirefoxRunning%
 	GuiControl,, KeepVagexRunning , %KeepVagexRunning%
 	GuiControl,, RestartFirefox , %RestartFirefox%
 	GuiControl,, RestartFirefoxPeriod , %RestartFirefoxPeriod%
+	GuiControl,, StartMinimized , %StartMinimized%
 	GuiControl,, StartWithWindows , %StartWithWindows%
 	Return
 }
@@ -52,12 +58,14 @@ Gui_Submit() {
 	GuiControlGet, KeepVagexRunning ,, KeepVagexRunning
 	GuiControlGet, RestartFirefox ,, RestartFirefox
 	GuiControlGet, RestartFirefoxPeriod ,, RestartFirefoxPeriod
+	GuiControlGet, StartMinimized ,, StartMinimized
 	GuiControlGet, StartWithWindows ,, StartWithWindows
 	IniWrite, %AutoClickWatchButton%, pi.ini, Vagex, AutoClickWatchButton
 	IniWrite, %KeepFirefoxRunning%, pi.ini, Vagex, KeepFirefoxRunning
 	IniWrite, %KeepVagexRunning%, pi.ini, Vagex, KeepVagexRunning
 	IniWrite, %RestartFirefox%, pi.ini, Vagex, RestartFirefox
 	IniWrite, %RestartFirefoxPeriod%, pi.ini, Vagex, RestartFirefoxPeriod
+	IniWrite, %StartMinimized%, pi.ini, General, StartMinimized
 	IniWrite, %StartWithWindows%, pi.ini, General, StartWithWindows
 	If StartWithWindows
 	{
@@ -113,7 +121,7 @@ Check_Ini() {
 vDefault_ini=
 (
 ;pi tools
-[General]`nStartWithWindows=0`n
+[General]`nStartWithWindows=0`nStartMinimized=0`n
 [Vagex]`nAutoClickWatchButton=1`nKeepFirefoxRunning=1`nKeepVagexRunning=1`nRestartFirefox=1`nRestartFirefoxPeriod=3600`n
 )
 IfNotExist, pi.ini
@@ -205,6 +213,7 @@ Return
 	Gui, Show
 Return
 StartWithWindows:
+StartMinimized:
 	GuiControlGet, GuiName , Name , %A_GuiControl%
 	GuiControlGet, GuiValue ,, %A_GuiControl%
 	IniWrite, %GuiValue%, pi.ini, General, %GuiName%
