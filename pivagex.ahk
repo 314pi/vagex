@@ -200,7 +200,7 @@ General_Task() {
 GuiClose:
 	Gui, Submit
 	Gui_Submit()
-    ExitApp
+	ExitApp
 Return
 BtnHide:
 GuiEscape:
@@ -448,22 +448,22 @@ TrayIcon_Move(idxOld, idxNew, sTray := "Shell_TrayWnd")
 ; ----------------------------------------------------------------------------------------------------------------------
 TrayIcon_Set(hWnd, uId, hIcon, hIconSmall:=0, hIconBig:=0)
 {
-    d := A_DetectHiddenWindows
-    DetectHiddenWindows, On
-    ; WM_SETICON = 0x0080
-    If ( hIconSmall )
-        SendMessage, 0x0080, 0, hIconSmall,, ahk_id %hWnd%
-    If ( hIconBig )
-        SendMessage, 0x0080, 1, hIconBig,, ahk_id %hWnd%
-    DetectHiddenWindows, %d%
-    VarSetCapacity(NID, szNID := ((A_IsUnicode ? 2 : 1) * 384 + A_PtrSize*5 + 40),0)
-    NumPut( szNID, NID, 0                           )
-    NumPut( hWnd,  NID, (A_PtrSize == 4) ? 4   : 8  )
-    NumPut( uId,   NID, (A_PtrSize == 4) ? 8   : 16 )
-    NumPut( 2,     NID, (A_PtrSize == 4) ? 12  : 20 )
-    NumPut( hIcon, NID, (A_PtrSize == 4) ? 20  : 32 )
-    ; NIM_MODIFY := 0x1
-    Return DllCall("Shell32.dll\Shell_NotifyIcon", UInt,0x1, Ptr,&NID)
+	d := A_DetectHiddenWindows
+	DetectHiddenWindows, On
+	; WM_SETICON = 0x0080
+	If ( hIconSmall )
+		SendMessage, 0x0080, 0, hIconSmall,, ahk_id %hWnd%
+	If ( hIconBig )
+		SendMessage, 0x0080, 1, hIconBig,, ahk_id %hWnd%
+	DetectHiddenWindows, %d%
+	VarSetCapacity(NID, szNID := ((A_IsUnicode ? 2 : 1) * 384 + A_PtrSize*5 + 40),0)
+	NumPut( szNID, NID, 0                           )
+	NumPut( hWnd,  NID, (A_PtrSize == 4) ? 4   : 8  )
+	NumPut( uId,   NID, (A_PtrSize == 4) ? 8   : 16 )
+	NumPut( 2,     NID, (A_PtrSize == 4) ? 12  : 20 )
+	NumPut( hIcon, NID, (A_PtrSize == 4) ? 20  : 32 )
+	; NIM_MODIFY := 0x1
+	Return DllCall("Shell32.dll\Shell_NotifyIcon", UInt,0x1, Ptr,&NID)
 }
 ; ----------------------------------------------------------------------------------------------------------------------
 ; Function .....: TrayIcon_GetTrayBar
