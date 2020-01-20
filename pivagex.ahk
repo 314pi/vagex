@@ -71,9 +71,9 @@ Main_Timmer:
 		Process, Exist , firefox.exe
 		If !ErrorLevel
 			RunWait, "firefox.exe"
-		Sleep, 5123
+		WinWait, Mozilla Firefox
 		If !FirefoxShow
-			WinHide,Mozilla Firefox
+			WinHide, Mozilla Firefox
 	}
 	If KeepVagexRunning
 	{
@@ -92,7 +92,8 @@ Main_Timmer:
 					ControlClick, Watch , Vagex Viewer
 			}
 		}
-		Sleep, 5123
+		General_Task()
+		WinWait, Vagex Viewer
 		If !VagexShow
 			WinHide, Vagex Viewer
 	}
