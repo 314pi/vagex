@@ -7,10 +7,9 @@ SetBatchLines -1
 SetTitleMatchMode, 2
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;======================================================================
-Firefox_Show=1
-Main_Show=1
-Tray_Show=1
-Vagex_Show=1
+TrayShow=1
+IniRead, VagexShow, pi.ini, Vagex, VagexShow,1
+IniRead, FirefoxShow, pi.ini, Vagex, FirefoxShow,1
 Check_Ini()
 SetTimer, Main_Timmer, 312345
 SetTimer, Firefox_Restart_Timmer, 3600000
@@ -54,7 +53,7 @@ Firefox_Restart_Timmer:
 		}
 		RunWait, "firefox.exe"
 		Sleep, 5123
-		If !Firefox_Show
+		If !FirefoxShow
 			WinHide, Mozilla Firefox
 	}
 Return
@@ -73,7 +72,7 @@ Main_Timmer:
 		If !ErrorLevel
 			RunWait, "firefox.exe"
 		Sleep, 5123
-		If !Firefox_Show
+		If !FirefoxShow
 			WinHide,Mozilla Firefox
 	}
 	If KeepVagexRunning
@@ -94,7 +93,7 @@ Main_Timmer:
 			}
 		}
 		Sleep, 5123
-		If !Vagex_Show
+		If !VagexShow
 			WinHide, Vagex Viewer
 	}
 	General_Task()
@@ -110,18 +109,18 @@ GuiEscape:
 	Gui, Submit
 	Gui_Submit()
 	General_Task()
-	Tray_Show=1
+	TrayShow=1
 	Menu, Tray, Icon
 Return
 ^0::
-	Tray_Show:=!Tray_Show
-	If Tray_Show
+	TrayShow:=!TrayShow
+	If TrayShow
 		Menu, Tray, Icon
 	Else
 		Menu, Tray, NoIcon
 Return
 ^1::
-	Tray_Show=1
+	TrayShow=1
 	Menu, Tray, Icon
 	Gui_Update()
 	Gui Show, w210 h350, Pi Tools
@@ -130,8 +129,8 @@ Return
 	Process, Exist , vagex.exe
 	if ErrorLevel
 	{
-		Vagex_Show:=!Vagex_Show
-		If Vagex_Show
+		VagexShow:=!VagexShow
+		If VagexShow
 			WinShow,Vagex Viewer
 		Else
 			WinHide,Vagex Viewer
@@ -141,8 +140,8 @@ Return
 	Process, Exist , firefox.exe
 	if ErrorLevel
 	{
-		Firefox_Show:=!Firefox_Show
-		If Firefox_Show
+		FirefoxShow:=!FirefoxShow
+		If FirefoxShow
 			WinShow,Mozilla Firefox
 		Else
 			WinHide,Mozilla Firefox
