@@ -144,9 +144,13 @@ Return
 	{
 		VagexShow:=!VagexShow
 		If VagexShow
-			WinShow,Vagex Viewer
+		{
+			WinShow, Vagex Viewer
+			Sleep, 1123
+			WinRestore, Vagex Viewer
+		}
 		Else
-			WinMinimize,Vagex Viewer
+			WinMinimize, Vagex Viewer
 	}
 Return
 ^3::
@@ -155,9 +159,9 @@ Return
 	{
 		FirefoxShow:=!FirefoxShow
 		If FirefoxShow
-			WinShow,Mozilla Firefox
+			WinShow, Mozilla Firefox
 		Else
-			WinHide,Mozilla Firefox
+			WinHide, Mozilla Firefox
 	}
 Return
 StartWithWindows:
