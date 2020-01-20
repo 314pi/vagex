@@ -49,10 +49,10 @@ Firefox_Restart_Timmer:
 		If ErrorLevel
 		{
 			WinClose, Mozilla Firefox
-			Sleep, 5123
+			Sleep, 15123
 		}
 		RunWait, "firefox.exe"
-		Sleep, 5123
+		Sleep, 15123
 		If !FirefoxShow
 			WinHide, Mozilla Firefox
 	}
@@ -71,9 +71,8 @@ Main_Timmer:
 		Process, Exist , firefox.exe
 		If !ErrorLevel
 			RunWait, "firefox.exe"
-		WinWait, Mozilla Firefox
-		If !FirefoxShow
-			WinHide, Mozilla Firefox
+		Sleep, 15123
+		WinHide, Mozilla Firefox
 	}
 	If KeepVagexRunning
 	{
@@ -92,8 +91,7 @@ Main_Timmer:
 					ControlClick, Watch , Vagex Viewer
 			}
 		}
-		General_Task()
-		WinWait, Vagex Viewer
+		Sleep, 15123
 		If !VagexShow
 			WinHide, Vagex Viewer
 	}
@@ -124,6 +122,7 @@ Return
 	TrayShow=1
 	Menu, Tray, Icon
 	Gui_Update()
+	General_Task()
 	Gui Show, w210 h350, Pi Tools
 Return
 ^2::
