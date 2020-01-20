@@ -89,8 +89,9 @@ Main_Timmer:
 			If AutoClickWatchButton
 			{
 				WinShow, Vagex Viewer
+				Sleep, 1123
 				WinRestore, Vagex Viewer
-				Sleep, 5123
+				Sleep, 3123
 				ControlGet, OutputVar, Visible,, Watch! , Vagex Viewer
 				If (OutputVar)
 				{
@@ -135,7 +136,6 @@ Return
 	TrayShow=1
 	Menu, Tray, Icon
 	Gui_Update()
-	General_Task()
 	Gui Show, w210 h350, Pi Tools
 Return
 ^2::
