@@ -34,13 +34,13 @@ Gui Add, Text, x15 y240 w180 h20 +0x200 +Center, Press Ctrl+0 to Hide/Unhide tra
 Gui Add, Text, x20 y120 w90 h20 +0x200, Firefox Installed :
 Gui Add, Text, x20 y20 w90 h20 +0x200, Vagex Installed :
 Check_Program_Installed()
-GoSub, Main_Timmer
 IniRead, StartMinimized, pi.ini, General, StartMinimized
 If !StartMinimized
 {
 	Gui_Update()
 	Gui Show, w210 h350, Pi Tools
 }
+GoSub, Main_Timmer
 Return
 Firefox_Restart_Timmer:
 	IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox,0
@@ -50,9 +50,12 @@ Firefox_Restart_Timmer:
 		If ErrorLevel
 		{
 			WinClose, Mozilla Firefox
-			Sleep, 5000
+			Sleep, 5123
 		}
 		RunWait, "firefox.exe"
+		Sleep, 5123
+		If !Firefox_Show
+			WinHide, Mozilla Firefox
 	}
 Return
 Main_Timmer:
@@ -69,15 +72,15 @@ Main_Timmer:
 		Process, Exist , firefox.exe
 		If !ErrorLevel
 			RunWait, "firefox.exe"
+		Sleep, 5123
+		If !Firefox_Show
+			WinHide,Mozilla Firefox
 	}
 	If KeepVagexRunning
 	{
 		Process, Exist , vagex.exe
 		If !ErrorLevel
-		{
 			RunWait, "%A_Programs%\Vagex\Vagex Viewer.appref-ms"
-			Sleep, 5123
-		}
 		Else {
 			If AutoClickWatchButton
 			{
@@ -88,10 +91,11 @@ Main_Timmer:
 				ControlGet, OutputVar, Visible,, Watch , Vagex Viewer
 				If (OutputVar)
 					ControlClick, Watch , Vagex Viewer
-				If !Vagex_Show
-					WinHide, Vagex Viewer
 			}
 		}
+		Sleep, 5123
+		If !Vagex_Show
+			WinHide, Vagex Viewer
 	}
 	General_Task()
 Return
