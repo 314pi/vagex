@@ -70,30 +70,42 @@ Main_Timmer:
 	{
 		Process, Exist , firefox.exe
 		If !ErrorLevel
+		{
 			RunWait, "firefox.exe"
-		Sleep, 15123
-		WinHide, Mozilla Firefox
+			Sleep, 15123
+			If !FirefoxShow
+				WinHide, Mozilla Firefox
+		}
 	}
 	If KeepVagexRunning
 	{
 		Process, Exist , vagex.exe
 		If !ErrorLevel
+		{
 			RunWait, "%A_Programs%\Vagex\Vagex Viewer.appref-ms"
+			Sleep, 15123
+		}
 		Else {
 			If AutoClickWatchButton
 			{
 				WinShow, Vagex Viewer
+				WinRestore, Vagex Viewer
 				ControlGet, OutputVar, Visible,, Watch! , Vagex Viewer
 				If (OutputVar)
+				{
 					WinClose, Vagex Viewer
+					FileAppend, %A_Now%: Close Vagex.`n, %A_MM%%A_YYYY%.log
+				}
 				ControlGet, OutputVar, Visible,, Watch , Vagex Viewer
 				If (OutputVar)
+				{
 					ControlClick, Watch , Vagex Viewer
+					FileAppend, %A_Now%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
+				}
 			}
 		}
-		Sleep, 15123
 		If !VagexShow
-			WinHide, Vagex Viewer
+			WinMinimize, Vagex Viewer
 	}
 	General_Task()
 Return
@@ -133,7 +145,7 @@ Return
 		If VagexShow
 			WinShow,Vagex Viewer
 		Else
-			WinHide,Vagex Viewer
+			WinMinimize,Vagex Viewer
 	}
 Return
 ^3::
