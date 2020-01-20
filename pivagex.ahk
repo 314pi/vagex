@@ -7,11 +7,13 @@ SetBatchLines -1
 SetTitleMatchMode, 2
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;======================================================================
-Main_Toggle=1
-Tray_Toggle=1
+Firefox_Show=1
+Main_Show=1
+Tray_Show=1
+Vagex_Show=1
 Check_Ini()
-SetTimer, Main_Timmer, Off
-SetTimer, Firefox_Restart_Timmer, Off
+SetTimer, Main_Timmer, 312345
+SetTimer, Firefox_Restart_Timmer, 3600000
 Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x65 y320 w80 h20, &Hide
 Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x20 y280 w120 h20, Start Minimized
 Gui Add, CheckBox, hWndhAutoClickWatchButton vAutoClickWatchButton gAutoClickWatchButton x20 y65 w160 h20, Auto click Watch button
@@ -20,7 +22,7 @@ Gui Add, CheckBox, hWndhKeepVagexRunning vKeepVagexRunning gKeepVagexRunning x20
 Gui Add, CheckBox, hWndhRestartFirefox vRestartFirefox gRestartFirefox x40 y160 w140 h20, Restart affter every
 Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x20 y260 w120 h20, Start with Windows
 Gui Add, Edit, hWndhRestartFirefoxPeriod vRestartFirefoxPeriod gRestartFirefoxPeriod x60 y180 w50 h20 +Right, 3600
-Gui Add, GroupBox, x10 y100 w190 h115, Firefox Addons Viewer
+Gui Add, GroupBox, x10 y100 w190 h110, Firefox Addons Viewer
 Gui Add, GroupBox, x10 y220 w190 h90, General
 Gui Add, GroupBox, x10 y5 w190 h90, Vagex Viewer
 Gui Font, Bold cRed
@@ -32,10 +34,134 @@ Gui Add, Text, x15 y240 w180 h20 +0x200 +Center, Press Ctrl+0 to Hide/Unhide tra
 Gui Add, Text, x20 y120 w90 h20 +0x200, Firefox Installed :
 Gui Add, Text, x20 y20 w90 h20 +0x200, Vagex Installed :
 Check_Program_Installed()
-Gui_Update()
+GoSub, Main_Timmer
 IniRead, StartMinimized, pi.ini, General, StartMinimized
 If !StartMinimized
+{
+	Gui_Update()
 	Gui Show, w210 h350, Pi Tools
+}
+Return
+Firefox_Restart_Timmer:
+	IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox,0
+	If RestartFirefox
+	{
+		Process, Exist , firefox.exe
+		If ErrorLevel
+		{
+			WinClose, Mozilla Firefox
+			Sleep, 5000
+		}
+		RunWait, "firefox.exe"
+	}
+Return
+Main_Timmer:
+	General_Task()
+	IniRead, AutoClickWatchButton, pi.ini, Vagex, AutoClickWatchButton
+	IniRead, KeepFirefoxRunning, pi.ini, Vagex, KeepFirefoxRunning
+	IniRead, KeepVagexRunning, pi.ini, Vagex, KeepVagexRunning
+	IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox
+	IniRead, RestartFirefoxPeriod, pi.ini, Vagex, RestartFirefoxPeriod
+	IniRead, StartMinimized, pi.ini, General, StartMinimized
+	IniRead, StartWithWindows, pi.ini, General, StartWithWindows
+	If KeepFirefoxRunning
+	{
+		Process, Exist , firefox.exe
+		If !ErrorLevel
+			RunWait, "firefox.exe"
+	}
+	If KeepVagexRunning
+	{
+		Process, Exist , vagex.exe
+		If !ErrorLevel
+		{
+			RunWait, "%A_Programs%\Vagex\Vagex Viewer.appref-ms"
+			Sleep, 5123
+		}
+		Else {
+			If AutoClickWatchButton
+			{
+				WinShow, Vagex Viewer
+				ControlGet, OutputVar, Visible,, Watch! , Vagex Viewer
+				If (OutputVar)
+					WinClose, Vagex Viewer
+				ControlGet, OutputVar, Visible,, Watch , Vagex Viewer
+				If (OutputVar)
+					ControlClick, Watch , Vagex Viewer
+				If !Vagex_Show
+					WinHide, Vagex Viewer
+			}
+		}
+	}
+	General_Task()
+Return
+GuiClose:
+	Gui, Submit
+	Gui_Submit()
+	General_Task()
+	ExitApp
+Return
+BtnHide:
+GuiEscape:
+	Gui, Submit
+	Gui_Submit()
+	General_Task()
+	Tray_Show=1
+	Menu, Tray, Icon
+Return
+^0::
+	Tray_Show:=!Tray_Show
+	If Tray_Show
+		Menu, Tray, Icon
+	Else
+		Menu, Tray, NoIcon
+Return
+^1::
+	Tray_Show=1
+	Menu, Tray, Icon
+	Gui_Update()
+	Gui Show, w210 h350, Pi Tools
+Return
+^2::
+	Process, Exist , vagex.exe
+	if ErrorLevel
+	{
+		Vagex_Show:=!Vagex_Show
+		If Vagex_Show
+			WinShow,Vagex Viewer
+		Else
+			WinHide,Vagex Viewer
+	}
+Return
+^3::
+	Process, Exist , firefox.exe
+	if ErrorLevel
+	{
+		Firefox_Show:=!Firefox_Show
+		If Firefox_Show
+			WinShow,Mozilla Firefox
+		Else
+			WinHide,Mozilla Firefox
+	}
+Return
+StartWithWindows:
+StartMinimized:
+	GuiControlGet, GuiName , Name , %A_GuiControl%
+	GuiControlGet, GuiValue ,, %A_GuiControl%
+	IniWrite, %GuiValue%, pi.ini, General, %GuiName%
+	Gui_Submit()
+	Gui_Update()
+Return
+AutoClickWatchButton:
+KeepFirefoxRunning:
+KeepVagexRunning:
+RestartFirefox:
+RestartFirefoxPeriod:
+	GuiControlGet, GuiName ,Name, %A_GuiControl%
+	GuiControlGet, GuiValue ,, %A_GuiControl%
+	IniWrite, %GuiValue%, pi.ini, Vagex, %GuiName%
+	Gui_Submit()
+	Gui_Update()
 Return
 Gui_Update() {
 	IniRead, AutoClickWatchButton, pi.ini, Vagex, AutoClickWatchButton
@@ -93,43 +219,9 @@ Gui_Submit() {
 		SetTimer, Firefox_Restart_Timmer, % RestartFirefoxPeriod*1000
 	Else
 		SetTimer, Firefox_Restart_Timmer, Off
+	SetTimer, Main_Timmer, 312345
 	Return
 }
-Firefox_Restart_Timmer:
-	IniRead, RestartFirefox, pi.ini, Vagex, RestartFirefox,0
-	If RestartFirefox
-	{
-		Process, Exist , firefox.exe
-		If ErrorLevel
-		{
-			WinClose, Mozilla Firefox
-			Sleep, 5000
-		}
-		RunWait, "firefox.exe"
-	}
-Return
-Main_Timmer:
-	General_Task()
-	If KeepFirefoxRunning
-	{
-		Process, Exist , firefox.exe
-		If !ErrorLevel
-			RunWait, "firefox.exe"
-	}
-	If KeepVagexRunning
-	{
-		Process, Exist , vagex.exe
-		If !ErrorLevel
-		{
-			RunWait, "%A_Programs%\Vagex\Vagex Viewer.appref-ms",,Hide
-		}
-		Else {
-			If AutoClickWatchButton
-			{
-			}
-		}
-	}
-Return
 Check_Ini() {
 vDefault_ini=
 (
@@ -199,56 +291,9 @@ General_Task() {
 	Tray_Refresh()
 	Return
 }
-GuiClose:
-	Gui, Submit
-	Gui_Submit()
-	ExitApp
-Return
-BtnHide:
-GuiEscape:
-	Gui, Submit
-	Gui_Submit()
-	Tray_Toggle=1
-	Menu, Tray, Icon
-	SetTimer, Main_Timmer, 312345
-Return
-^0::
-	Tray_Toggle:=!Tray_Toggle
-	If Tray_Toggle
-		Menu, Tray, Icon
-	Else
-		Menu, Tray, NoIcon
-Return
-^1::
-	SetTimer, Main_Timmer, Off
-	SetTimer, Firefox_Restart_Timmer, Off
-	Tray_Toggle=1
-	Menu, Tray, Icon
-	Gui_Update()
-	Gui Show, w210 h350, Pi Tools
-Return
-StartWithWindows:
-StartMinimized:
-	GuiControlGet, GuiName , Name , %A_GuiControl%
-	GuiControlGet, GuiValue ,, %A_GuiControl%
-	IniWrite, %GuiValue%, pi.ini, General, %GuiName%
-	Gui_Submit()
-	Gui_Update()
-Return
-AutoClickWatchButton:
-KeepFirefoxRunning:
-KeepVagexRunning:
-RestartFirefox:
-RestartFirefoxPeriod:
-	GuiControlGet, GuiName ,Name, %A_GuiControl%
-	GuiControlGet, GuiValue ,, %A_GuiControl%
-	IniWrite, %GuiValue%, pi.ini, Vagex, %GuiName%
-	Gui_Submit()
-	Gui_Update()
-Return
 Tray_Refresh() {
-/*		Remove any dead icon from the tray menu
- *		Should work both for W7 & W10
+/*	Remove any dead icon from the tray menu
+ *	Should work both for W7 & W10
  */
 	WM_MOUSEMOVE := 0x200
 	detectHiddenWin := A_DetectHiddenWindows
