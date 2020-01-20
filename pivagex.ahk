@@ -90,6 +90,7 @@ Main_Timmer:
 			{
 				WinShow, Vagex Viewer
 				WinRestore, Vagex Viewer
+				Sleep, 5123
 				ControlGet, OutputVar, Visible,, Watch! , Vagex Viewer
 				If (OutputVar)
 				{
