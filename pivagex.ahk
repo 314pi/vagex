@@ -8,7 +8,7 @@ SetTitleMatchMode, 2
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;======================================================================
 TrayShow=1
-IniRead, VagexShow, pi.ini, Vagex, VagexShow,1
+IniRead, VagexShow, pi.ini, Vagex, VagexShow,0
 IniRead, FirefoxShow, pi.ini, Vagex, FirefoxShow,1
 Check_Ini()
 SetTimer, Main_Timmer, 312345
