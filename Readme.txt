@@ -1,5 +1,8 @@
 About: Pi Tools
 
+Sometimes, the Pause button will turn into a Watch button and you must click the Watch button for Vagex Viewer to continue working.
+The Tools will create a log file every time the Watch button is clicked with file named: MMYYYY.log
+
 Auto close error messages:
 	Alert
 	Script Error
