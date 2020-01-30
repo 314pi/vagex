@@ -14,8 +14,8 @@ Check_Ini()
 SetTimer, Main_Timmer, 312345
 SetTimer, Firefox_Restart_Timmer, 3600000
 Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x65 y265 w80 h20, &Hide
-Gui Add, Tab3, x5 y5 w200 h260, PiTools|Vagex|About
-Gui Tab, PiTools
+Gui Add, Tab3, x5 y5 w200 h260, General|Vagex|About
+Gui Tab, General
 Gui Add, Text, x15 y50 w180 h20 +0x200, Press Ctrl+0 to Hide/Unhide tray icon
 Gui Add, Text, x15 y70 w180 h20 +0x200, Press Ctrl+1 Show Main Windows
 Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y90 w120 h20, Start with Windows
@@ -102,7 +102,9 @@ Main_Timmer:
 		Process, Exist , vagex.exe
 		If !ErrorLevel
 		{
-			RunWait, "%A_Programs%\Vagex\Vagex Viewer.appref-ms"
+			IfNotExist Vagex.application
+				UrlDownloadToFile, https://vagex.com/Vagex4/Vagex.application, Vagex.application
+			RunWait, Vagex.application
 			Sleep, 15123
 		}
 		Else {
@@ -266,8 +268,14 @@ Check_Ini() {
 vDefault_ini=
 (
 ;pi tools
-[PiTools]`nStartWithWindows=0`nStartMinimized=0
-AutoClickWatchButton=1`nKeepFirefoxRunning=1`nKeepVagexRunning=1`nRestartFirefox=1`nRestartFirefoxPeriod=3600`n
+[PiTools]
+AutoClickWatchButton=1
+KeepFirefoxRunning=1
+KeepVagexRunning=1
+RestartFirefox=1
+RestartFirefoxPeriod=3600
+StartMinimized=0
+StartWithWindows=0
 )
 IfNotExist, pi.ini
 	FileAppend ,% vDefault_ini, pi.ini, UTF-8
