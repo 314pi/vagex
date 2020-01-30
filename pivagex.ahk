@@ -21,6 +21,8 @@ Gui Add, Text, x15 y70 w180 h20 +0x200, Press Ctrl+1 Show Main Windows
 Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y90 w120 h20, Start with Windows
 Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y110 w120 h20, Start Minimized
 Gui Tab, Vagex
+Gui Add, Button, hWndhFirefoxAddon vFirefoxAddon gFirefoxAddon x135 y170 w60 h20, &Addon
+Gui Add, Button, hWndhVagexInstall vVagexInstall gVagexInstall x135 y70 w60 h20, &Install
 Gui Add, CheckBox, hWndhAutoClickWatchButton vAutoClickWatchButton gAutoClickWatchButton x15 y110 w160 h20, Auto click Watch button
 Gui Add, CheckBox, hWndhKeepFirefoxRunning vKeepFirefoxRunning gKeepFirefoxRunning x15 y190 w160 h20, Keep Firefox running
 Gui Add, CheckBox, hWndhKeepVagexRunning vKeepVagexRunning gKeepVagexRunning x15 y90 w160 h20, Keep Vagex running
@@ -29,31 +31,13 @@ Gui Add, Edit, hWndhRestartFirefoxPeriod vRestartFirefoxPeriod gRestartFirefoxPe
 Gui Add, GroupBox, x10 y150 w190 h110, Firefox Addons Viewer
 Gui Add, GroupBox, x10 y50 w190 h90, Vagex Viewer
 Gui Font, Bold cRed
-Gui Add, Text, hWndhTxtFirefoxInstalled vTxtFirefoxInstalled  x115 y170 w35 h20 +0x200, NO
-Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x115 y70 w60 h20 +0x200, NO
+Gui Add, Text, hWndhTxtFirefoxInstalled vTxtFirefoxInstalled  x100 y170 w30 h20 +0x200, NO
+Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x100 y70 w30 h20 +0x200, NO
 Gui Font
 Gui Add, Text, x115 y230 w50 h20 +0x200, second(s)
-Gui Add, Text, x15 y170 w90 h20 +0x200, Firefox Installed :
-Gui Add, Text, x15 y70 w90 h20 +0x200, Vagex Installed :
+Gui Add, Text, x15 y170 w85 h20 +0x200, Firefox Installed :
+Gui Add, Text, x15 y70 w85 h20 +0x200, Vagex Installed :
 
-If Check_Program_Installed("Mozilla Firefox")
-	GuiControl,, TxtFirefoxInstalled , YES
-Else {
-	IniWrite, 0, pi.ini, PiTools, KeepFirefoxRunning
-	IniWrite, 0, pi.ini, PiTools, RestartFirefox
-	GuiControl,Disable, KeepFirefoxRunning
-	GuiControl,Disable, RestartFirefox
-}
-
-If Check_Program_Installed("Vagex Viewer")
-	GuiControl,, TxtVagexInstalled , YES
-Else {
-	IniWrite, 0, pi.ini, PiTools, KeepVagexRunning
-	IniWrite, 0, pi.ini, PiTools, AutoClickWatchButton
-	GuiControl,Disable, KeepVagexRunning
-	GuiControl,Disable, AutoClickWatchButton
-}
-IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
 If !StartMinimized
 {
 	Gui_Update()
@@ -228,6 +212,40 @@ Gui_Update() {
 		GuiControl,Disable, RestartFirefox
 		GuiControl,Disable, RestartFirefoxPeriod
 	}
+	If Check_Program_Installed("Mozilla Firefox")
+		GuiControl,, TxtFirefoxInstalled , YES
+	Else {
+		IniWrite, 0, pi.ini, PiTools, KeepFirefoxRunning
+		IniWrite, 0, pi.ini, PiTools, RestartFirefox
+		GuiControl,Disable, KeepFirefoxRunning
+		GuiControl,Disable, RestartFirefox
+		GuiControl,Disable, FirefoxAddon
+	}
+
+	If Check_Program_Installed("Vagex Viewer")
+	{
+		GuiControl,, TxtVagexInstalled , YES
+		GuiControl,Disable, VagexInstall
+	}
+	Else {
+		IniWrite, 0, pi.ini, PiTools, KeepVagexRunning
+		IniWrite, 0, pi.ini, PiTools, AutoClickWatchButton
+		GuiControl,Disable, KeepVagexRunning
+		GuiControl,Disable, AutoClickWatchButton
+	}
+	IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
+	Return
+}
+VagexInstall() {
+	UrlDownloadToFile, https://vagex.com/Vagex4/Vagex.application, Vagex.application
+	If !ErrorLevel
+		RunWait, Vagex.application
+	Else
+		MsgBox Manual download link: https://vagex.com/Vagex4/Vagex.application
+	Return
+}
+FirefoxAddon() {
+	RunWait, firefox.exe https://addons.mozilla.org/addon/vagex2
 	Return
 }
 Gui_Submit() {
