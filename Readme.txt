@@ -1,5 +1,11 @@
 About: Pi Tools
-
+30/01/2020:
+For those who don't know how to install Vagex and Firefox Addon:
+- Add Vagex Install button if Vagex is not installed.
+- Add Firefox Vagex Addon Install button.
+To do:
+- Add Hitleap Features tab: Install, Keep running, Minimized, Hide.
+=============================
 Sometimes, the Pause button will turn into a Watch button and you must click the Watch button for Vagex Viewer to continue working.
 The Tools will create a log file every time the Watch button is clicked with file named: MMYYYY.log
 
