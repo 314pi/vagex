@@ -35,7 +35,24 @@ Gui Font
 Gui Add, Text, x115 y230 w50 h20 +0x200, second(s)
 Gui Add, Text, x15 y170 w90 h20 +0x200, Firefox Installed :
 Gui Add, Text, x15 y70 w90 h20 +0x200, Vagex Installed :
-Check_Program_Installed()
+
+If Check_Program_Installed("Mozilla Firefox")
+	GuiControl,, TxtFirefoxInstalled , YES
+Else {
+	IniWrite, 0, pi.ini, PiTools, KeepFirefoxRunning
+	IniWrite, 0, pi.ini, PiTools, RestartFirefox
+	GuiControl,Disable, KeepFirefoxRunning
+	GuiControl,Disable, RestartFirefox
+}
+
+If Check_Program_Installed("Vagex Viewer")
+	GuiControl,, TxtVagexInstalled , YES
+Else {
+	IniWrite, 0, pi.ini, PiTools, KeepVagexRunning
+	IniWrite, 0, pi.ini, PiTools, AutoClickWatchButton
+	GuiControl,Disable, KeepVagexRunning
+	GuiControl,Disable, AutoClickWatchButton
+}
 IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
 If !StartMinimized
 {
@@ -255,7 +272,7 @@ AutoClickWatchButton=1`nKeepFirefoxRunning=1`nKeepVagexRunning=1`nRestartFirefox
 IfNotExist, pi.ini
 	FileAppend ,% vDefault_ini, pi.ini, UTF-8
 }
-Check_Program_Installed() {
+Check_Program_Installed(Program) {
 	shell := ComObjCreate("Shell.Application")
 	programsFolder := shell.NameSpace("::{26EE0668-A00A-44D7-9371-BEB064C98683}\8\::{7B81BE6A-CE2B-4676-A29E-EB907A5126C5}")
 	items := programsFolder.Items()
@@ -265,23 +282,10 @@ Check_Program_Installed() {
 	  this_item := items.Item(A_Index - 1)
 	  programList .= this_item.Name . "`n"
 	}
-	IfInString, programList, Mozilla Firefox
-		GuiControl,, TxtFirefoxInstalled , YES
-	Else {
-		IniWrite, 0, pi.ini, PiTools, KeepFirefoxRunning
-		IniWrite, 0, pi.ini, PiTools, RestartFirefox
-		GuiControl,Disable, KeepFirefoxRunning
-		GuiControl,Disable, RestartFirefox
-	}
-	IfInString, programList, Vagex Viewer
-		GuiControl,, TxtVagexInstalled , YES
-	Else {
-		IniWrite, 0, pi.ini, PiTools, KeepVagexRunning
-		IniWrite, 0, pi.ini, PiTools, AutoClickWatchButton
-		GuiControl,Disable, KeepVagexRunning
-		GuiControl,Disable, AutoClickWatchButton
-	}
-	Return
+	IfInString, programList, %Program%
+		Return True
+	Else
+		Return False
 }
 General_Task() {
 /*	Close some error, alert, update nortify, ...
