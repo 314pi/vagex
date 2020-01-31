@@ -10,6 +10,7 @@ SetWorkingDir %A_ScriptDir%	 ; Ensures a consistent starting directory.
 TrayShow=1
 IniRead, VagexShow, pi.ini, PiTools, VagexShow,0
 IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow,1
+IniRead, HitleapShow, pi.ini, PiTools, HitleapShow,0
 Check_Ini()
 SetTimer, Main_Timmer, 312345
 SetTimer, Firefox_Restart_Timmer, 3600000
@@ -23,11 +24,11 @@ Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y110 w120
 Gui Tab, Vagex
 Gui Add, Button, hWndhFirefoxAddon vFirefoxAddon gFirefoxAddon x135 y170 w60 h20, &Addon
 Gui Add, Button, hWndhVagexInstall vVagexInstall gVagexInstall x135 y70 w60 h20, &Install
-Gui Add, CheckBox, hWndhAutoClickWatchButton vAutoClickWatchButton gAutoClickWatchButton x15 y110 w160 h20, Auto click Watch button
-Gui Add, CheckBox, hWndhKeepFirefoxRunning vKeepFirefoxRunning gKeepFirefoxRunning x15 y190 w160 h20, Keep Firefox running
-Gui Add, CheckBox, hWndhKeepVagexRunning vKeepVagexRunning gKeepVagexRunning x15 y90 w160 h20, Keep Vagex running
-Gui Add, CheckBox, hWndhRestartFirefox vRestartFirefox gRestartFirefox x40 y210 w140 h20, Restart affter every
-Gui Add, Edit, hWndhRestartFirefoxPeriod vRestartFirefoxPeriod gRestartFirefoxPeriod x60 y230 w50 h20 +Right, 3600
+Gui Add, CheckBox, hWndhVagexAutoClickWatchButton vVagexAutoClickWatchButton gVagexAutoClickWatchButton x15 y110 w160 h20, Auto click Watch button
+Gui Add, CheckBox, hWndhFirefoxKeepRunning vFirefoxKeepRunning gFirefoxKeepRunning x15 y190 w160 h20, Keep Firefox running
+Gui Add, CheckBox, hWndhVagexKeepRunning vVagexKeepRunning gVagexKeepRunning x15 y90 w160 h20, Keep Vagex running
+Gui Add, CheckBox, hWndhFirefoxRestart vFirefoxRestart gFirefoxRestart x40 y210 w140 h20, Restart affter every
+Gui Add, Edit, hWndhFirefoxRestartPeriod vFirefoxRestartPeriod gFirefoxRestartPeriod x60 y230 w50 h20 +Right, 3600
 Gui Add, GroupBox, x10 y150 w190 h110, Firefox Addons Viewer
 Gui Add, GroupBox, x10 y50 w190 h90, Vagex Viewer
 Gui Font, Bold cRed
@@ -39,14 +40,13 @@ Gui Add, Text, x15 y170 w85 h20 +0x200, Firefox Installed:
 Gui Add, Text, x15 y70 w85 h20 +0x200, Vagex Installed:
 Gui Tab, Hitleap
 Gui Add, Button, hWndhHitleapInstall vHitleapInstall gHitleapInstall x135 y50 w60 h20, &Install
-Gui Add, CheckBox, x15 y110 w160 h20, Hided
-Gui Add, CheckBox, x15 y70 w160 h20, Keep Hitleap running
-Gui Add, CheckBox, x15 y90 w160 h20, Minimized
+Gui Add, CheckBox, hWndhHitleapHided vHitleapHided gHitleapHided x15 y110 w160 h20, Hided
+Gui Add, CheckBox, hWndhHitleapKeepRunning vHitleapKeepRunning gHitleapKeepRunning x15 y70 w160 h20, Keep Hitleap running
+Gui Add, CheckBox, hWndhHitleapMinimized vHitleapMinimized gHitleapMinimized x15 y90 w160 h20, Minimized
 Gui Add, Text, x15 y50 w85 h20 +0x200, Hitleap Installed:
 Gui Font, Bold cRed
-Gui Add, Text, x100 y50 w30 h20 +0x200, NO
+Gui Add, Text, hWndhTxtHitleapInstalled vTxtHitleapInstalled x100 y50 w30 h20 +0x200, NO
 Gui Font
-
 IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
 If !StartMinimized
 {
@@ -55,89 +55,11 @@ If !StartMinimized
 }
 GoSub, Main_Timmer
 Return
-Firefox_Restart_Timmer:
-	IniRead, RestartFirefox, pi.ini, PiTools, RestartFirefox,0
-	If RestartFirefox
-	{
-		Process, Exist , firefox.exe
-		If ErrorLevel
-		{
-			WinClose, Mozilla Firefox
-			Sleep, 15123
-		}
-		RunWait, "firefox.exe"
-		Sleep, 15123
-		If !FirefoxShow
-			WinHide, Mozilla Firefox
-	}
-Return
-HitleapInstall() {
-	Global url
-	url = https://hitleap.com/viewer/download`?platform=Windows
-	save = HitleapViewer.exe
-	FileDelete, %save%
-	message = 0x1100
-	Progress, M H80, , .
-	OnMessage(message, "SetCounter")
-	DownloadProgress(url, save, message, 50)
-	Progress, Off
-	RunWait, %save%
-	Return
-}
 Main_Timmer:
 	General_Task()
-	IniRead, AutoClickWatchButton, pi.ini, PiTools, AutoClickWatchButton
-	IniRead, KeepFirefoxRunning, pi.ini, PiTools, KeepFirefoxRunning
-	IniRead, KeepVagexRunning, pi.ini, PiTools, KeepVagexRunning
-	IniRead, RestartFirefox, pi.ini, PiTools, RestartFirefox
-	IniRead, RestartFirefoxPeriod, pi.ini, PiTools, RestartFirefoxPeriod
-	IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
-	IniRead, StartWithWindows, pi.ini, PiTools, StartWithWindows
-	If KeepFirefoxRunning
-	{
-		Process, Exist , firefox.exe
-		If !ErrorLevel
-		{
-			RunWait, "firefox.exe"
-			Sleep, 15123
-			If !FirefoxShow
-				WinHide, Mozilla Firefox
-		}
-	}
-	If KeepVagexRunning
-	{
-		Process, Exist , vagex.exe
-		If !ErrorLevel
-		{
-			IfNotExist Vagex.application
-				UrlDownloadToFile, https://vagex.com/Vagex4/Vagex.application, Vagex.application
-			RunWait, Vagex.application
-			Sleep, 15123
-		}
-		Else {
-			If AutoClickWatchButton
-			{
-				WinShow, Vagex Viewer
-				Sleep, 1123
-				WinRestore, Vagex Viewer
-				Sleep, 3123
-				ControlGet, OutputVar, Visible,, Watch! , Vagex Viewer
-				If (OutputVar)
-				{
-					WinClose, Vagex Viewer
-					FileAppend, %A_Now%: Close Vagex.`n, %A_MM%%A_YYYY%.log
-				}
-				ControlGet, OutputVar, Visible,, Watch , Vagex Viewer
-				If (OutputVar)
-				{
-					ControlClick, Watch , Vagex Viewer
-					FileAppend, %A_Now%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
-				}
-			}
-		}
-		If !VagexShow
-			WinMinimize, Vagex Viewer
-	}
+	Main_Hitleap()
+	Main_Vagex()
+	Main_Firefox()
 	General_Task()
 Return
 GuiClose:
@@ -154,58 +76,16 @@ GuiEscape:
 	TrayShow=1
 	Menu, Tray, Icon
 Return
-^0::
-	TrayShow:=!TrayShow
-	If TrayShow
-		Menu, Tray, Icon
-	Else
-		Menu, Tray, NoIcon
-Return
-^1::
-	TrayShow=1
-	Menu, Tray, Icon
-	Gui_Update()
-	Gui Show, w210 h290, Pi Tools
-Return
-^2::
-	Process, Exist , vagex.exe
-	if ErrorLevel
-	{
-		VagexShow:=!VagexShow
-		If VagexShow
-		{
-			WinShow, Vagex Viewer
-			Sleep, 1123
-			WinRestore, Vagex Viewer
-		}
-		Else
-			WinMinimize, Vagex Viewer
-	}
-Return
-^3::
-	Process, Exist , firefox.exe
-	if ErrorLevel
-	{
-		FirefoxShow:=!FirefoxShow
-		If FirefoxShow
-			WinShow, Mozilla Firefox
-		Else
-			WinHide, Mozilla Firefox
-	}
-Return
-StartWithWindows:
+FirefoxKeepRunning:
+FirefoxRestart:
+FirefoxRestartPeriod:
+HitleapHided:
+HitleapKeepRunning:
+HitleapMinimized:
 StartMinimized:
-	GuiControlGet, GuiName , Name , %A_GuiControl%
-	GuiControlGet, GuiValue ,, %A_GuiControl%
-	IniWrite, %GuiValue%, pi.ini, PiTools, %GuiName%
-	Gui_Submit()
-	Gui_Update()
-Return
-AutoClickWatchButton:
-KeepFirefoxRunning:
-KeepVagexRunning:
-RestartFirefox:
-RestartFirefoxPeriod:
+StartWithWindows:
+VagexAutoClickWatchButton:
+VagexKeepRunning:
 	GuiControlGet, GuiName ,Name, %A_GuiControl%
 	GuiControlGet, GuiValue ,, %A_GuiControl%
 	IniWrite, %GuiValue%, pi.ini, PiTools, %GuiName%
@@ -213,112 +93,89 @@ RestartFirefoxPeriod:
 	Gui_Update()
 Return
 Gui_Update() {
-	IniRead, AutoClickWatchButton, pi.ini, PiTools, AutoClickWatchButton
-	IniRead, KeepFirefoxRunning, pi.ini, PiTools, KeepFirefoxRunning
-	IniRead, KeepVagexRunning, pi.ini, PiTools, KeepVagexRunning
-	IniRead, RestartFirefox, pi.ini, PiTools, RestartFirefox
-	IniRead, RestartFirefoxPeriod, pi.ini, PiTools, RestartFirefoxPeriod
-	IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
-	IniRead, StartWithWindows, pi.ini, PiTools, StartWithWindows
-	GuiControl,, AutoClickWatchButton , %AutoClickWatchButton%
-	GuiControl,, KeepFirefoxRunning , %KeepFirefoxRunning%
-	GuiControl,, KeepVagexRunning , %KeepVagexRunning%
-	GuiControl,, RestartFirefox , %RestartFirefox%
-	GuiControl,, RestartFirefoxPeriod , %RestartFirefoxPeriod%
-	GuiControl,, StartMinimized , %StartMinimized%
-	GuiControl,, StartWithWindows , %StartWithWindows%
-	If KeepFirefoxRunning
+	Loop, Read, pi.ini
 	{
-		GuiControl,Enable, RestartFirefox
-		GuiControl,Enable, RestartFirefoxPeriod
-	} Else {
-		GuiControl,Disable, RestartFirefox
-		GuiControl,Disable, RestartFirefoxPeriod
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+			GuiControl,, %magic1% , %magic2%
+		}
 	}
-
+	If FirefoxKeepRunning
+	{
+		GuiControl,Enable, FirefoxRestart
+		GuiControl,Enable, FirefoxRestartPeriod
+	} Else {
+		GuiControl,Disable, FirefoxRestart
+		GuiControl,Disable, FirefoxRestartPeriod
+	}
 	If Check_Program_Installed("Vagex Viewer")
 	{
 		GuiControl,, TxtVagexInstalled , YES
 		GuiControl,Disable, VagexInstall
+		GuiControl,Enable, VagexKeepRunning
+		GuiControl,Enable, VagexAutoClickWatchButton
 	}
 	Else {
-		IniWrite, 0, pi.ini, PiTools, KeepVagexRunning
-		IniWrite, 0, pi.ini, PiTools, AutoClickWatchButton
-		GuiControl,Disable, KeepVagexRunning
-		GuiControl,Disable, AutoClickWatchButton
+		GuiControl,, VagexKeepRunning,0
+		GuiControl,, VagexAutoClickWatchButton,0
+		GuiControl,Disable, VagexKeepRunning
+		GuiControl,Disable, VagexAutoClickWatchButton
 	}
-	
 	If Check_Program_Installed("Mozilla Firefox")
 	{
 		GuiControl,, TxtFirefoxInstalled , YES
+		GuiControl,Enable, FirefoxKeepRunning
+		GuiControl,Enable, FirefoxRestart
 	}
 	Else {
-		IniWrite, 0, pi.ini, PiTools, KeepFirefoxRunning
-		IniWrite, 0, pi.ini, PiTools, RestartFirefox
-		GuiControl,Disable, KeepFirefoxRunning
-		GuiControl,Disable, RestartFirefox
+		GuiControl,, FirefoxKeepRunning,0
+		GuiControl,, FirefoxRestart,0
+		GuiControl,Disable, FirefoxKeepRunning
+		GuiControl,Disable, FirefoxRestart
 		GuiControl,, FirefoxAddon, Install
 	}
-	Return
-}
-VagexInstall() {
-	Global url
-	url = https://vagex.com/Vagex4/Vagex.application
-	save = Vagex.application
-	FileDelete, %save%
-	message = 0x1100
-	Progress, M H80, , .
-	OnMessage(message, "SetCounter")
-	DownloadProgress(url, save, message, 50)
-	Progress, Off
-	IfExist %save%
-		RunWait, %save%
-	Else {
-		Clipboard:="https://vagex.com/Vagex4/Vagex.application"
-		MsgBox Link copied, paste (Ctrl+V) into your browser to download Vagex setup file.
-	}
-	Return
-}
-FirefoxAddon() {
-	GuiControlGet, FirefoxAddon ,, FirefoxAddon
-	IfInString, FirefoxAddon, Install
+	If Check_Program_Installed("Hitleap Viewer")
 	{
-		Global url
-		url = https://download.mozilla.org/`?product=firefox-latest`&os=win`&lang=en-US
-		save = FirefoxSetup.exe
-		FileDelete, %save%
-		message = 0x1100
-		Progress, M H80, , .
-		OnMessage(message, "SetCounter")
-		DownloadProgress(url, save, message, 50)
-		Progress, Off
-		IfExist %save%
-			RunWait, %save%
-		Else {
-			Clipboard:="https://download.mozilla.org/`?product=firefox-latest`&os=win`&lang=en-US"
-			MsgBox Link copied, paste (Ctrl+V) into your browser to download Firefox setup file.
-		}
+		GuiControl,, TxtHitleapInstalled , YES
+		GuiControl,Disable, HitleapInstall
+		GuiControl,Enable, HitleapHided
+		GuiControl,Enable, HitleapKeepRunning
+		GuiControl,Enable, HitleapMinimized
 	}
 	Else {
-		RunWait, firefox.exe https://addons.mozilla.org/addon/vagex2
+		GuiControl,, HitleapHided,0
+		GuiControl,, HitleapKeepRunning,0
+		GuiControl,, HitleapMinimized,0
+		GuiControl,Disable, HitleapHided
+		GuiControl,Disable, HitleapKeepRunning
+		GuiControl,Disable, HitleapMinimized
 	}
+	Gui_Submit()
 	Return
 }
 Gui_Submit() {
-	GuiControlGet, AutoClickWatchButton ,, AutoClickWatchButton
-	GuiControlGet, KeepFirefoxRunning ,, KeepFirefoxRunning
-	GuiControlGet, KeepVagexRunning ,, KeepVagexRunning
-	GuiControlGet, RestartFirefox ,, RestartFirefox
-	GuiControlGet, RestartFirefoxPeriod ,, RestartFirefoxPeriod
+	GuiControlGet, FirefoxKeepRunning ,, FirefoxKeepRunning
+	GuiControlGet, FirefoxRestart ,, FirefoxRestart
+	GuiControlGet, FirefoxRestartPeriod ,, FirefoxRestartPeriod
+	GuiControlGet, HitleapHided ,, HitleapHided
+	GuiControlGet, HitleapKeepRunning ,, HitleapKeepRunning
+	GuiControlGet, HitleapMinimized ,, HitleapMinimized
 	GuiControlGet, StartMinimized ,, StartMinimized
 	GuiControlGet, StartWithWindows ,, StartWithWindows
-	IniWrite, %AutoClickWatchButton%, pi.ini, PiTools, AutoClickWatchButton
-	IniWrite, %KeepFirefoxRunning%, pi.ini, PiTools, KeepFirefoxRunning
-	IniWrite, %KeepVagexRunning%, pi.ini, PiTools, KeepVagexRunning
-	IniWrite, %RestartFirefox%, pi.ini, PiTools, RestartFirefox
-	IniWrite, %RestartFirefoxPeriod%, pi.ini, PiTools, RestartFirefoxPeriod
+	GuiControlGet, VagexAutoClickWatchButton ,, VagexAutoClickWatchButton
+	GuiControlGet, VagexKeepRunning ,, VagexKeepRunning
+	IniWrite, %FirefoxKeepRunning%, pi.ini, PiTools, FirefoxKeepRunning
+	IniWrite, %FirefoxRestart%, pi.ini, PiTools, FirefoxRestart
+	IniWrite, %FirefoxRestartPeriod%, pi.ini, PiTools, FirefoxRestartPeriod
+	IniWrite, %HitleapHided%, pi.ini, PiTools, HitleapHided
+	IniWrite, %HitleapKeepRunning%, pi.ini, PiTools, HitleapKeepRunning
+	IniWrite, %HitleapMinimized%, pi.ini, PiTools, HitleapMinimized
 	IniWrite, %StartMinimized%, pi.ini, PiTools, StartMinimized
 	IniWrite, %StartWithWindows%, pi.ini, PiTools, StartWithWindows
+	IniWrite, %VagexAutoClickWatchButton%, pi.ini, PiTools, VagexAutoClickWatchButton
+	IniWrite, %VagexKeepRunning%, pi.ini, PiTools, VagexKeepRunning
 	If StartWithWindows
 	{
 		SplitPath, A_Scriptname, , , , OutNameNoExt
@@ -331,8 +188,8 @@ Gui_Submit() {
 		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
 		FileDelete, %LinkFile%
 	}
-	If RestartFirefox
-		SetTimer, Firefox_Restart_Timmer, % RestartFirefoxPeriod*1000
+	If FirefoxRestart
+		SetTimer, Firefox_Restart_Timmer, % FirefoxRestartPeriod*1000
 	Else
 		SetTimer, Firefox_Restart_Timmer, Off
 	SetTimer, Main_Timmer, 312345
@@ -343,31 +200,19 @@ vDefault_ini=
 (
 ;pi tools
 [PiTools]
-AutoClickWatchButton=1
-KeepFirefoxRunning=1
-KeepVagexRunning=1
-RestartFirefox=1
-RestartFirefoxPeriod=3600
+FirefoxKeepRunning=1
+FirefoxRestart=1
+FirefoxRestartPeriod=3600
+HitleapHided=1
+HitleapKeepRunning=1
+HitleapMinimized=1
 StartMinimized=0
 StartWithWindows=0
+VagexAutoClickWatchButton=1
+VagexKeepRunning=1
 )
 IfNotExist, pi.ini
 	FileAppend ,% vDefault_ini, pi.ini, UTF-8
-}
-Check_Program_Installed(Program) {
-	shell := ComObjCreate("Shell.Application")
-	programsFolder := shell.NameSpace("::{26EE0668-A00A-44D7-9371-BEB064C98683}\8\::{7B81BE6A-CE2B-4676-A29E-EB907A5126C5}")
-	items := programsFolder.Items()
-	programList := ""
-	Loop, % items.Count
-	{
-	  this_item := items.Item(A_Index - 1)
-	  programList .= this_item.Name . "`n"
-	}
-	IfInString, programList, %Program%
-		Return True
-	Else
-		Return False
 }
 General_Task() {
 /*	Close some error, alert, update nortify, ...
@@ -691,39 +536,28 @@ TrayIcon_Button(sExeName, sButton := "L", bDouble := false, index := 1)
 	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
 	return
 }
-
-/* ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HttpQueryInfo ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+/* ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HttpQueryInfo ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 QueryInfoFlag:
-
 HTTP_QUERY_RAW_HEADERS = 21
 Receives all the headers returned by the server.
 Each header is terminated by "\0". An additional "\0" terminates the list of headers.
-
 HTTP_QUERY_CONTENT_LENGTH = 5
 Retrieves the size of the resource, in bytes.
-
 HTTP_QUERY_CONTENT_TYPE = 1
 Receives the content type of the resource (such as text/html).
-
 Find more at: http://msdn.microsoft.com/library/en-us/wininet/wininet/query_info_flags.asp
-
 Proxy Settings:
-
 INTERNET_OPEN_TYPE_PRECONFIG                    0   // use registry configuration
 INTERNET_OPEN_TYPE_DIRECT                       1   // direct to net
 INTERNET_OPEN_TYPE_PROXY                        3   // via named proxy
 INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY  4   // prevent using java/script/INS
-
-*/ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
-
+*/ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 HttpQueryInfo(URL, QueryInfoFlag=21, Proxy="", ProxyBypass="") {
-hModule := DllCall("LoadLibrary", "str", "wininet.dll") 
-
+hModule := DllCall("LoadLibrary", "str", "wininet.dll")
 If (Proxy != "")
 AccessType=3
 Else
 AccessType=1
-
 io_hInternet := DllCall("wininet\InternetOpenA"
 , "str", "" ;lpszAgent
 , "uint", AccessType
@@ -734,7 +568,6 @@ If (ErrorLevel != 0 or io_hInternet = 0) {
 DllCall("FreeLibrary", "uint", hModule)
 return, -1
 }
-
 iou_hInternet := DllCall("wininet\InternetOpenUrlA"
 , "uint", io_hInternet
 , "str", url
@@ -746,10 +579,8 @@ If (ErrorLevel != 0 or iou_hInternet = 0) {
 DllCall("FreeLibrary", "uint", hModule)
 return, -1
 }
-
 VarSetCapacity(buffer, 1024, 0)
 VarSetCapacity(buffer_len, 4, 0)
-
 Loop, 5
 {
   hqi := DllCall("wininet\HttpQueryInfoA"
@@ -759,13 +590,11 @@ Loop, 5
   , "uint", &buffer_len
   , "uint", 0) ;lpdwIndex
   If (hqi = 1) {
-    hqi=success
-    break
+	hqi=success
+	break
   }
 }
-
 IfNotEqual, hqi, success, SetEnv, res, timeout
-
 If (hqi = "success") {
 p := &buffer
 Loop
@@ -773,21 +602,18 @@ Loop
   l := DllCall("lstrlen", "UInt", p)
   VarSetCapacity(tmp_var, l+1, 0)
   DllCall("lstrcpy", "Str", tmp_var, "UInt", p)
-  p += l + 1  
+  p += l + 1
   res := res  . "`n" . tmp_var
   If (*p = 0)
   Break
 }
 StringTrimLeft, res, res, 1
 }
-
 DllCall("wininet\InternetCloseHandle",  "uint", iou_hInternet)
 DllCall("wininet\InternetCloseHandle",  "uint", io_hInternet)
 DllCall("FreeLibrary", "uint", hModule)
-
 return, res
 }
-
 DownloadProgress(url, save, msg = 0x1100, sleep = 250) {
 	total := HttpQueryInfo(url, 5)
 	SetTimer, _dlprocess, %sleep%
@@ -800,11 +626,235 @@ DownloadProgress(url, save, msg = 0x1100, sleep = 250) {
 	PostMessage, msg, current * 1024, total, , ahk_pid %ErrorLevel%
 	Exit
 }
-
 SetCounter(wParam, lParam) {
 	global url
 	progress := Round(wParam / lParam * 100)
 	wParam := wParam // 1024
 	lParam := lParam // 1024
 	Progress, %progress%, %url%, Downloading %wParam%kb of %lParam%kb..., %progress%`% - Downloading...
+}
+HitleapInstall() {
+	Global url
+	url = https://hitleap.com/viewer/download`?platform=Windows
+	save = HitleapViewer.exe
+	FileDelete, %save%
+	message = 0x1100
+	Progress, M H80, , .
+	OnMessage(message, "SetCounter")
+	DownloadProgress(url, save, message, 50)
+	Progress, Off
+	RunWait, %save%
+	Gui_Update()
+	Return
+}
+Firefox_Restart_Timmer:
+	IniRead, FirefoxRestart, pi.ini, PiTools, FirefoxRestart,0
+	If FirefoxRestart
+	{
+		Process, Exist , firefox.exe
+		If ErrorLevel
+		{
+			WinClose, Mozilla Firefox
+			Sleep, 15123
+		}
+		RunWait, "firefox.exe"
+		Sleep, 15123
+		If !FirefoxShow
+			WinHide, Mozilla Firefox
+	}
+Return
+VagexInstall() {
+	Global url
+	url = https://vagex.com/Vagex4/Vagex.application
+	save = Vagex.application
+	FileDelete, %save%
+	message = 0x1100
+	Progress, M H80, , .
+	OnMessage(message, "SetCounter")
+	DownloadProgress(url, save, message, 50)
+	Progress, Off
+	IfExist %save%
+		RunWait, %save%
+	Else {
+		Clipboard:="https://vagex.com/Vagex4/Vagex.application"
+		MsgBox Link copied, paste (Ctrl+V) into your browser to download Vagex setup file.
+	}
+	Gui_Update()
+	Return
+}
+FirefoxAddon() {
+	GuiControlGet, FirefoxAddon ,, FirefoxAddon
+	IfInString, FirefoxAddon, Install
+	{
+		Global url
+		os :=A_Is64bitOS ? 64 : 32
+		url := "https://download.mozilla.org/`?product=firefox-latest`&os=win" . os . "`&lang=en-US"
+		save = FirefoxSetup.exe
+		FileDelete, %save%
+		message = 0x1100
+		Progress, M H80, , .
+		OnMessage(message, "SetCounter")
+		DownloadProgress(url, save, message, 50)
+		Progress, Off
+		IfExist %save%
+			RunWait, %save%
+		Else {
+			Clipboard:="https://download.mozilla.org/`?product=firefox-latest`&os=win`&lang=en-US"
+			MsgBox Link copied, paste (Ctrl+V) into your browser to download Firefox setup file.
+		}
+	}
+	Else {
+		RunWait, firefox.exe https://addons.mozilla.org/addon/vagex2
+	}
+	Gui_Update()
+	Return
+}
+^0::
+	TrayShow:=!TrayShow
+	If TrayShow
+		Menu, Tray, Icon
+	Else
+		Menu, Tray, NoIcon
+Return
+^1::
+	TrayShow=1
+	Menu, Tray, Icon
+	Gui_Update()
+	Gui Show, w210 h290, Pi Tools
+Return
+^2::
+	Process, Exist , vagex.exe
+	if ErrorLevel
+	{
+		VagexShow:=!VagexShow
+		If VagexShow
+		{
+			WinShow, Vagex Viewer
+			Sleep, 1123
+			WinRestore, Vagex Viewer
+		}
+		Else
+			WinMinimize, Vagex Viewer
+	}
+Return
+^3::
+	Process, Exist , firefox.exe
+	if ErrorLevel
+	{
+		FirefoxShow:=!FirefoxShow
+		If FirefoxShow
+			WinShow, Mozilla Firefox
+		Else
+			WinHide, Mozilla Firefox
+	}
+Return
+^4::
+	Process, Exist , simplewrapper.exe
+	if ErrorLevel
+	{
+		HitleapShow:=!HitleapShow
+		If HitleapShow
+			WinShow, HitLeap Viewer
+		Else
+			WinHide, HitLeap Viewer
+	}
+Return
+Check_Program_Installed(Program) {
+	shell := ComObjCreate("Shell.Application")
+	programsFolder := shell.NameSpace("::{26EE0668-A00A-44D7-9371-BEB064C98683}\8\::{7B81BE6A-CE2B-4676-A29E-EB907A5126C5}")
+	items := programsFolder.Items()
+	programList := ""
+	Loop, % items.Count
+	{
+	  this_item := items.Item(A_Index - 1)
+	  programList .= this_item.Name . "`n"
+	}
+	IfInString, programList, %Program%
+		Return True
+	Else
+		Return False
+}
+Main_Vagex() {
+	IniRead, VagexAutoClickWatchButton, pi.ini, PiTools, VagexAutoClickWatchButton
+	IniRead, VagexKeepRunning, pi.ini, PiTools, VagexKeepRunning
+	IniRead, VagexShow, pi.ini, PiTools, VagexShow,0
+	If VagexKeepRunning
+	{
+		Process, Exist , vagex.exe
+		If !ErrorLevel
+		{
+			IfNotExist Vagex.application
+				UrlDownloadToFile, https://vagex.com/Vagex4/Vagex.application, Vagex.application
+			RunWait, Vagex.application
+			Sleep, 15123
+		}
+		Else {
+			If VagexAutoClickWatchButton
+			{
+				WinShow, Vagex Viewer
+				Sleep, 1123
+				WinRestore, Vagex Viewer
+				Sleep, 3123
+				ControlGet, OutputVar, Visible,, Watch! , Vagex Viewer
+				If (OutputVar)
+				{
+					WinClose, Vagex Viewer
+					FileAppend, %A_Now%: Close Vagex.`n, %A_MM%%A_YYYY%.log
+				}
+				ControlGet, OutputVar, Visible,, Watch , Vagex Viewer
+				If (OutputVar)
+				{
+					ControlClick, Watch , Vagex Viewer
+					FileAppend, %A_Now%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
+				}
+			}
+		}
+		If !VagexShow
+			WinMinimize, Vagex Viewer
+	}
+	Return
+}
+Main_Firefox() {
+	IniRead, FirefoxKeepRunning, pi.ini, PiTools, FirefoxKeepRunning
+	IniRead, FirefoxRestart, pi.ini, PiTools, FirefoxRestart
+	IniRead, FirefoxRestartPeriod, pi.ini, PiTools, FirefoxRestartPeriod
+	IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow,1
+	If FirefoxKeepRunning
+	{
+		Process, Exist , firefox.exe
+		If !ErrorLevel
+		{
+			RunWait, "firefox.exe"
+			Sleep, 15123
+			If !FirefoxShow
+				WinHide, Mozilla Firefox
+		}
+	}
+	Return
+}
+Main_Hitleap() {
+	IniRead, HitleapHided, pi.ini, PiTools, HitleapHided
+	IniRead, HitleapKeepRunning, pi.ini, PiTools, HitleapKeepRunning
+	IniRead, HitleapMinimized, pi.ini, PiTools, HitleapMinimized
+	If HitleapKeepRunning
+	{
+		Process, Exist , simplewrapper.exe
+		If !ErrorLevel
+		{
+			IfNotExist Hitleap.lnk
+			{
+				SplitPath, A_AppData, , Hitleappath
+				Hitleappath := Hitleappath . "\Local\HitLeap Viewer\app\lua.exe"
+				SplitPath, Hitleappath, , Hitleapdir
+				FileCreateShortcut, %Hitleappath%, Hitleap.lnk, %Hitleapdir%, HitLeap-Viewer.lua Windows
+			}
+			Run, Hitleap.lnk
+			Sleep, 15123
+		}
+	}
+	If HitleapMinimized
+		WinMinimize, HitLeap Viewer
+	If HitleapHided
+		WinHide, HitLeap Viewer
+	Return
 }

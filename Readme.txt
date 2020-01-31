@@ -1,5 +1,6 @@
 About: Pi Tools
 30/01/2020:
+- Delete old pi.ini before run the new pivagex.exe
 For those who don't know how to install Vagex and Firefox Addon:
 - Add Vagex Install button if Vagex is not installed.
 - Add Firefox Vagex Addon Install button.
