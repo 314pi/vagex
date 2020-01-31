@@ -156,26 +156,16 @@ Gui_Update() {
 	Return
 }
 Gui_Submit() {
-	GuiControlGet, FirefoxKeepRunning ,, FirefoxKeepRunning
-	GuiControlGet, FirefoxRestart ,, FirefoxRestart
-	GuiControlGet, FirefoxRestartPeriod ,, FirefoxRestartPeriod
-	GuiControlGet, HitleapHided ,, HitleapHided
-	GuiControlGet, HitleapKeepRunning ,, HitleapKeepRunning
-	GuiControlGet, HitleapMinimized ,, HitleapMinimized
-	GuiControlGet, StartMinimized ,, StartMinimized
-	GuiControlGet, StartWithWindows ,, StartWithWindows
-	GuiControlGet, VagexAutoClickWatchButton ,, VagexAutoClickWatchButton
-	GuiControlGet, VagexKeepRunning ,, VagexKeepRunning
-	IniWrite, %FirefoxKeepRunning%, pi.ini, PiTools, FirefoxKeepRunning
-	IniWrite, %FirefoxRestart%, pi.ini, PiTools, FirefoxRestart
-	IniWrite, %FirefoxRestartPeriod%, pi.ini, PiTools, FirefoxRestartPeriod
-	IniWrite, %HitleapHided%, pi.ini, PiTools, HitleapHided
-	IniWrite, %HitleapKeepRunning%, pi.ini, PiTools, HitleapKeepRunning
-	IniWrite, %HitleapMinimized%, pi.ini, PiTools, HitleapMinimized
-	IniWrite, %StartMinimized%, pi.ini, PiTools, StartMinimized
-	IniWrite, %StartWithWindows%, pi.ini, PiTools, StartWithWindows
-	IniWrite, %VagexAutoClickWatchButton%, pi.ini, PiTools, VagexAutoClickWatchButton
-	IniWrite, %VagexKeepRunning%, pi.ini, PiTools, VagexKeepRunning
+	Loop, Read, pi.ini
+	{
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+			GuiControlGet, %magic1% ,, %magic1%
+			IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
+		}
+	}
 	If StartWithWindows
 	{
 		SplitPath, A_Scriptname, , , , OutNameNoExt
