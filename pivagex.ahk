@@ -37,6 +37,15 @@ Gui Font
 Gui Add, Text, x115 y230 w50 h20 +0x200, second(s)
 Gui Add, Text, x15 y170 w85 h20 +0x200, Firefox Installed:
 Gui Add, Text, x15 y70 w85 h20 +0x200, Vagex Installed:
+Gui Tab, Hitleap
+Gui Add, Button, hWndhHitleapInstall vHitleapInstall gHitleapInstall x135 y50 w60 h20, &Install
+Gui Add, CheckBox, x15 y110 w160 h20, Hided
+Gui Add, CheckBox, x15 y70 w160 h20, Keep Hitleap running
+Gui Add, CheckBox, x15 y90 w160 h20, Minimized
+Gui Add, Text, x15 y50 w85 h20 +0x200, Hitleap Installed:
+Gui Font, Bold cRed
+Gui Add, Text, x100 y50 w30 h20 +0x200, NO
+Gui Font
 
 IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
 If !StartMinimized
@@ -62,6 +71,19 @@ Firefox_Restart_Timmer:
 			WinHide, Mozilla Firefox
 	}
 Return
+HitleapInstall() {
+	Global url
+	url = https://hitleap.com/viewer/download`?platform=Windows
+	save = HitleapViewer.exe
+	FileDelete, %save%
+	message = 0x1100
+	Progress, M H80, , .
+	OnMessage(message, "SetCounter")
+	DownloadProgress(url, save, message, 50)
+	Progress, Off
+	RunWait, %save%
+	Return
+}
 Main_Timmer:
 	General_Task()
 	IniRead, AutoClickWatchButton, pi.ini, PiTools, AutoClickWatchButton
@@ -240,11 +262,18 @@ Gui_Update() {
 	Return
 }
 VagexInstall() {
-	UrlDownloadToFile, https://vagex.com/Vagex4/Vagex.application, Vagex.application
-	If !ErrorLevel
-		RunWait, Vagex.application
-	Else
-	{
+	Global url
+	url = https://vagex.com/Vagex4/Vagex.application
+	save = Vagex.application
+	FileDelete, %save%
+	message = 0x1100
+	Progress, M H80, , .
+	OnMessage(message, "SetCounter")
+	DownloadProgress(url, save, message, 50)
+	Progress, Off
+	IfExist %save%
+		RunWait, %save%
+	Else {
 		Clipboard:="https://vagex.com/Vagex4/Vagex.application"
 		MsgBox Link copied, paste (Ctrl+V) into your browser to download Vagex setup file.
 	}
@@ -254,11 +283,18 @@ FirefoxAddon() {
 	GuiControlGet, FirefoxAddon ,, FirefoxAddon
 	IfInString, FirefoxAddon, Install
 	{
-		UrlDownloadToFile, https://download.mozilla.org/`?product=firefox-latest`&os=win`&lang=en-US, FirefoxSetup.exe
-		If !ErrorLevel
-			RunWait, FirefoxSetup.exe
-		Else
-		{
+		Global url
+		url = https://download.mozilla.org/`?product=firefox-latest`&os=win`&lang=en-US
+		save = FirefoxSetup.exe
+		FileDelete, %save%
+		message = 0x1100
+		Progress, M H80, , .
+		OnMessage(message, "SetCounter")
+		DownloadProgress(url, save, message, 50)
+		Progress, Off
+		IfExist %save%
+			RunWait, %save%
+		Else {
 			Clipboard:="https://download.mozilla.org/`?product=firefox-latest`&os=win`&lang=en-US"
 			MsgBox Link copied, paste (Ctrl+V) into your browser to download Firefox setup file.
 		}
@@ -654,4 +690,121 @@ TrayIcon_Button(sExeName, sButton := "L", bDouble := false, index := 1)
 	}
 	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
 	return
+}
+
+/* ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; HttpQueryInfo ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+QueryInfoFlag:
+
+HTTP_QUERY_RAW_HEADERS = 21
+Receives all the headers returned by the server.
+Each header is terminated by "\0". An additional "\0" terminates the list of headers.
+
+HTTP_QUERY_CONTENT_LENGTH = 5
+Retrieves the size of the resource, in bytes.
+
+HTTP_QUERY_CONTENT_TYPE = 1
+Receives the content type of the resource (such as text/html).
+
+Find more at: http://msdn.microsoft.com/library/en-us/wininet/wininet/query_info_flags.asp
+
+Proxy Settings:
+
+INTERNET_OPEN_TYPE_PRECONFIG                    0   // use registry configuration
+INTERNET_OPEN_TYPE_DIRECT                       1   // direct to net
+INTERNET_OPEN_TYPE_PROXY                        3   // via named proxy
+INTERNET_OPEN_TYPE_PRECONFIG_WITH_NO_AUTOPROXY  4   // prevent using java/script/INS
+
+*/ ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
+
+HttpQueryInfo(URL, QueryInfoFlag=21, Proxy="", ProxyBypass="") {
+hModule := DllCall("LoadLibrary", "str", "wininet.dll") 
+
+If (Proxy != "")
+AccessType=3
+Else
+AccessType=1
+
+io_hInternet := DllCall("wininet\InternetOpenA"
+, "str", "" ;lpszAgent
+, "uint", AccessType
+, "str", Proxy
+, "str", ProxyBypass
+, "uint", 0) ;dwFlags
+If (ErrorLevel != 0 or io_hInternet = 0) {
+DllCall("FreeLibrary", "uint", hModule)
+return, -1
+}
+
+iou_hInternet := DllCall("wininet\InternetOpenUrlA"
+, "uint", io_hInternet
+, "str", url
+, "str", "" ;lpszHeaders
+, "uint", 0 ;dwHeadersLength
+, "uint", 0x80000000 ;dwFlags: INTERNET_FLAG_RELOAD = 0x80000000 // retrieve the original item
+, "uint", 0) ;dwContext
+If (ErrorLevel != 0 or iou_hInternet = 0) {
+DllCall("FreeLibrary", "uint", hModule)
+return, -1
+}
+
+VarSetCapacity(buffer, 1024, 0)
+VarSetCapacity(buffer_len, 4, 0)
+
+Loop, 5
+{
+  hqi := DllCall("wininet\HttpQueryInfoA"
+  , "uint", iou_hInternet
+  , "uint", QueryInfoFlag ;dwInfoLevel
+  , "uint", &buffer
+  , "uint", &buffer_len
+  , "uint", 0) ;lpdwIndex
+  If (hqi = 1) {
+    hqi=success
+    break
+  }
+}
+
+IfNotEqual, hqi, success, SetEnv, res, timeout
+
+If (hqi = "success") {
+p := &buffer
+Loop
+{
+  l := DllCall("lstrlen", "UInt", p)
+  VarSetCapacity(tmp_var, l+1, 0)
+  DllCall("lstrcpy", "Str", tmp_var, "UInt", p)
+  p += l + 1  
+  res := res  . "`n" . tmp_var
+  If (*p = 0)
+  Break
+}
+StringTrimLeft, res, res, 1
+}
+
+DllCall("wininet\InternetCloseHandle",  "uint", iou_hInternet)
+DllCall("wininet\InternetCloseHandle",  "uint", io_hInternet)
+DllCall("FreeLibrary", "uint", hModule)
+
+return, res
+}
+
+DownloadProgress(url, save, msg = 0x1100, sleep = 250) {
+	total := HttpQueryInfo(url, 5)
+	SetTimer, _dlprocess, %sleep%
+	UrlDownloadToFile, %url%, %save%
+	SetTimer, _dlprocess, Off
+	Return, ErrorLevel
+	_dlprocess:
+	FileGetSize, current, %save%, K
+	Process, Exist
+	PostMessage, msg, current * 1024, total, , ahk_pid %ErrorLevel%
+	Exit
+}
+
+SetCounter(wParam, lParam) {
+	global url
+	progress := Round(wParam / lParam * 100)
+	wParam := wParam // 1024
+	lParam := lParam // 1024
+	Progress, %progress%, %url%, Downloading %wParam%kb of %lParam%kb..., %progress%`% - Downloading...
 }
