@@ -7,6 +7,11 @@ SetBatchLines -1
 SetTitleMatchMode, 2
 SetWorkingDir %A_ScriptDir%	 ; Ensures a consistent starting directory.
 ;======================================================================
+OS :=A_Is64bitOS ? 64 : 32
+FirefoxAddonUrl :="https://addons.mozilla.org/addon/vagex2"
+FirefoxDownloadURl :="https://download.mozilla.org/`?product=firefox-latest`&os=win" . OS
+HitleapDownloadUrl :="https://hitleap.com/viewer/download`?platform=Windows"
+VagexDownloadUrl :="https://vagex.com/Vagex4/Vagex.application"
 TrayShow=1
 IniRead, VagexShow, pi.ini, PiTools, VagexShow,0
 IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow,1
@@ -624,14 +629,13 @@ SetCounter(wParam, lParam) {
 	Progress, %progress%, %url%, Downloading %wParam%kb of %lParam%kb..., %progress%`% - Downloading...
 }
 HitleapInstall() {
-	Global url
-	url = https://hitleap.com/viewer/download`?platform=Windows
+	Global HitleapDownloadUrl
 	save = HitleapViewer.exe
 	FileDelete, %save%
 	message = 0x1100
 	Progress, M H80, , .
 	OnMessage(message, "SetCounter")
-	DownloadProgress(url, save, message, 50)
+	DownloadProgress(HitleapDownloadUrl, save, message, 50)
 	Progress, Off
 	RunWait, %save%
 	Gui_Update()
@@ -654,19 +658,18 @@ Firefox_Restart_Timmer:
 	}
 Return
 VagexInstall() {
-	Global url
-	url = https://vagex.com/Vagex4/Vagex.application
+	Global VagexDownloadUrl
 	save = Vagex.application
 	FileDelete, %save%
 	message = 0x1100
 	Progress, M H80, , .
 	OnMessage(message, "SetCounter")
-	DownloadProgress(url, save, message, 50)
+	DownloadProgress(VagexDownloadUrl, save, message, 50)
 	Progress, Off
 	IfExist %save%
 		RunWait, %save%
 	Else {
-		Clipboard:="https://vagex.com/Vagex4/Vagex.application"
+		Clipboard:=VagexDownloadUrl
 		MsgBox Link copied, paste (Ctrl+V) into your browser to download Vagex setup file.
 	}
 	Gui_Update()
@@ -676,25 +679,26 @@ FirefoxAddon() {
 	GuiControlGet, FirefoxAddon ,, FirefoxAddon
 	IfInString, FirefoxAddon, Install
 	{
-		Global url
-		os :=A_Is64bitOS ? 64 : 32
-		url := "https://download.mozilla.org/`?product=firefox-latest`&os=win" . os . "`&lang=en-US"
+		Global FirefoxDownloadURl
 		save = FirefoxSetup.exe
 		FileDelete, %save%
 		message = 0x1100
 		Progress, M H80, , .
 		OnMessage(message, "SetCounter")
-		DownloadProgress(url, save, message, 50)
+		DownloadProgress(FirefoxDownloadURl, save, message, 50)
 		Progress, Off
 		IfExist %save%
 			RunWait, %save%
 		Else {
-			Clipboard:="https://download.mozilla.org/`?product=firefox-latest`&os=win`&lang=en-US"
+			Clipboard:=FirefoxDownloadURl
 			MsgBox Link copied, paste (Ctrl+V) into your browser to download Firefox setup file.
 		}
+		If Check_Program_Installed("Mozilla Firefox")
+			GuiControl,, FirefoxAddon, &Addon
 	}
 	Else {
-		RunWait, firefox.exe https://addons.mozilla.org/addon/vagex2
+		Global FirefoxAddonUrl
+		RunWait, firefox.exe %FirefoxAddonUrl%
 	}
 	Gui_Update()
 	Return
@@ -765,10 +769,10 @@ Check_Program_Installed(Program) {
 		Return False
 }
 Main_Vagex() {
-	static WatchButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad15
-	static WatchButtonx = WindowsForms10.BUTTON.app.0.34f5582_r9_ad12
-	static PauseButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad14
-	static AccButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad16
+	WatchButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad15
+	WatchButtonx = WindowsForms10.BUTTON.app.0.34f5582_r9_ad12
+	PauseButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad14
+	AccButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad16
 	
 	IniRead, VagexAutoClickWatchButton, pi.ini, PiTools, VagexAutoClickWatchButton
 	IniRead, VagexKeepRunning, pi.ini, PiTools, VagexKeepRunning
@@ -779,7 +783,10 @@ Main_Vagex() {
 		If !ErrorLevel
 		{
 			IfNotExist Vagex.application
-				UrlDownloadToFile, https://vagex.com/Vagex4/Vagex.application, Vagex.application
+			{
+				Global VagexDownloadUrl
+				UrlDownloadToFile, %VagexDownloadUrl%, Vagex.application
+			}
 			RunWait, Vagex.application
 			Sleep, 15123
 		}
@@ -794,13 +801,13 @@ Main_Vagex() {
 				If (OutputVar)
 				{
 					WinClose, Vagex Viewer
-					FileAppend, %A_Now%: Close Vagex.`n, %A_MM%%A_YYYY%.log
+					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Close Vagex.`n, %A_MM%%A_YYYY%.log
 				}
 				ControlGet, OutputVar, Visible,, %WatchButton% , Vagex Viewer
 				If (OutputVar)
 				{
 					ControlClick, %WatchButton% , Vagex Viewer
-					FileAppend, %A_Now%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
+					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
 				}
 			}
 		}
