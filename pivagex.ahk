@@ -765,6 +765,11 @@ Check_Program_Installed(Program) {
 		Return False
 }
 Main_Vagex() {
+	static WatchButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad15
+	static WatchButtonx = WindowsForms10.BUTTON.app.0.34f5582_r9_ad12
+	static PauseButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad14
+	static AccButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad16
+	
 	IniRead, VagexAutoClickWatchButton, pi.ini, PiTools, VagexAutoClickWatchButton
 	IniRead, VagexKeepRunning, pi.ini, PiTools, VagexKeepRunning
 	IniRead, VagexShow, pi.ini, PiTools, VagexShow,0
@@ -785,16 +790,16 @@ Main_Vagex() {
 				Sleep, 1123
 				WinRestore, Vagex Viewer
 				Sleep, 3123
-				ControlGet, OutputVar, Visible,, Watch! , Vagex Viewer
+				ControlGet, OutputVar, Visible,, %WatchButtonx% , Vagex Viewer
 				If (OutputVar)
 				{
 					WinClose, Vagex Viewer
 					FileAppend, %A_Now%: Close Vagex.`n, %A_MM%%A_YYYY%.log
 				}
-				ControlGet, OutputVar, Visible,, Watch , Vagex Viewer
+				ControlGet, OutputVar, Visible,, %WatchButton% , Vagex Viewer
 				If (OutputVar)
 				{
-					ControlClick, Watch , Vagex Viewer
+					ControlClick, %WatchButton% , Vagex Viewer
 					FileAppend, %A_Now%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
 				}
 			}
