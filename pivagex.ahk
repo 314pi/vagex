@@ -1,6 +1,7 @@
 #Include checkinstall.ahk
 #Include download.ahk
 #Include tray.ahk
+FileInstall, mmo.ico, mmo.ico
 #NoEnv	; Recommended for performance and compatibility with future AutoHotkey releases.
 #Persistent
 #SingleInstance Force
@@ -11,51 +12,59 @@ SetTitleMatchMode, 2
 SetWorkingDir %A_ScriptDir%	 ; Ensures a consistent starting directory.
 ;======================================================================
 OS :=A_Is64bitOS ? 64 : 32
-ToolName :="MMO Tools"
-ToolSize:="W230 H290"
+Favi :="mmo.ico"
 FirefoxAddonUrl :="https://addons.mozilla.org/addon/vagex2"
 FirefoxDownloadURl :="https://download.mozilla.org/`?product=firefox-latest`&os=win" . OS
 HitleapDownloadUrl :="https://hitleap.com/viewer/download`?platform=Windows"
+HitleapRegUrl :="https://hitleap.com/by/kmc44210"
+ToolName :="MMO Tools"
+ToolSize:="W230 H290"
 VagexDownloadUrl :="https://vagex.com/Vagex4/Vagex.application"
-TrayShow=1
-IniRead, VagexShow, pi.ini, PiTools, VagexShow,0
-IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow,1
-IniRead, HitleapShow, pi.ini, PiTools, HitleapShow,0
+VagexRegUrl :="http://vagex.com/`?ref=458167"
+IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow, 1
+IniRead, HitleapShow, pi.ini, PiTools, HitleapShow, 0
+IniRead, VagexShow, pi.ini, PiTools, VagexShow, 0
 Check_Ini()
 SetTimer, Main_Timmer, 312345
 SetTimer, FirefoxRestartTimmer, 3600000
+Menu, Tray, Icon, %Favi%
+Gui -MinimizeBox -MaximizeBox
 Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x75 y265 w80 h20, &Hide
 Gui Add, Tab3, x5 y5 w220 h260, General|Vagex|Hitleap|About
 Gui Tab, General
+Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y110 w120 h20, Start Minimized
+Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y90 w120 h20, Start with Windows
 Gui Add, Text, x15 y50 w180 h20 +0x200, Press Ctrl+0 to Hide/Unhide tray icon
 Gui Add, Text, x15 y70 w180 h20 +0x200, Press Ctrl+1 Show Main Windows
-Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y90 w120 h20, Start with Windows
-Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y110 w120 h20, Start Minimized
 Gui Tab, Vagex
-Gui Add, Button, hWndhFirefoxAddon vFirefoxAddon gFirefoxAddon x135 y170 w60 h20, &Addon
-Gui Add, Button, hWndhVagexInstall vVagexInstall gVagexInstall x135 y70 w60 h20, &Install
-Gui Add, CheckBox, hWndhVagexAutoClickWatchButton vVagexAutoClickWatchButton gVagexAutoClickWatchButton x15 y110 w160 h20, Auto click Watch button
-Gui Add, CheckBox, hWndhFirefoxKeepRunning vFirefoxKeepRunning gFirefoxKeepRunning x15 y190 w160 h20, Keep Firefox running
-Gui Add, CheckBox, hWndhVagexKeepRunning vVagexKeepRunning gVagexKeepRunning x15 y90 w160 h20, Keep Vagex running
-Gui Add, CheckBox, hWndhFirefoxRestart vFirefoxRestart gFirefoxRestart x25 y210 w110 h20, Restart affter every
-Gui Add, Edit, hWndhFirefoxRestartPeriod vFirefoxRestartPeriod gFirefoxRestartPeriod x140 y210 w40 h20 +Right, 3600
-Gui Add, GroupBox, x10 y150 w210 h110, Firefox Addons Viewer
-Gui Add, GroupBox, x10 y50 w210 h90, Vagex Viewer
+Gui Add, Button, hWndhFirefoxAddon vFirefoxAddon gFirefoxAddon x135 y190 w60 h20, &Addon
+Gui Add, Button, hWndhVagexInstall vVagexInstall gVagexInstall x135 y90 w60 h20, &Install
+Gui Add, Button, x150 y50 w70 h20, &Register
+Gui Add, CheckBox, hWndhFirefoxKeepRunning vFirefoxKeepRunning gFirefoxKeepRunning x15 y210 w160 h20, Keep Firefox running
+Gui Add, CheckBox, hWndhFirefoxRestart vFirefoxRestart gFirefoxRestart x25 y230 w110 h20, Restart affter every
+Gui Add, CheckBox, hWndhVagexAutoClickWatchButton vVagexAutoClickWatchButton gVagexAutoClickWatchButton x15 y130 w160 h20, Auto click Watch button
+Gui Add, CheckBox, hWndhVagexKeepRunning vVagexKeepRunning gVagexKeepRunning x15 y110 w160 h20, Keep Vagex running
+Gui Add, Edit, hWndhFirefoxRestartPeriod vFirefoxRestartPeriod gFirefoxRestartPeriod x140 y230 w40 h20 +Right, 3600
+Gui Add, GroupBox, x10 y170 w210 h90, Firefox Addons Viewer
+Gui Add, GroupBox, x10 y70 w210 h90, Vagex Viewer
+Gui Add, Text, x15 y190 w85 h20 +0x200, Firefox Installed:
+Gui Add, Text, x15 y90 w85 h20 +0x200, Vagex Installed:
+Gui Add, Text, x180 y230 w15 h20 +0x200, (s)
 Gui Font, Bold cRed
-Gui Add, Text, hWndhTxtFirefoxInstalled vTxtFirefoxInstalled  x100 y170 w30 h20 +0x200, NO
-Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x100 y70 w30 h20 +0x200, NO
+Gui Add, Text, hWndhTxtFirefoxInstalled vTxtFirefoxInstalled  x100 y190 w30 h20 +0x200, NO
+Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x100 y90 w30 h20 +0x200, NO
+Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
-Gui Add, Text, x180 y210 w15 h20 +0x200, (s)
-Gui Add, Text, x15 y170 w85 h20 +0x200, Firefox Installed:
-Gui Add, Text, x15 y70 w85 h20 +0x200, Vagex Installed:
 Gui Tab, Hitleap
-Gui Add, Button, hWndhHitleapInstall vHitleapInstall gHitleapInstall x135 y50 w60 h20, &Install
-Gui Add, CheckBox, hWndhHitleapHided vHitleapHided gHitleapHided x15 y110 w160 h20, Hided
-Gui Add, CheckBox, hWndhHitleapKeepRunning vHitleapKeepRunning gHitleapKeepRunning x15 y70 w160 h20, Keep Hitleap running
-Gui Add, CheckBox, hWndhHitleapMinimized vHitleapMinimized gHitleapMinimized x15 y90 w160 h20, Minimized
-Gui Add, Text, x15 y50 w85 h20 +0x200, Hitleap Installed:
+Gui Add, Button, hWndhHitleapInstall vHitleapInstall gHitleapInstall x135 y80 w60 h20, &Install
+Gui Add, Button, x150 y50 w70 h20, &Register
+Gui Add, CheckBox, hWndhHitleapHided vHitleapHided gHitleapHided x15 y140 w160 h20, Hided
+Gui Add, CheckBox, hWndhHitleapKeepRunning vHitleapKeepRunning gHitleapKeepRunning x15 y100 w160 h20, Keep Hitleap running
+Gui Add, CheckBox, hWndhHitleapMinimized vHitleapMinimized gHitleapMinimized x15 y120 w160 h20, Minimized
+Gui Add, Text, x15 y80 w85 h20 +0x200, Hitleap Installed:
 Gui Font, Bold cRed
-Gui Add, Text, hWndhTxtHitleapInstalled vTxtHitleapInstalled x100 y50 w30 h20 +0x200, NO
+Gui Add, Text, hWndhTxtHitleapInstalled vTxtHitleapInstalled x100 y80 w30 h20 +0x200, NO
+Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
 If !StartMinimized
@@ -72,19 +81,11 @@ Main_Timmer:
 	Main_Firefox()
 	General_Task()
 Return
-GuiClose:
-	Gui, Submit
-	Gui_Submit()
-	General_Task()
-	ExitApp
-Return
 BtnHide:
+GuiClose:
 GuiEscape:
 	Gui, Submit
 	Gui_Submit()
-	General_Task()
-	TrayShow=1
-	Menu, Tray, Icon
 Return
 FirefoxKeepRunning:
 FirefoxRestart:
@@ -317,14 +318,12 @@ FirefoxAddon() {
 	Return
 }
 ^0::
-	TrayShow:=!TrayShow
-	If TrayShow
+	If A_IconHidden
 		Menu, Tray, Icon
 	Else
 		Menu, Tray, NoIcon
 Return
 ^1::
-	TrayShow=1
 	Menu, Tray, Icon
 	Gui_Update()
 	Gui Show, %ToolSize%, %ToolName%
