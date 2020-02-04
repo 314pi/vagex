@@ -11,10 +11,10 @@ Gui_Submit() {
 	}
 	If StartWithWindows
 	{
-		SplitPath, A_Scriptname, , , , OutNameNoExt
+		SplitPath, A_ScriptFullPath, , OutDir, , OutNameNoExt
 		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
 		IfNotExist, %LinkFile%
-			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile% ; Admin right ?
+			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile%, %OutDir% ; Admin right ?
 	}
 	Else {
 		SplitPath, A_Scriptname, , , , OutNameNoExt
@@ -27,3 +27,4 @@ Gui_Submit() {
 		SetTimer, FirefoxRestartTimmer, Off
 	Return
 }
+FileCreateShortcut, Target, LinkFile [, WorkingDir

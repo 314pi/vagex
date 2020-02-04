@@ -1,5 +1,5 @@
 HitleapInstall() {
-	Global HitleapDownloadUrl
+	HitleapDownloadUrl :="https://hitleap.com/viewer/download`?platform=Windows"
 	save = HitleapViewer.exe
 	FileDelete, %save%
 	message = 0x1100
@@ -38,7 +38,7 @@ Main_Hitleap() {
 	Return
 }
 HitleapReg() {
-	Global HitleapRegUrl
+	HitleapRegUrl :="https://hitleap.com/by/kmc44210"
 	Run %HitleapRegUrl%
 	Return
 }

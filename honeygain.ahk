@@ -16,12 +16,12 @@ Main_Honeygain() {
 	Return
 }
 HoneygainReg() {
-	Global HoneygainRegUrl
+	HoneygainRegUrl :="https://dashboard.honeygain.com/ref/TUONGE2B"
 	Run %HoneygainRegUrl%
 	Return
 }
 HoneygainInstall() {
-	Global HoneygainDownloadUrl
+	HoneygainDownloadUrl :="https://download.honeygain.com/windows-app/Honeygain_install.exe"
 	save = HoneygainSetup.exe
 	FileDelete, %save%
 	message = 0x1100

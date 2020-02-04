@@ -10,7 +10,7 @@ Gui_Update() {
 	}
 	If Check_Program_Installed("Vagex Viewer")
 	{
-		GuiControl,, TxtVagexInstalled , YES
+		GuiControl,, TxtVagexInstalled , Yes
 		GuiControl,Disable, VagexInstall
 		GuiControl,Enable, VagexKeepRunning
 		If VagexKeepRunning
@@ -26,7 +26,7 @@ Gui_Update() {
 	}
 	If Check_Program_Installed("Mozilla Firefox")
 	{
-		GuiControl,, TxtFirefoxInstalled , YES
+		GuiControl,, TxtFirefoxInstalled , Yes
 		GuiControl,, FirefoxAddon, &Addon
 		GuiControl,Enable, FirefoxKeepRunning
 		If FirefoxKeepRunning
@@ -51,18 +51,9 @@ Gui_Update() {
 	}
 	If Check_Program_Installed("Hitleap Viewer")
 	{
-		GuiControl,, TxtHitleapInstalled , YES
+		GuiControl,, TxtHitleapInstalled , Yes
 		GuiControl,Disable, HitleapInstall
 		GuiControl,Enable, HitleapKeepRunning
-		If HitleapKeepRunning
-		{
-			GuiControl,Enable, HitleapHided
-			GuiControl,Enable, HitleapMinimized
-		}
-		Else {
-			GuiControl,Disable, HitleapHided
-			GuiControl,Disable, HitleapMinimized
-		}
 	}
 	Else {
 		GuiControl,, HitleapHided,0
@@ -74,13 +65,23 @@ Gui_Update() {
 	}
 	If Check_Program_Installed("Honeygain")
 	{
-		GuiControl,, TxtHoneygainInstalled , YES
+		GuiControl,, TxtHoneygainInstalled , Yes
 		GuiControl,Disable, HoneygainInstall
 		GuiControl,Enable, HoneygainKeepRunning
 	}
 	Else {
 		GuiControl,, HoneygainKeepRunning,0
-		GuiControl,Disable, HitleapKeepRunning
+		GuiControl,Disable, HoneygainKeepRunning
+	}
+	If Check_Program_Installed("FluidStack Node")
+	{
+		GuiControl,, TxtFluidstackInstalled , Yes
+		GuiControl,Disable, FluidstackInstall
+		GuiControl,Enable, FluidstackKeepRunning
+	}
+	Else {
+		GuiControl,, FluidstackKeepRunning,0
+		GuiControl,Disable, FluidstackKeepRunning
 	}
 	Gui_Submit()
 	Return

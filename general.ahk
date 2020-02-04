@@ -6,6 +6,7 @@ Check_Ini() {
 	FirefoxKeepRunning=1
 	FirefoxRestart=1
 	FirefoxRestartPeriod=3600
+	FluidstackKeepRunning=1
 	HitleapHided=1
 	HitleapKeepRunning=1
 	HitleapMinimized=1

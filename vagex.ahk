@@ -1,5 +1,5 @@
 VagexInstall() {
-	Global VagexDownloadUrl
+	VagexDownloadUrl :="https://vagex.com/Vagex4/Vagex.application"
 	save = Vagex.application
 	FileDelete, %save%
 	message = 0x1100
@@ -20,7 +20,8 @@ FirefoxAddon() {
 	GuiControlGet, FirefoxAddon ,, FirefoxAddon
 	IfInString, FirefoxAddon, Install
 	{
-		Global FirefoxDownloadURl
+		OS :=A_Is64bitOS ? 64 : 32
+		FirefoxDownloadURl :="https://download.mozilla.org/`?product=firefox-latest`&os=win" . OS
 		save = FirefoxSetup.exe
 		FileDelete, %save%
 		message = 0x1100
@@ -36,7 +37,7 @@ FirefoxAddon() {
 		}
 	}
 	Else {
-		Global FirefoxAddonUrl
+		FirefoxAddonUrl :="https://addons.mozilla.org/addon/vagex2"
 		RunWait, firefox.exe %FirefoxAddonUrl%
 	}
 	Gui_Update()
@@ -57,7 +58,7 @@ Main_Vagex() {
 		{
 			IfNotExist Vagex.application
 			{
-				Global VagexDownloadUrl
+				VagexDownloadUrl :="https://vagex.com/Vagex4/Vagex.application"
 				UrlDownloadToFile, %VagexDownloadUrl%, Vagex.application
 			}
 			RunWait, Vagex.application
@@ -115,7 +116,7 @@ FirefoxRestartTimmer:
 		If ErrorLevel
 		{
 			WinClose, Mozilla Firefox
-			Sleep, 15123
+			Sleep, 120123
 		}
 		RunWait, "firefox.exe"
 		Sleep, 15123
@@ -124,7 +125,7 @@ FirefoxRestartTimmer:
 	}
 Return
 VagexReg() {
-	Global VagexRegUrl
+	VagexRegUrl :="http://vagex.com/`?ref=458167"
 	Run %VagexRegUrl%
 	Return
 }
