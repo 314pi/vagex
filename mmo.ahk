@@ -16,7 +16,12 @@ Check_Ini()
 SetTimer, Main_Timmer, 312345
 SetTimer, FirefoxRestartTimmer, 3600000
 ;======================================================================
+Menu, Tray, Add,%ToolName%, ShowGui
+Menu, Tray, Click, 1
+Menu, Tray, Default,%ToolName%
 Menu, Tray, Icon, %Favi%
+Menu, Tray, NoStandard
+Menu, Tray, Tip , %ToolName%
 Gui -MinimizeBox -MaximizeBox +AlwaysOnTop
 Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x75 y265 w80 h20, &Hide
 Gui Add, Tab3, x5 y5 w225 h260, General|Vagex|HoneyGain|FluidStack|Hitleap|About
@@ -35,6 +40,7 @@ Gui Tab, HoneyGain
 Gui Add, Button, hWndhHoneygainInstall vHoneygainInstall gHoneygainInstall x160 y80 w60 h20, &Install
 Gui Add, Button, hWndhHoneygainReg vHoneygainReg gHoneygainReg x160 y50 w60 h20, &Register
 Gui Add, CheckBox, hWndhHoneygainKeepRunning vHoneygainKeepRunning gHoneygainKeepRunning x15 y100 w200 h20, Keep Honeygain running
+Gui Add, CheckBox, x15 y120 w200 h20, Hide tray icon
 Gui Add, Text, x15 y80 w125 h20 +0x200, HoneyGain Installed:
 Gui Font, Bold cRed
 Gui Add, Text, hWndhTxtHoneygainInstalled vTxtHoneygainInstalled x130 y80 w25 h20 +0x200, No
@@ -42,7 +48,8 @@ Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 ;======================================================================
 Gui Tab, General
-Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y110 w120 h20, Start Minimized
+Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y110 w120 h20, Start minimized
+Gui Add, CheckBox, x15 y130 w120 h20, Hide tray icon
 Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y90 w120 h20, Start with Windows
 Gui Add, Text, x15 y50 w180 h20 +0x200, Press Ctrl+0 to Hide/Unhide tray icon
 Gui Add, Text, x15 y70 w180 h20 +0x200, Press Ctrl+1 Show Main Windows
@@ -98,12 +105,14 @@ Return
 #Include tray.ahk
 #Include vagex.ahk
 Main_Timmer:
+	SetTimer, Main_Timmer, Off
 	General_Task()
 	Main_Fluidstack()
 	Main_Honeygain()
 	Main_Hitleap()
 	Main_Vagex()
 	Main_Firefox()
+	SetTimer, Main_Timmer, On
 Return
 BtnHide:
 GuiClose:
@@ -142,6 +151,7 @@ Return
 	Else
 		Menu, Tray, NoIcon
 Return
+ShowGui:
 ^1::
 	Menu, Tray, Icon
 	Gui_Update()
