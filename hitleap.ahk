@@ -12,9 +12,9 @@ HitleapInstall() {
 	Return
 }
 Main_Hitleap() {
-	IniRead, HitleapHided, pi.ini, PiTools, HitleapHided
-	IniRead, HitleapKeepRunning, pi.ini, PiTools, HitleapKeepRunning
-	IniRead, HitleapMinimized, pi.ini, PiTools, HitleapMinimized
+	IniRead, HitleapHided, pi.ini, PiTools, HitleapHided, 1
+	IniRead, HitleapKeepRunning, pi.ini, PiTools, HitleapKeepRunning, 1
+	IniRead, HitleapSleepAfterRun, pi.ini, PiTools, HitleapSleepAfterRun, 120123
 	If HitleapKeepRunning
 	{
 		Process, Exist , simplewrapper.exe
@@ -28,13 +28,18 @@ Main_Hitleap() {
 				FileCreateShortcut, %Hitleappath%, Hitleap.lnk, %Hitleapdir%, HitLeap-Viewer.lua Windows
 			}
 			Run, Hitleap.lnk
-			Sleep, 15123
+			Sleep, %HitleapSleepAfterRun%
 		}
 	}
-	If HitleapMinimized
-		WinMinimize, HitLeap Viewer
 	If HitleapHided
+	{
+		WinMinimize, HitLeap Viewer
 		WinHide, HitLeap Viewer
+	}
+	Else {
+		WinShow, HitLeap Viewer
+		WinRestore, HitLeap Viewer
+	}
 	Return
 }
 HitleapReg() {

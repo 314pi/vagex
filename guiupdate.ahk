@@ -54,23 +54,25 @@ Gui_Update() {
 		GuiControl,, TxtHitleapInstalled , Yes
 		GuiControl,Disable, HitleapInstall
 		GuiControl,Enable, HitleapKeepRunning
+		GuiControl,Enable, HitleapHided
 	}
 	Else {
 		GuiControl,, HitleapHided,0
 		GuiControl,, HitleapKeepRunning,0
-		GuiControl,, HitleapMinimized,0
 		GuiControl,Disable, HitleapHided
 		GuiControl,Disable, HitleapKeepRunning
-		GuiControl,Disable, HitleapMinimized
 	}
 	If Check_Program_Installed("Honeygain")
 	{
 		GuiControl,, TxtHoneygainInstalled , Yes
 		GuiControl,Disable, HoneygainInstall
+		GuiControl,Enable, HoneygainHideTray
 		GuiControl,Enable, HoneygainKeepRunning
 	}
 	Else {
-		GuiControl,, HoneygainKeepRunning,0
+		GuiControl,, HoneygainHideTray, 0
+		GuiControl,, HoneygainKeepRunning, 0
+		GuiControl,Disable, HoneygainHideTray
 		GuiControl,Disable, HoneygainKeepRunning
 	}
 	If Check_Program_Installed("FluidStack Node")
@@ -82,6 +84,24 @@ Gui_Update() {
 	Else {
 		GuiControl,, FluidstackKeepRunning,0
 		GuiControl,Disable, FluidstackKeepRunning
+	}
+	Process, Exist , simplewrapper.exe
+	If ErrorLevel
+	{
+		GuiControl,Enabled, HitleapHided
+		If HitleapHided
+		{
+			WinMinimize, HitLeap Viewer
+			WinHide, HitLeap Viewer
+		}
+		Else {
+			WinShow, HitLeap Viewer
+			WinRestore, HitLeap Viewer
+		}
+	}
+	Else {
+		GuiControl,, HitleapHided,0
+		GuiControl,Disable, HitleapHided
 	}
 	Gui_Submit()
 	Return

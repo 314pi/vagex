@@ -9,7 +9,6 @@ Check_Ini() {
 	FluidstackKeepRunning=1
 	HitleapHided=1
 	HitleapKeepRunning=1
-	HitleapMinimized=1
 	HoneygainKeepRunning=1
 	StartMinimized=0
 	StartWithWindows=0

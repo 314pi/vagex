@@ -16,12 +16,13 @@ Check_Ini()
 SetTimer, Main_Timmer, 312345
 SetTimer, FirefoxRestartTimmer, 3600000
 ;======================================================================
-Menu, Tray, Add,%ToolName%, ShowGui
+Menu, Tray, Add,Make Money Online, ShowTool
+Menu, Tray, Add,Exit, ExitTool
 Menu, Tray, Click, 1
-Menu, Tray, Default,%ToolName%
+Menu, Tray, Default,Make Money Online
 Menu, Tray, Icon, %Favi%
 Menu, Tray, NoStandard
-Menu, Tray, Tip , %ToolName%
+Menu, Tray, Tip , Make Money Online Manager Tools
 Gui -MinimizeBox -MaximizeBox +AlwaysOnTop
 Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x75 y265 w80 h20, &Hide
 Gui Add, Tab3, x5 y5 w225 h260, General|Vagex|HoneyGain|FluidStack|Hitleap|About
@@ -29,10 +30,12 @@ Gui Add, Tab3, x5 y5 w225 h260, General|Vagex|HoneyGain|FluidStack|Hitleap|About
 Gui Tab, FluidStack
 Gui Add, Button, hWndhFluidstackInstall vFluidstackInstall gFluidstackInstall x160 y80 w60 h20, &Install
 Gui Add, Button, hWndhFluidstackReg vFluidstackReg gFluidstackReg x160 y50 w60 h20, &Register
-Gui Add, CheckBox, hWndhFluidstackKeepRunning vFluidstackKeepRunning gFluidstackKeepRunning x15 y100 w200 h20, Keep Fluidstack Service running
+Gui Add, Text, x15 y110 w130 h20, Fluidstack Service status
+Gui Add, CheckBox, hWndhFluidstackKeepRunning vFluidstackKeepRunning gFluidstackKeepRunning x15 y130 w200 h20, Keep Fluidstack Service running
 Gui Add, Text, x15 y80 w125 h20 +0x200, Fluidstack Installed:
 Gui Font, Bold cRed
 Gui Add, Text, hWndhTxtFluidstackInstalled vTxtFluidstackInstalled x130 y80 w25 h20 +0x200, No
+Gui Add, Text, x160 y110 w60 h20 +Center, No
 Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 ;======================================================================
@@ -40,7 +43,7 @@ Gui Tab, HoneyGain
 Gui Add, Button, hWndhHoneygainInstall vHoneygainInstall gHoneygainInstall x160 y80 w60 h20, &Install
 Gui Add, Button, hWndhHoneygainReg vHoneygainReg gHoneygainReg x160 y50 w60 h20, &Register
 Gui Add, CheckBox, hWndhHoneygainKeepRunning vHoneygainKeepRunning gHoneygainKeepRunning x15 y100 w200 h20, Keep Honeygain running
-Gui Add, CheckBox, x15 y120 w200 h20, Hide tray icon
+Gui Add, CheckBox, hWndhHoneygainHideTray vHoneygainHideTray gHoneygainHideTray x15 y120 w200 h20, Hide tray icon
 Gui Add, Text, x15 y80 w125 h20 +0x200, HoneyGain Installed:
 Gui Font, Bold cRed
 Gui Add, Text, hWndhTxtHoneygainInstalled vTxtHoneygainInstalled x130 y80 w25 h20 +0x200, No
@@ -77,9 +80,8 @@ Gui Font
 Gui Tab, Hitleap
 Gui Add, Button, hWndhHitleapInstall vHitleapInstall gHitleapInstall x160 y80 w60 h20, &Install
 Gui Add, Button, hWndhHitleapReg vHitleapReg gHitleapReg x160 y50 w60 h20, &Register
-Gui Add, CheckBox, hWndhHitleapHided vHitleapHided gHitleapHided x15 y140 w200 h20, Hided
+Gui Add, CheckBox, hWndhHitleapHided vHitleapHided gHitleapHided x15 y120 w200 h20, Hide / Show
 Gui Add, CheckBox, hWndhHitleapKeepRunning vHitleapKeepRunning gHitleapKeepRunning x15 y100 w200 h20, Keep Hitleap running
-Gui Add, CheckBox, hWndhHitleapMinimized vHitleapMinimized gHitleapMinimized x15 y120 w200 h20, Minimized
 Gui Add, Text, x15 y80 w125 h20 +0x200, Hitleap Installed:
 Gui Font, Bold cRed
 Gui Add, Text, hWndhTxtHitleapInstalled vTxtHitleapInstalled x130 y80 w25 h20 +0x200, No
@@ -95,6 +97,7 @@ If !StartMinimized
 GoSub, Main_Timmer
 Return
 #Include checkinstall.ahk
+#Include cpuload.ahk
 #Include download.ahk
 #Include fluidstack.ahk
 #Include general.ahk
@@ -127,6 +130,7 @@ FluidstackKeepRunning:
 HitleapHided:
 HitleapKeepRunning:
 HitleapMinimized:
+HoneygainHideTray:
 HoneygainKeepRunning:
 StartMinimized:
 StartWithWindows:
@@ -138,10 +142,11 @@ VagexKeepRunning:
 	Gui_Submit()
 	Gui_Update()
 Return
+ExitTool:
 ^`::
 	Gui, Submit
 	Gui_Submit()
-	MsgBox , , %ToolName%, You are Exiting %ToolName%, 5
+	MsgBox , , %ToolName%, You are Exiting %ToolName%, 3
 
 	ExitApp
 Return
@@ -151,7 +156,7 @@ Return
 	Else
 		Menu, Tray, NoIcon
 Return
-ShowGui:
+ShowTool:
 ^1::
 	Menu, Tray, Icon
 	Gui_Update()

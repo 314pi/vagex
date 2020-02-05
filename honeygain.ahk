@@ -1,5 +1,6 @@
 Main_Honeygain() {
-	IniRead, HoneygainKeepRunning, pi.ini, PiTools, HoneygainKeepRunning
+	IniRead, HoneygainKeepRunning, pi.ini, PiTools, HoneygainKeepRunning, 1
+	IniRead, HoneygainSleepAfterRun, pi.ini, PiTools, HoneygainSleepAfterRun, 120123
 	If HoneygainKeepRunning
 	{
 		Process, Exist , Honeygain.exe
@@ -10,7 +11,7 @@ Main_Honeygain() {
 				FileCreateShortcut, %A_AppData%\Honeygain\Honeygain.exe, Honeygain.lnk, %A_AppData%\Honeygain\
 			}
 			Run, HoneyGain.lnk
-			Sleep, 15123
+			Sleep, %HoneygainSleepAfterRun%
 		}
 	}
 	Return

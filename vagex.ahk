@@ -48,9 +48,10 @@ Main_Vagex() {
 	WatchButtonx = WindowsForms10.BUTTON.app.0.34f5582_r9_ad12
 	PauseButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad14
 	AccButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad16
-	IniRead, VagexAutoClickWatchButton, pi.ini, PiTools, VagexAutoClickWatchButton
-	IniRead, VagexKeepRunning, pi.ini, PiTools, VagexKeepRunning
-	IniRead, VagexShow, pi.ini, PiTools, VagexShow,0
+	IniRead, VagexAutoClickWatchButton, pi.ini, PiTools, VagexAutoClickWatchButton, 1
+	IniRead, VagexKeepRunning, pi.ini, PiTools, VagexKeepRunning, 1
+	IniRead, VagexShow, pi.ini, PiTools, VagexShow, 0
+	IniRead, VagexSleepAfterRun, pi.ini, PiTools, VagexSleepAfterRun, 120123
 	If VagexKeepRunning
 	{
 		Process, Exist , vagex.exe
@@ -62,7 +63,7 @@ Main_Vagex() {
 				UrlDownloadToFile, %VagexDownloadUrl%, Vagex.application
 			}
 			RunWait, Vagex.application
-			Sleep, 15123
+			Sleep, %VagexSleepAfterRun%
 		}
 		Else {
 			If VagexAutoClickWatchButton
@@ -91,17 +92,18 @@ Main_Vagex() {
 	Return
 }
 Main_Firefox() {
-	IniRead, FirefoxKeepRunning, pi.ini, PiTools, FirefoxKeepRunning
-	IniRead, FirefoxRestart, pi.ini, PiTools, FirefoxRestart
-	IniRead, FirefoxRestartPeriod, pi.ini, PiTools, FirefoxRestartPeriod
-	IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow,1
+	IniRead, FirefoxKeepRunning, pi.ini, PiTools, FirefoxKeepRunning, 1
+	IniRead, FirefoxRestart, pi.ini, PiTools, FirefoxRestart, 1
+	IniRead, FirefoxRestartPeriod, pi.ini, PiTools, FirefoxRestartPeriod, 3600
+	IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow, 1
+	IniRead, FirefoxSleepAfterRun, pi.ini, PiTools, FirefoxSleepAfterRun, 120123
 	If FirefoxKeepRunning
 	{
 		Process, Exist , firefox.exe
 		If !ErrorLevel
 		{
 			RunWait, "firefox.exe"
-			Sleep, 15123
+			Sleep, %FirefoxSleepAfterRun%
 			If !FirefoxShow
 				WinHide, Mozilla Firefox
 		}
@@ -109,17 +111,18 @@ Main_Firefox() {
 	Return
 }
 FirefoxRestartTimmer:
-	IniRead, FirefoxRestart, pi.ini, PiTools, FirefoxRestart,0
+	IniRead, FirefoxRestart, pi.ini, PiTools, FirefoxRestart, 0
+	IniRead, FirefoxSleepAfterRun, pi.ini, PiTools, FirefoxSleepAfterRun, 120123
 	If FirefoxRestart
 	{
 		Process, Exist , firefox.exe
 		If ErrorLevel
 		{
 			WinClose, Mozilla Firefox
-			Sleep, 120123
+			Sleep, %FirefoxSleepAfterRun%
 		}
 		RunWait, "firefox.exe"
-		Sleep, 15123
+		Sleep, %FirefoxSleepAfterRun%
 		If !FirefoxShow
 			WinHide, Mozilla Firefox
 	}

@@ -27,4 +27,3 @@ Gui_Submit() {
 		SetTimer, FirefoxRestartTimmer, Off
 	Return
 }
-FileCreateShortcut, Target, LinkFile [, WorkingDir
