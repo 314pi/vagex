@@ -8,6 +8,15 @@ Gui_Update() {
 			GuiControl,, %magic1% , %magic2%
 		}
 	}
+	If TrayShowHide
+	{
+		Menu, Tray, Icon
+		GuiControl,, TrayShowHide, 1
+	}
+	Else {
+		Menu, Tray, NoIcon
+		GuiControl,, TrayShowHide, 0
+	}
 	If Check_Program_Installed("Vagex Viewer")
 	{
 		GuiControl,, TxtVagexInstalled , Yes

@@ -42,8 +42,8 @@ Gui Font
 Gui Tab, HoneyGain
 Gui Add, Button, hWndhHoneygainInstall vHoneygainInstall gHoneygainInstall x160 y80 w60 h20, &Install
 Gui Add, Button, hWndhHoneygainReg vHoneygainReg gHoneygainReg x160 y50 w60 h20, &Register
-Gui Add, CheckBox, hWndhHoneygainKeepRunning vHoneygainKeepRunning gHoneygainKeepRunning x15 y100 w200 h20, Keep Honeygain running
 Gui Add, CheckBox, hWndhHoneygainHideTray vHoneygainHideTray gHoneygainHideTray x15 y120 w200 h20, Hide tray icon
+Gui Add, CheckBox, hWndhHoneygainKeepRunning vHoneygainKeepRunning gHoneygainKeepRunning x15 y100 w200 h20, Keep Honeygain running
 Gui Add, Text, x15 y80 w125 h20 +0x200, HoneyGain Installed:
 Gui Font, Bold cRed
 Gui Add, Text, hWndhTxtHoneygainInstalled vTxtHoneygainInstalled x130 y80 w25 h20 +0x200, No
@@ -51,11 +51,10 @@ Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 ;======================================================================
 Gui Tab, General
-Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y110 w120 h20, Start minimized
-Gui Add, CheckBox, x15 y130 w120 h20, Hide tray icon
-Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y90 w120 h20, Start with Windows
-Gui Add, Text, x15 y50 w180 h20 +0x200, Press Ctrl+0 to Hide/Unhide tray icon
-Gui Add, Text, x15 y70 w180 h20 +0x200, Press Ctrl+1 Show Main Windows
+Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y90 w200 h20, Start minimized
+Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y70 w200 h20, Start with Windows
+Gui Add, CheckBox, hWndhTrayShowHide vTrayShowHide gTrayShowHide x15 y110 w200 h20, Show/Hide tray icon (Ctrl + 0)
+Gui Add, Text, x15 y50 w200 h20 +0x200, Press Ctrl+1 Show Main Windows
 ;======================================================================
 Gui Tab, Vagex
 Gui Add, Button, hWndhFirefoxAddon vFirefoxAddon gFirefoxAddon x160 y190 w60 h20, &Addon
@@ -125,6 +124,7 @@ GuiEscape:
 Return
 FirefoxKeepRunning:
 FirefoxRestart:
+TrayShowHide:
 FirefoxRestartPeriod:
 FluidstackKeepRunning:
 HitleapHided:
@@ -152,9 +152,14 @@ ExitTool:
 Return
 ^0::
 	If A_IconHidden
+	{
 		Menu, Tray, Icon
-	Else
+		GuiControl,, TrayShowHide, 1
+	}
+	Else {
 		Menu, Tray, NoIcon
+		GuiControl,, TrayShowHide, 0
+	}
 Return
 ShowTool:
 ^1::
