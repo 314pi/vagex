@@ -63,7 +63,24 @@ Gui_Update() {
 		GuiControl,, TxtHitleapInstalled , Yes
 		GuiControl,Disable, HitleapInstall
 		GuiControl,Enable, HitleapKeepRunning
-		GuiControl,Enable, HitleapHided
+		Process, Exist , simplewrapper.exe
+		If ErrorLevel
+		{
+			GuiControl,Enabled, HitleapHided
+			If HitleapHided
+			{
+				WinMinimize, HitLeap Viewer
+				WinHide, HitLeap Viewer
+			}
+			Else {
+				WinShow, HitLeap Viewer
+				WinRestore, HitLeap Viewer
+			}
+		}
+		Else {
+			GuiControl,, HitleapHided,0
+			GuiControl,Disable, HitleapHided
+		}
 	}
 	Else {
 		GuiControl,, HitleapHided,0
@@ -75,8 +92,19 @@ Gui_Update() {
 	{
 		GuiControl,, TxtHoneygainInstalled , Yes
 		GuiControl,Disable, HoneygainInstall
-		GuiControl,Enable, HoneygainHideTray
 		GuiControl,Enable, HoneygainKeepRunning
+		Process, Exist , Honeygain.exe
+		If ErrorLevel
+		{
+			GuiControl,Enable, HoneygainHideTray
+			HoneygainTray := TrayIcon_GetInfo("Honeygain.exe")
+			HoneygainTrayID  := HoneygainTray[1].IDcmd
+			TrayIcon_Hide(HoneygainTrayID, "Shell_TrayWnd", HoneygainHideTray)
+		}
+		Else {
+			GuiControl,, HoneygainHideTray, 0
+			GuiControl,Disable, HoneygainHideTray
+		}
 	}
 	Else {
 		GuiControl,, HoneygainHideTray, 0
@@ -94,24 +122,7 @@ Gui_Update() {
 		GuiControl,, FluidstackKeepRunning,0
 		GuiControl,Disable, FluidstackKeepRunning
 	}
-	Process, Exist , simplewrapper.exe
-	If ErrorLevel
-	{
-		GuiControl,Enabled, HitleapHided
-		If HitleapHided
-		{
-			WinMinimize, HitLeap Viewer
-			WinHide, HitLeap Viewer
-		}
-		Else {
-			WinShow, HitLeap Viewer
-			WinRestore, HitLeap Viewer
-		}
-	}
-	Else {
-		GuiControl,, HitleapHided,0
-		GuiControl,Disable, HitleapHided
-	}
+	GuiControl,, FluidstackSvcStatus, % Check_Service_Running("FluidStackNode")
 	Gui_Submit()
 	Return
 }

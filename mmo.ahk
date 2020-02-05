@@ -25,7 +25,7 @@ Menu, Tray, NoStandard
 Menu, Tray, Tip , Make Money Online Manager Tools
 Gui -MinimizeBox -MaximizeBox +AlwaysOnTop
 Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x75 y265 w80 h20, &Hide
-Gui Add, Tab3, x5 y5 w225 h260, General|Vagex|HoneyGain|FluidStack|Hitleap|About
+Gui Add, Tab3, x5 y5 w225 h260, General|Vagex|Hitleap|HoneyGain|FluidStack|About
 ;======================================================================
 Gui Tab, FluidStack
 Gui Add, Button, hWndhFluidstackInstall vFluidstackInstall gFluidstackInstall x160 y80 w60 h20, &Install
@@ -34,8 +34,8 @@ Gui Add, Text, x15 y110 w130 h20, Fluidstack Service status
 Gui Add, CheckBox, hWndhFluidstackKeepRunning vFluidstackKeepRunning gFluidstackKeepRunning x15 y130 w200 h20, Keep Fluidstack Service running
 Gui Add, Text, x15 y80 w125 h20 +0x200, Fluidstack Installed:
 Gui Font, Bold cRed
-Gui Add, Text, hWndhTxtFluidstackInstalled vTxtFluidstackInstalled x130 y80 w25 h20 +0x200, No
-Gui Add, Text, x160 y110 w60 h20 +Center, No
+Gui Add, Text, vTxtFluidstackInstalled x130 y80 w25 h20 +0x200, No
+Gui Add, Text, vFluidstackSvcStatus x160 y110 w60 h20 +Center, No
 Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 ;======================================================================
@@ -95,7 +95,6 @@ If !StartMinimized
 }
 GoSub, Main_Timmer
 Return
-#Include checkinstall.ahk
 #Include cpuload.ahk
 #Include download.ahk
 #Include fluidstack.ahk
