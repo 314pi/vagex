@@ -24,5 +24,18 @@ FluidstackReg() {
 	Return
 }
 Main_Fluidstack() {
+	IniRead, FluidstackKeepRunning, pi.ini, PiTools, FluidstackKeepRunning, 1
+	If FluidstackKeepRunning
+	{
+		FluidstackSvcStatus :=Check_Service_Running("FluidStackNode")
+		IfInString, FluidstackSvcStatus, Stop
+			FluidstackStartStop()
+	}
+	Return
+}
+FluidstackStartStop() {
+	Run startfs.exe
+	Sleep, 15123
+	Gui_Update()
 	Return
 }

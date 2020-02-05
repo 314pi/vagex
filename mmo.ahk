@@ -29,9 +29,10 @@ Gui Add, Tab3, x5 y5 w225 h260, General|Vagex|Hitleap|HoneyGain|FluidStack|About
 ;======================================================================
 Gui Tab, FluidStack
 Gui Add, Button, hWndhFluidstackInstall vFluidstackInstall gFluidstackInstall x160 y80 w60 h20, &Install
+Gui Add, Button, hWndhFluidstackStartStop vFluidstackStartStop gFluidstackStartStop x160 y130 w60 h20, &Start
 Gui Add, Button, hWndhFluidstackReg vFluidstackReg gFluidstackReg x160 y50 w60 h20, &Register
 Gui Add, Text, x15 y110 w130 h20, Fluidstack Service status
-Gui Add, CheckBox, hWndhFluidstackKeepRunning vFluidstackKeepRunning gFluidstackKeepRunning x15 y130 w200 h20, Keep Fluidstack Service running
+Gui Add, CheckBox, hWndhFluidstackKeepRunning vFluidstackKeepRunning gFluidstackKeepRunning x15 y130 w145 h20, Keep Service running
 Gui Add, Text, x15 y80 w125 h20 +0x200, Fluidstack Installed:
 Gui Font, Bold cRed
 Gui Add, Text, vTxtFluidstackInstalled x130 y80 w25 h20 +0x200, No

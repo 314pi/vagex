@@ -113,17 +113,23 @@ Gui_Update() {
 		GuiControl,Disable, HoneygainHideTray
 		GuiControl,Disable, HoneygainKeepRunning
 	}
+	FluidstackSvcStatus :=Check_Service_Running("FluidStackNode")
+	GuiControl,, FluidstackSvcStatus, %FluidstackSvcStatus%
 	If Check_Program_Installed("FluidStack Node")
 	{
 		GuiControl,, TxtFluidstackInstalled , Yes
 		GuiControl,Disable, FluidstackInstall
 		GuiControl,Enable, FluidstackKeepRunning
+		IfInString, FluidstackSvcStatus, Stop
+			GuiControl,Enable, FluidstackStartStop
+		Else
+			GuiControl,Disable, FluidstackStartStop
 	}
 	Else {
 		GuiControl,, FluidstackKeepRunning,0
 		GuiControl,Disable, FluidstackKeepRunning
+		GuiControl,Disable, FluidstackStartStop
 	}
-	GuiControl,, FluidstackSvcStatus, % Check_Service_Running("FluidStackNode")
 	Gui_Submit()
 	Return
 }
