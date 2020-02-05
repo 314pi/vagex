@@ -11,6 +11,7 @@ Check_Ini() {
 	TrayShowHide=1
 	HitleapKeepRunning=1
 	HoneygainKeepRunning=1
+	HoneygainHideTray=1
 	StartMinimized=0
 	StartWithWindows=0
 	VagexAutoClickWatchButton=1

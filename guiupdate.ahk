@@ -94,16 +94,17 @@ Gui_Update() {
 		GuiControl,Disable, HoneygainInstall
 		GuiControl,Enable, HoneygainKeepRunning
 		Process, Exist , Honeygain.exe
-		If ErrorLevel
+		If !ErrorLevel
 		{
+			GuiControl,, HoneygainHideTray, 0
+			GuiControl,Disable, HoneygainHideTray
+		}
+		Else {
 			GuiControl,Enable, HoneygainHideTray
 			HoneygainTray := TrayIcon_GetInfo("Honeygain.exe")
 			HoneygainTrayID  := HoneygainTray[1].IDcmd
-			TrayIcon_Hide(HoneygainTrayID, "Shell_TrayWnd", HoneygainHideTray)
-		}
-		Else {
-			GuiControl,, HoneygainHideTray, 0
-			GuiControl,Disable, HoneygainHideTray
+			TrayIcon_Hide(HoneygainTrayID, , HoneygainHideTray)
+			Tray_Refresh()
 		}
 	}
 	Else {
