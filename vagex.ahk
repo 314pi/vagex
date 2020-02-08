@@ -9,7 +9,8 @@ VagexInstall() {
 	Progress, Off
 	IfExist %save%
 		RunWait, %save%
-	Else {
+	Else
+	{
 		Clipboard:=VagexDownloadUrl
 		MsgBox Link copied, paste (Ctrl+V) into your browser to download Vagex setup file.
 	}
@@ -31,12 +32,14 @@ FirefoxAddon() {
 		Progress, Off
 		IfExist %save%
 			RunWait, %save%
-		Else {
+		Else
+		{
 			Clipboard:=FirefoxDownloadURl
 			MsgBox Link copied, paste (Ctrl+V) into your browser to download Firefox setup file.
 		}
 	}
-	Else {
+	Else
+	{
 		FirefoxAddonUrl :="https://addons.mozilla.org/addon/vagex2"
 		RunWait, firefox.exe %FirefoxAddonUrl%
 	}
@@ -44,18 +47,17 @@ FirefoxAddon() {
 	Return
 }
 Main_Vagex() {
+	AccButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad16
+	PauseButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad14
+	VagexShow = 0
 	WatchButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad15
 	WatchButtonx = WindowsForms10.BUTTON.app.0.34f5582_r9_ad12
-	PauseButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad14
-	AccButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad16
 	Loop, Read, pi.ini
 	{
 		IfInString, A_LoopReadLine, =
 		{
 			StringSplit, magic, A_LoopReadLine, =
 			%magic1% := magic2
-			GuiControlGet, %magic1% ,, %magic1%
-			IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
 		}
 	}
 	If VagexKeepRunning
@@ -71,7 +73,8 @@ Main_Vagex() {
 			RunWait, Vagex.application
 			Sleep, %VagexSleepAfterRun%
 		}
-		Else {
+		Else
+		{
 			If VagexAutoClickWatchButton
 			{
 				WinShow, Vagex Viewer
@@ -79,13 +82,13 @@ Main_Vagex() {
 				WinRestore, Vagex Viewer
 				Sleep, 3123
 				ControlGet, OutputVar, Visible,, %WatchButtonx% , Vagex Viewer
-				If (OutputVar)
+				If OutputVar
 				{
 					WinClose, Vagex Viewer
 					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Close Vagex.`n, %A_MM%%A_YYYY%.log
 				}
 				ControlGet, OutputVar, Visible,, %WatchButton% , Vagex Viewer
-				If (OutputVar)
+				If OutputVar
 				{
 					ControlClick, %WatchButton% , Vagex Viewer
 					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
@@ -105,8 +108,6 @@ Main_Firefox() {
 		{
 			StringSplit, magic, A_LoopReadLine, =
 			%magic1% := magic2
-			GuiControlGet, %magic1% ,, %magic1%
-			IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
 		}
 	}
 	If FirefoxKeepRunning
@@ -128,8 +129,6 @@ FirefoxRestartTimmer:
 		{
 			StringSplit, magic, A_LoopReadLine, =
 			%magic1% := magic2
-			GuiControlGet, %magic1% ,, %magic1%
-			IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
 		}
 	}
 	If FirefoxRestart & FirefoxKeepRunning

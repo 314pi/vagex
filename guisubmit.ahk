@@ -6,7 +6,8 @@ Gui_Submit() {
 			StringSplit, magic, A_LoopReadLine, =
 			%magic1% := magic2
 			GuiControlGet, %magic1% ,, %magic1%
-			IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
+			If !ErrorLevel
+				IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
 		}
 	}
 	If StartWithWindows
@@ -16,15 +17,14 @@ Gui_Submit() {
 		IfNotExist, %LinkFile%
 			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile%, %OutDir% ; Admin right ?
 	}
-	Else {
+	Else
+	{
 		SplitPath, A_Scriptname, , , , OutNameNoExt
 		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
 		FileDelete, %LinkFile%
 	}
 	If FirefoxRestart & FirefoxKeepRunning
-	{
 		SetTimer, FirefoxRestartTimmer, % FirefoxRestartPeriod*1000
-	}
 	Else
 		SetTimer, FirefoxRestartTimmer, Off
 	Return
