@@ -1,8 +1,1 @@
-; Prompt to 'Run as Admin', i.e. show UAC dialog
-If Not A_IsAdmin
-{
-   Run *RunAs "%A_ScriptFullPath%"  ; Requires v1.0.92.01+
-   ExitApp
-}
-RunWait,sc stop "Spooler",,hide
-Return
+WinMove, Mozilla Firefox, , 0, 0 , A_ScreenWidth/2, A_ScreenHeight/2

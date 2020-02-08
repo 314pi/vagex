@@ -3,53 +3,38 @@ Check_Ini() {
 	( LTrim
 	;pi tools
 	[PiTools]
-	FirefoxKeepRunning=1
+	FirefoxKeepRunning=0
 	FirefoxRestart=1
 	FirefoxRestartPeriod=3600
-	FluidstackKeepRunning=1
+	FirefoxSleepAfterRun=120123
+	FluidstackKeepRunning=0
 	HitleapHided=1
-	TrayShowHide=1
-	HitleapKeepRunning=1
-	HoneygainKeepRunning=1
+	HitleapKeepRunning=0
+	HitleapSleepAfterRun=120123
 	HoneygainHideTray=1
+	HoneygainKeepRunning=0
+	HoneygainSleepAfterRun=120123
 	StartMinimized=0
 	StartWithWindows=0
+	TrayShowHide=1
 	VagexAutoClickWatchButton=1
-	VagexKeepRunning=1
+	VagexKeepRunning=0
+	VagexSleepAfterRun=120123
 	)
 	IfNotExist, pi.ini
 		FileAppend ,% vDefault_ini, pi.ini, UTF-8
 	Return
 }
 General_Task() {
-/*	Close some error, alert, update nortify, ...
- *
- */
-	IfWinExist, Vagex.exe - EXCEPTION
-	{
-		WinActivate, Vagex.exe - EXCEPTION
-		WinClose
-	}
-	IfWinExist, Script Error
-	{
-		WinActivate, Script Error
-		ControlSend, ,{Enter}, Script Error
-	}
-	IfWinExist, Update Available
-	{
-		WinActivate, Update Available
-		ControlSend, ,{Enter}, Update Available
-		Sleep, 121234
-	}
-	IfWinExist, Alert
-	{
-		WinActivate, Alert
-		WinClose
-	}
-	Process, Exist , WerFault.exe
-	if ErrorLevel
-		Process, Close, %ErrorLevel%
-	Tray_Refresh()
+/*
+	Close some error, alert, update nortify, ...
+*/
+	ControlSend, ,{Enter}, Script Error
+	ControlSend, ,{Enter}, Update Available
+	Process, Close, %ErrorLevel%
+	WinActivate, Script Error
+	WinClose Alert
+	WinClose Vagex.exe - EXCEPTION
 	Return
 }
 Check_Program_Installed(Program) {

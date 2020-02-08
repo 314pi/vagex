@@ -46,6 +46,7 @@ Gui_Update() {
 			Else
 				GuiControl,Disable, FirefoxRestartPeriod
 		} Else {
+			GuiControl,, FirefoxRestart,0
 			GuiControl,Disable, FirefoxRestart
 			GuiControl,Disable, FirefoxRestartPeriod
 		}
@@ -65,25 +66,12 @@ Gui_Update() {
 		GuiControl,Enable, HitleapKeepRunning
 		Process, Exist , simplewrapper.exe
 		If ErrorLevel
-		{
 			GuiControl,Enabled, HitleapHided
-			If HitleapHided
-			{
-				WinMinimize, HitLeap Viewer
-				WinHide, HitLeap Viewer
-			}
-			Else {
-				WinShow, HitLeap Viewer
-				WinRestore, HitLeap Viewer
-			}
-		}
 		Else {
-			GuiControl,, HitleapHided,0
 			GuiControl,Disable, HitleapHided
 		}
 	}
 	Else {
-		GuiControl,, HitleapHided,0
 		GuiControl,, HitleapKeepRunning,0
 		GuiControl,Disable, HitleapHided
 		GuiControl,Disable, HitleapKeepRunning
@@ -96,7 +84,6 @@ Gui_Update() {
 		Process, Exist , Honeygain.exe
 		If !ErrorLevel
 		{
-			GuiControl,, HoneygainHideTray, 0
 			GuiControl,Disable, HoneygainHideTray
 		}
 		Else {
@@ -108,7 +95,6 @@ Gui_Update() {
 		}
 	}
 	Else {
-		GuiControl,, HoneygainHideTray, 0
 		GuiControl,, HoneygainKeepRunning, 0
 		GuiControl,Disable, HoneygainHideTray
 		GuiControl,Disable, HoneygainKeepRunning

@@ -10,29 +10,29 @@ SetWorkingDir %A_ScriptDir%	 ; Ensures a consistent starting directory.
 ;======================================================================
 #Include variables.ahk
 IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow, 1
-IniRead, HitleapShow, pi.ini, PiTools, HitleapShow, 0
 IniRead, VagexShow, pi.ini, PiTools, VagexShow, 0
 Check_Ini()
-SetTimer, Main_Timmer, 312345
 SetTimer, FirefoxRestartTimmer, 3600000
+SetTimer, General_Task, 15123
+SetTimer, Main_Timmer, 312345
 ;======================================================================
-Menu, Tray, Add,Make Money Online, ShowTool
-Menu, Tray, Add,Exit, ExitTool
+Menu, Tray, Add, %Tray_Menu_2%, ShowTool
+Menu, Tray, Add, %Tray_Menu_1% , ExitTool
 Menu, Tray, Click, 1
-Menu, Tray, Default,Make Money Online
+Menu, Tray, Default, %Tray_Menu_Default%
 Menu, Tray, Icon, %Favi%
 Menu, Tray, NoStandard
-Menu, Tray, Tip , Make Money Online Manager Tools
+Menu, Tray, Tip , %Tray_Tip%
 Gui -MinimizeBox -MaximizeBox +AlwaysOnTop
 Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x75 y265 w80 h20, &Hide
 Gui Add, Tab3, x5 y5 w225 h260, General|Vagex|Hitleap|HoneyGain|FluidStack|About
 ;======================================================================
 Gui Tab, FluidStack
 Gui Add, Button, hWndhFluidstackInstall vFluidstackInstall gFluidstackInstall x160 y80 w60 h20, &Install
-Gui Add, Button, hWndhFluidstackStartStop vFluidstackStartStop gFluidstackStartStop x160 y130 w60 h20, &Start
 Gui Add, Button, hWndhFluidstackReg vFluidstackReg gFluidstackReg x160 y50 w60 h20, &Register
-Gui Add, Text, x15 y110 w130 h20, Fluidstack Service status
+Gui Add, Button, hWndhFluidstackStartStop vFluidstackStartStop gFluidstackStartStop x160 y130 w60 h20, &Start
 Gui Add, CheckBox, hWndhFluidstackKeepRunning vFluidstackKeepRunning gFluidstackKeepRunning x15 y130 w145 h20, Keep Service running
+Gui Add, Text, x15 y110 w130 h20, Fluidstack Service status
 Gui Add, Text, x15 y80 w125 h20 +0x200, Fluidstack Installed:
 Gui Font, Bold cRed
 Gui Add, Text, vTxtFluidstackInstalled x130 y80 w25 h20 +0x200, No
@@ -108,7 +108,6 @@ Return
 #Include vagex.ahk
 Main_Timmer:
 	SetTimer, Main_Timmer, Off
-	General_Task()
 	Main_Fluidstack()
 	Main_Honeygain()
 	Main_Hitleap()
@@ -124,16 +123,15 @@ GuiEscape:
 Return
 FirefoxKeepRunning:
 FirefoxRestart:
-TrayShowHide:
 FirefoxRestartPeriod:
 FluidstackKeepRunning:
 HitleapHided:
 HitleapKeepRunning:
-HitleapMinimized:
 HoneygainHideTray:
 HoneygainKeepRunning:
 StartMinimized:
 StartWithWindows:
+TrayShowHide:
 VagexAutoClickWatchButton:
 VagexKeepRunning:
 	GuiControlGet, GuiName ,Name, %A_GuiControl%
@@ -191,16 +189,5 @@ Return
 			WinShow, Mozilla Firefox
 		Else
 			WinHide, Mozilla Firefox
-	}
-Return
-^4::
-	Process, Exist , simplewrapper.exe
-	if ErrorLevel
-	{
-		HitleapShow:=!HitleapShow
-		If HitleapShow
-			WinShow, HitLeap Viewer
-		Else
-			WinHide, HitLeap Viewer
 	}
 Return

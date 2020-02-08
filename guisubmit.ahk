@@ -21,8 +21,10 @@ Gui_Submit() {
 		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
 		FileDelete, %LinkFile%
 	}
-	If FirefoxRestart
+	If FirefoxRestart & FirefoxKeepRunning
+	{
 		SetTimer, FirefoxRestartTimmer, % FirefoxRestartPeriod*1000
+	}
 	Else
 		SetTimer, FirefoxRestartTimmer, Off
 	Return

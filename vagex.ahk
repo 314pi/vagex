@@ -48,10 +48,16 @@ Main_Vagex() {
 	WatchButtonx = WindowsForms10.BUTTON.app.0.34f5582_r9_ad12
 	PauseButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad14
 	AccButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad16
-	IniRead, VagexAutoClickWatchButton, pi.ini, PiTools, VagexAutoClickWatchButton, 1
-	IniRead, VagexKeepRunning, pi.ini, PiTools, VagexKeepRunning, 1
-	IniRead, VagexShow, pi.ini, PiTools, VagexShow, 0
-	IniRead, VagexSleepAfterRun, pi.ini, PiTools, VagexSleepAfterRun, 120123
+	Loop, Read, pi.ini
+	{
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+			GuiControlGet, %magic1% ,, %magic1%
+			IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
+		}
+	}
 	If VagexKeepRunning
 	{
 		Process, Exist , vagex.exe
@@ -92,39 +98,50 @@ Main_Vagex() {
 	Return
 }
 Main_Firefox() {
-	IniRead, FirefoxKeepRunning, pi.ini, PiTools, FirefoxKeepRunning, 1
-	IniRead, FirefoxRestart, pi.ini, PiTools, FirefoxRestart, 1
-	IniRead, FirefoxRestartPeriod, pi.ini, PiTools, FirefoxRestartPeriod, 3600
-	IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow, 1
-	IniRead, FirefoxSleepAfterRun, pi.ini, PiTools, FirefoxSleepAfterRun, 120123
+	FirefoxShow = 1
+	Loop, Read, pi.ini
+	{
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+			GuiControlGet, %magic1% ,, %magic1%
+			IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
+		}
+	}
 	If FirefoxKeepRunning
 	{
 		Process, Exist , firefox.exe
 		If !ErrorLevel
-		{
 			RunWait, "firefox.exe"
-			Sleep, %FirefoxSleepAfterRun%
-			If !FirefoxShow
-				WinHide, Mozilla Firefox
-		}
 	}
+	WinMove, Mozilla Firefox, , 0, 0 , A_ScreenWidth/2, A_ScreenHeight/2
+	If !FirefoxShow
+		WinHide, Mozilla Firefox
+	Sleep, %FirefoxSleepAfterRun%
 	Return
 }
 FirefoxRestartTimmer:
-	IniRead, FirefoxRestart, pi.ini, PiTools, FirefoxRestart, 0
-	IniRead, FirefoxSleepAfterRun, pi.ini, PiTools, FirefoxSleepAfterRun, 120123
-	If FirefoxRestart
+	Loop, Read, pi.ini
+	{
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+			GuiControlGet, %magic1% ,, %magic1%
+			IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
+		}
+	}
+	If FirefoxRestart & FirefoxKeepRunning
 	{
 		Process, Exist , firefox.exe
 		If ErrorLevel
 		{
-			WinClose, Mozilla Firefox
+			GroupAdd MyGroup, ahk_class MozillaWindowClass
+			WinClose ahk_group MyGroup
 			Sleep, %FirefoxSleepAfterRun%
 		}
-		RunWait, "firefox.exe"
-		Sleep, %FirefoxSleepAfterRun%
-		If !FirefoxShow
-			WinHide, Mozilla Firefox
+		Main_Firefox()
 	}
 Return
 VagexReg() {
