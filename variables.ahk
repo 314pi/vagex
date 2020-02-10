@@ -1,6 +1,7 @@
 FileDelete, *.lnk
 FileDelete, *.application
 ;========================
+Cfg_File			:=A_ScriptDir . "\pi.ini"
 Favi 				:="mmo.ico"
 ToolName 			:="MMO Manager"
 ToolSize 			:="W230 H290"

@@ -1,5 +1,6 @@
 Gui_Update() {
-	Loop, Read, pi.ini
+	Global Cfg_File
+	Loop, Read, %Cfg_File%
 	{
 		IfInString, A_LoopReadLine, =
 		{
@@ -7,15 +8,6 @@ Gui_Update() {
 			%magic1% := magic2
 			GuiControl,, %magic1% , %magic2%
 		}
-	}
-	If TrayShowHide
-	{
-		Menu, Tray, Icon
-		GuiControl,, TrayShowHide, 1
-	}
-	Else {
-		Menu, Tray, NoIcon
-		GuiControl,, TrayShowHide, 0
 	}
 	If Check_Program_Installed("Vagex Viewer")
 	{
@@ -27,16 +19,17 @@ Gui_Update() {
 		Else
 			GuiControl,Disable, VagexAutoClickWatchButton
 	}
-	Else {
-		GuiControl,, VagexKeepRunning,0
-		GuiControl,, VagexAutoClickWatchButton,0
-		GuiControl,Disable, VagexKeepRunning
+	Else
+	{
+		GuiControl,, TxtVagexInstalled , No
 		GuiControl,Disable, VagexAutoClickWatchButton
+		GuiControl,Disable, VagexKeepRunning
+		GuiControl,Enable, VagexInstall
 	}
 	If Check_Program_Installed("Mozilla Firefox")
 	{
-		GuiControl,, TxtFirefoxInstalled , Yes
 		GuiControl,, FirefoxAddon, &Addon
+		GuiControl,, TxtFirefoxInstalled , Yes
 		GuiControl,Enable, FirefoxKeepRunning
 		If FirefoxKeepRunning
 		{
@@ -46,14 +39,12 @@ Gui_Update() {
 			Else
 				GuiControl,Disable, FirefoxRestartPeriod
 		} Else {
-			GuiControl,, FirefoxRestart,0
 			GuiControl,Disable, FirefoxRestart
 			GuiControl,Disable, FirefoxRestartPeriod
 		}
 	}
-	Else {
-		GuiControl,, FirefoxKeepRunning,0
-		GuiControl,, FirefoxRestart,0
+	Else
+	{
 		GuiControl,, FirefoxAddon, &Install
 		GuiControl,Disable, FirefoxKeepRunning
 		GuiControl,Disable, FirefoxRestart
@@ -64,40 +55,28 @@ Gui_Update() {
 		GuiControl,, TxtHitleapInstalled , Yes
 		GuiControl,Disable, HitleapInstall
 		GuiControl,Enable, HitleapKeepRunning
-		Process, Exist , simplewrapper.exe
-		If ErrorLevel
-			GuiControl,Enabled, HitleapHided
-		Else {
-			GuiControl,Disable, HitleapHided
-		}
+		GuiControl,Enabled, HitleapHided
 	}
-	Else {
-		GuiControl,, HitleapKeepRunning,0
+	Else
+	{
+		GuiControl,, TxtHitleapInstalled , No
 		GuiControl,Disable, HitleapHided
 		GuiControl,Disable, HitleapKeepRunning
+		GuiControl,Enable, HitleapInstall
 	}
 	If Check_Program_Installed("Honeygain")
 	{
 		GuiControl,, TxtHoneygainInstalled , Yes
 		GuiControl,Disable, HoneygainInstall
+		GuiControl,Enable, HoneygainHideTray
 		GuiControl,Enable, HoneygainKeepRunning
-		Process, Exist , Honeygain.exe
-		If !ErrorLevel
-		{
-			GuiControl,Disable, HoneygainHideTray
-		}
-		Else {
-			GuiControl,Enable, HoneygainHideTray
-			HoneygainTray := TrayIcon_GetInfo("Honeygain.exe")
-			HoneygainTrayID  := HoneygainTray[1].IDcmd
-			TrayIcon_Hide(HoneygainTrayID, , HoneygainHideTray)
-			Tray_Refresh()
-		}
 	}
-	Else {
-		GuiControl,, HoneygainKeepRunning, 0
+	Else
+	{
+		GuiControl,, TxtHoneygainInstalled , No
 		GuiControl,Disable, HoneygainHideTray
 		GuiControl,Disable, HoneygainKeepRunning
+		GuiControl,Enable, HoneygainInstall
 	}
 	FluidstackSvcStatus :=Check_Service_Running("FluidStackNode")
 	GuiControl,, FluidstackSvcStatus, %FluidstackSvcStatus%
@@ -111,11 +90,12 @@ Gui_Update() {
 		Else
 			GuiControl,Disable, FluidstackStartStop
 	}
-	Else {
-		GuiControl,, FluidstackKeepRunning,0
+	Else
+	{
+		GuiControl,, TxtFluidstackInstalled , No
 		GuiControl,Disable, FluidstackKeepRunning
 		GuiControl,Disable, FluidstackStartStop
+		GuiControl,Enable, FluidstackInstall
 	}
-	Gui_Submit()
 	Return
 }

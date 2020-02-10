@@ -1,3 +1,114 @@
+Main_Vagex() {
+	VagexShow = 0
+	Global Cfg_File
+	Loop, Read, %Cfg_File%
+	{
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+		}
+	}
+	If VagexKeepRunning
+	{
+		Process, Exist , vagex.exe
+		If !ErrorLevel
+		{
+			IfNotExist Vagex.application
+			{
+				VagexDownloadUrl :="https://vagex.com/Vagex4/Vagex.application"
+				UrlDownloadToFile, %VagexDownloadUrl%, Vagex.application
+			}
+			RunWait, Vagex.application
+			Sleep, %VagexSleepAfterRun%
+		}
+		Else
+		{
+			If VagexAutoClickWatchButton
+			{
+				WinShow, Vagex Viewer
+				Sleep, 1123
+				ControlGet, PauseBtnVis, Visible,, %VagexPauseBtn% , Vagex Viewer
+				If PauseBtnVis
+				{
+					WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+					If !VagexShow
+						WinMinimize, Vagex Viewer
+					Return
+				}
+				ControlGet, WatchBtnVis, Visible,, %VagexWatchBtn% , Vagex Viewer
+				If WatchBtnVis
+				{
+					ControlClick, %VagexWatchBtn% , Vagex Viewer
+					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
+					WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+					If !VagexShow
+						WinMinimize, Vagex Viewer
+					Return
+				}
+				ControlGet, WatchXBtnVis, Visible,, %VagexWatchXBtn% , Vagex Viewer
+				If WatchXBtnVis
+				{
+					WinClose, Vagex Viewer
+					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Close Vagex.`n, %A_MM%%A_YYYY%.log
+				}
+			}
+		}
+	}
+	Return
+}
+Main_Firefox() {
+	FirefoxShow = 1
+	Global Cfg_File
+	Loop, Read, %Cfg_File%
+	{
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+		}
+	}
+	If FirefoxKeepRunning
+	{
+		Process, Exist , firefox.exe
+		If !ErrorLevel
+		{
+			RunWait, "firefox.exe"
+			Sleep, %FirefoxSleepAfterRun%
+		}
+	}
+	WinMove, Mozilla Firefox, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+	If !FirefoxShow
+		WinHide, Mozilla Firefox
+	Return
+}
+FirefoxRestartTimmer:
+	Global Cfg_File
+	Loop, Read, %Cfg_File%
+	{
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+		}
+	}
+	If FirefoxRestart & FirefoxKeepRunning
+	{
+		Process, Exist , firefox.exe
+		If ErrorLevel
+		{
+			GroupAdd MyGroup, ahk_class MozillaWindowClass
+			WinClose ahk_group MyGroup
+			Sleep, %FirefoxSleepAfterRun%
+		}
+		Main_Firefox()
+	}
+Return
+VagexReg() {
+	VagexRegUrl :="http://vagex.com/`?ref=458167"
+	Run %VagexRegUrl%
+	Return
+}
 VagexInstall() {
 	VagexDownloadUrl :="https://vagex.com/Vagex4/Vagex.application"
 	save = Vagex.application
@@ -44,107 +155,5 @@ FirefoxAddon() {
 		RunWait, firefox.exe %FirefoxAddonUrl%
 	}
 	Gui_Update()
-	Return
-}
-Main_Vagex() {
-	AccButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad16
-	PauseButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad14
-	VagexShow = 0
-	WatchButton = WindowsForms10.BUTTON.app.0.34f5582_r10_ad15
-	WatchButtonx = WindowsForms10.BUTTON.app.0.34f5582_r9_ad12
-	Loop, Read, pi.ini
-	{
-		IfInString, A_LoopReadLine, =
-		{
-			StringSplit, magic, A_LoopReadLine, =
-			%magic1% := magic2
-		}
-	}
-	If VagexKeepRunning
-	{
-		Process, Exist , vagex.exe
-		If !ErrorLevel
-		{
-			IfNotExist Vagex.application
-			{
-				VagexDownloadUrl :="https://vagex.com/Vagex4/Vagex.application"
-				UrlDownloadToFile, %VagexDownloadUrl%, Vagex.application
-			}
-			RunWait, Vagex.application
-			Sleep, %VagexSleepAfterRun%
-		}
-		Else
-		{
-			If VagexAutoClickWatchButton
-			{
-				WinShow, Vagex Viewer
-				Sleep, 1123
-				WinRestore, Vagex Viewer
-				Sleep, 3123
-				ControlGet, OutputVar, Visible,, %WatchButtonx% , Vagex Viewer
-				If OutputVar
-				{
-					WinClose, Vagex Viewer
-					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Close Vagex.`n, %A_MM%%A_YYYY%.log
-				}
-				ControlGet, OutputVar, Visible,, %WatchButton% , Vagex Viewer
-				If OutputVar
-				{
-					ControlClick, %WatchButton% , Vagex Viewer
-					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
-				}
-			}
-		}
-		If !VagexShow
-			WinMinimize, Vagex Viewer
-	}
-	Return
-}
-Main_Firefox() {
-	FirefoxShow = 1
-	Loop, Read, pi.ini
-	{
-		IfInString, A_LoopReadLine, =
-		{
-			StringSplit, magic, A_LoopReadLine, =
-			%magic1% := magic2
-		}
-	}
-	If FirefoxKeepRunning
-	{
-		Process, Exist , firefox.exe
-		If !ErrorLevel
-			RunWait, "firefox.exe"
-	}
-	WinMove, Mozilla Firefox, , 0, 0 , A_ScreenWidth/2, A_ScreenHeight/2
-	If !FirefoxShow
-		WinHide, Mozilla Firefox
-	Sleep, %FirefoxSleepAfterRun%
-	Return
-}
-FirefoxRestartTimmer:
-	Loop, Read, pi.ini
-	{
-		IfInString, A_LoopReadLine, =
-		{
-			StringSplit, magic, A_LoopReadLine, =
-			%magic1% := magic2
-		}
-	}
-	If FirefoxRestart & FirefoxKeepRunning
-	{
-		Process, Exist , firefox.exe
-		If ErrorLevel
-		{
-			GroupAdd MyGroup, ahk_class MozillaWindowClass
-			WinClose ahk_group MyGroup
-			Sleep, %FirefoxSleepAfterRun%
-		}
-		Main_Firefox()
-	}
-Return
-VagexReg() {
-	VagexRegUrl :="http://vagex.com/`?ref=458167"
-	Run %VagexRegUrl%
 	Return
 }

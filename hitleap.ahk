@@ -1,20 +1,13 @@
-HitleapInstall() {
-	HitleapDownloadUrl :="https://hitleap.com/viewer/download`?platform=Windows"
-	save = HitleapViewer.exe
-	FileDelete, %save%
-	message = 0x1100
-	Progress, M H80, , .
-	OnMessage(message, "SetCounter")
-	DownloadProgress(HitleapDownloadUrl, save, message, 50)
-	Progress, Off
-	RunWait, %save%
-	Gui_Update()
-	Return
-}
 Main_Hitleap() {
-	IniRead, HitleapHided, pi.ini, PiTools, HitleapHided, 1
-	IniRead, HitleapKeepRunning, pi.ini, PiTools, HitleapKeepRunning, 1
-	IniRead, HitleapSleepAfterRun, pi.ini, PiTools, HitleapSleepAfterRun, 120123
+	Global Cfg_File
+	Loop, Read, %Cfg_File%
+	{
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+		}
+	}
 	If HitleapKeepRunning
 	{
 		Process, Exist , simplewrapper.exe
@@ -36,7 +29,8 @@ Main_Hitleap() {
 		WinMinimize, HitLeap Viewer
 		WinHide, HitLeap Viewer
 	}
-	Else {
+	Else
+	{
 		WinShow, HitLeap Viewer
 		WinRestore, HitLeap Viewer
 	}
@@ -45,5 +39,18 @@ Main_Hitleap() {
 HitleapReg() {
 	HitleapRegUrl :="https://hitleap.com/by/kmc44210"
 	Run %HitleapRegUrl%
+	Return
+}
+HitleapInstall() {
+	HitleapDownloadUrl :="https://hitleap.com/viewer/download`?platform=Windows"
+	save = HitleapViewer.exe
+	FileDelete, %save%
+	message = 0x1100
+	Progress, M H80, , .
+	OnMessage(message, "SetCounter")
+	DownloadProgress(HitleapDownloadUrl, save, message, 50)
+	Progress, Off
+	RunWait, %save%
+	Gui_Update()
 	Return
 }

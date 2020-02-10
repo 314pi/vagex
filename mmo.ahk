@@ -9,9 +9,9 @@ SetTitleMatchMode, 2
 SetWorkingDir %A_ScriptDir%	 ; Ensures a consistent starting directory.
 ;======================================================================
 #Include variables.ahk
-IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow, 1
-IniRead, VagexShow, pi.ini, PiTools, VagexShow, 0
-Check_Ini()
+Startup()
+IniRead, FirefoxShow, %Cfg_File%, PiTools, FirefoxShow, 1
+IniRead, VagexShow, %Cfg_File%, PiTools, VagexShow, 0
 SetTimer, FirefoxRestartTimmer, 3600000
 SetTimer, General_Task, 15123
 SetTimer, Main_Timmer, 312345
@@ -88,7 +88,7 @@ Gui Add, Text, hWndhTxtHitleapInstalled vTxtHitleapInstalled x130 y80 w25 h20 +0
 Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 ;======================================================================
-IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
+IniRead, StartMinimized, %Cfg_File%, PiTools, StartMinimized
 If !StartMinimized
 {
 	Gui_Update()
@@ -120,25 +120,6 @@ GuiClose:
 GuiEscape:
 	Gui, Submit
 	Gui_Submit()
-Return
-FirefoxKeepRunning:
-FirefoxRestart:
-FirefoxRestartPeriod:
-FluidstackKeepRunning:
-HitleapHided:
-HitleapKeepRunning:
-HoneygainHideTray:
-HoneygainKeepRunning:
-StartMinimized:
-StartWithWindows:
-TrayShowHide:
-VagexAutoClickWatchButton:
-VagexKeepRunning:
-	GuiControlGet, GuiName ,Name, %A_GuiControl%
-	GuiControlGet, GuiValue ,, %A_GuiControl%
-	IniWrite, %GuiValue%, pi.ini, PiTools, %GuiName%
-	Gui_Submit()
-	Gui_Update()
 Return
 ExitTool:
 ^`::
@@ -173,8 +154,8 @@ Return
 		If VagexShow
 		{
 			WinShow, Vagex Viewer
-			Sleep, 1123
-			WinRestore, Vagex Viewer
+			Sleep, 5123
+			WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
 		}
 		Else
 			WinMinimize, Vagex Viewer
@@ -186,7 +167,10 @@ Return
 	{
 		FirefoxShow:=!FirefoxShow
 		If FirefoxShow
+		{
 			WinShow, Mozilla Firefox
+			WinMove, Mozilla Firefox, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+		}
 		Else
 			WinHide, Mozilla Firefox
 	}

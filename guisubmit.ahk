@@ -1,5 +1,25 @@
+FirefoxKeepRunning:
+FirefoxRestart:
+FirefoxRestartPeriod:
+FluidstackKeepRunning:
+HitleapHided:
+HitleapKeepRunning:
+HoneygainHideTray:
+HoneygainKeepRunning:
+StartMinimized:
+StartWithWindows:
+TrayShowHide:
+VagexAutoClickWatchButton:
+VagexKeepRunning:
+	GuiControlGet, GuiName ,Name, %A_GuiControl%
+	GuiControlGet, GuiValue ,, %A_GuiControl%
+	IniWrite, %GuiValue%, %Cfg_File%, PiTools, %GuiName%
+	Gui_Update()
+Return
+
 Gui_Submit() {
-	Loop, Read, pi.ini
+	Global Cfg_File
+	Loop, Read, %Cfg_File%
 	{
 		IfInString, A_LoopReadLine, =
 		{
@@ -7,21 +27,8 @@ Gui_Submit() {
 			%magic1% := magic2
 			GuiControlGet, %magic1% ,, %magic1%
 			If !ErrorLevel
-				IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
+				IniWrite, % %magic1%, %Cfg_File%, PiTools, %magic1%
 		}
-	}
-	If StartWithWindows
-	{
-		SplitPath, A_ScriptFullPath, , OutDir, , OutNameNoExt
-		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
-		IfNotExist, %LinkFile%
-			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile%, %OutDir% ; Admin right ?
-	}
-	Else
-	{
-		SplitPath, A_Scriptname, , , , OutNameNoExt
-		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
-		FileDelete, %LinkFile%
 	}
 	If FirefoxRestart & FirefoxKeepRunning
 		SetTimer, FirefoxRestartTimmer, % FirefoxRestartPeriod*1000
