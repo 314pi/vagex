@@ -1,6 +1,5 @@
 Main_Hitleap() {
-	Global Cfg_File
-	Loop, Read, %Cfg_File%
+	Loop, Read, pi.ini
 	{
 		IfInString, A_LoopReadLine, =
 		{

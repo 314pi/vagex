@@ -1,6 +1,5 @@
 Main_Fluidstack() {
-	Global Cfg_File
-	IniRead, FluidstackKeepRunning, %Cfg_File%, PiTools, FluidstackKeepRunning, 1
+	IniRead, FluidstackKeepRunning, pi.ini, PiTools, FluidstackKeepRunning, 1
 	If FluidstackKeepRunning
 	{
 		FluidstackSvcStatus :=Check_Service_Running("FluidStackNode")
@@ -15,7 +14,7 @@ FluidstackReg() {
 	Return
 }
 FluidstackInstall() {
-	MsgBox , % 4096+64 , Fluidstack Notes, Copy your token before running Fluidstack Setup, 10
+	MsgBox , , Fluidstack Notes, Copy your token before running Fluidstack Setup, 10
 	FluidstackDownloadURl :="https://provider.api.fluidstack.io/download"
 	FluidstackMsg :="Copy your token from: https://provider.fluidstack.io/dashboard/download/get-started to use in Setup"
 	save = FluidstackSetup.exe

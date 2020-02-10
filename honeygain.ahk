@@ -1,13 +1,6 @@
 Main_Honeygain() {
-	Global Cfg_File
-	Loop, Read, %Cfg_File%
-	{
-		IfInString, A_LoopReadLine, =
-		{
-			StringSplit, magic, A_LoopReadLine, =
-			%magic1% := magic2
-		}
-	}
+	IniRead, HoneygainKeepRunning, pi.ini, PiTools, HoneygainKeepRunning, 1
+	IniRead, HoneygainSleepAfterRun, pi.ini, PiTools, HoneygainSleepAfterRun, 120123
 	If HoneygainKeepRunning
 	{
 		Process, Exist , Honeygain.exe

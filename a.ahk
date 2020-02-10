@@ -1,1 +1,1 @@
-WinMove, Mozilla Firefox, , 0, 0 , A_ScreenWidth/2, A_ScreenHeight/2
+WinSet, Transparent , 0, ahk_exe firefox.exe

@@ -1,71 +1,33 @@
-Startup() {
-	Check_Ini()
-	Global Cfg_File
-	Loop, Read, %Cfg_File%
-	{
-		IfInString, A_LoopReadLine, =
-		{
-			StringSplit, magic, A_LoopReadLine, =
-			%magic1% := magic2
-			GuiControl,, %magic1% , %magic2%
-		}
-	}
-	If StartWithWindows
-	{
-		SplitPath, A_ScriptFullPath, , OutDir, , OutNameNoExt
-		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
-		IfNotExist, %LinkFile%
-			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile%, %OutDir% ; Admin right ?
-	}
-	Else
-	{
-		SplitPath, A_Scriptname, , , , OutNameNoExt
-		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
-		FileDelete, %LinkFile%
-	}
-	If TrayShowHide
-	{
-		Menu, Tray, Icon
-		GuiControl,, TrayShowHide, 1
-	}
-	Else
-	{
-		Menu, Tray, NoIcon
-		GuiControl,, TrayShowHide, 0
-	}
-	Return
-}
 Check_Ini() {
-	Global Cfg_File
 	vDefault_ini=
 	( LTrim
 	;pi tools
 	[PiTools]
 	FirefoxKeepRunning=0
-	FirefoxRestart=0
+	FirefoxRestart=1
 	FirefoxRestartPeriod=3600
 	FirefoxSleepAfterRun=120123
 	FluidstackKeepRunning=0
-	HitleapHided=0
+	HitleapHided=1
 	HitleapKeepRunning=0
 	HitleapSleepAfterRun=120123
-	HoneygainHideTray=0
+	HoneygainHideTray=1
 	HoneygainKeepRunning=0
 	HoneygainSleepAfterRun=120123
 	StartMinimized=0
 	StartWithWindows=0
 	TrayShowHide=1
-	VagexAutoClickWatchButton=0
+	VagexAutoClickWatchButton=1
 	VagexKeepRunning=0
 	VagexSleepAfterRun=120123
-	; Vagex Button ClassNN update @ 08/02/2020
+	; Vagex Button ClassNN
 	VagexPauseBtn=WindowsForms10.BUTTON.app.0.34f5582_r9_ad14
 	VagexWatchBtn=WindowsForms10.BUTTON.app.0.34f5582_r9_ad15
 	VagexWatchXBtn=WindowsForms10.BUTTON.app.0.34f5582_r9_ad12xx
 	VagexAccBtn=WindowsForms10.BUTTON.app.0.34f5582_r9_ad16
 	)
-	IfNotExist, %Cfg_File%
-		FileAppend ,% vDefault_ini, %Cfg_File%, UTF-8
+	IfNotExist, pi.ini
+		FileAppend ,% vDefault_ini, pi.ini, UTF-8
 	Return
 }
 General_Task() {
@@ -78,6 +40,9 @@ General_Task() {
 	WinActivate, Script Error
 	WinClose Alert
 	WinClose Vagex.exe - EXCEPTION
+	WinSet, Transparent , 10, ahk_exe firefox.exe
+	WinMove, Mozilla Firefox, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+	WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
 	Return
 }
 Check_Program_Installed(Program) {

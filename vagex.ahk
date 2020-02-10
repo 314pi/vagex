@@ -1,7 +1,6 @@
 Main_Vagex() {
 	VagexShow = 0
-	Global Cfg_File
-	Loop, Read, %Cfg_File%
+	Loop, Read, pi.ini
 	{
 		IfInString, A_LoopReadLine, =
 		{
@@ -31,26 +30,21 @@ Main_Vagex() {
 				ControlGet, PauseBtnVis, Visible,, %VagexPauseBtn% , Vagex Viewer
 				If PauseBtnVis
 				{
-					WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
 					If !VagexShow
 						WinMinimize, Vagex Viewer
 					Return
 				}
 				ControlGet, WatchBtnVis, Visible,, %VagexWatchBtn% , Vagex Viewer
-				If WatchBtnVis
+				ControlGet, WatchXBtnVis, Visible,, %VagexWatchXBtn% , Vagex Viewer
+				If ( WatchBtnVis or WatchXBtnVis )
 				{
 					ControlClick, %VagexWatchBtn% , Vagex Viewer
+					Sleep, 1123
+					ControlClick, %WatchXBtnVis% , Vagex Viewer
 					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
-					WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
 					If !VagexShow
 						WinMinimize, Vagex Viewer
 					Return
-				}
-				ControlGet, WatchXBtnVis, Visible,, %VagexWatchXBtn% , Vagex Viewer
-				If WatchXBtnVis
-				{
-					WinClose, Vagex Viewer
-					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Close Vagex.`n, %A_MM%%A_YYYY%.log
 				}
 			}
 		}
@@ -59,8 +53,7 @@ Main_Vagex() {
 }
 Main_Firefox() {
 	FirefoxShow = 1
-	Global Cfg_File
-	Loop, Read, %Cfg_File%
+	Loop, Read, pi.ini
 	{
 		IfInString, A_LoopReadLine, =
 		{
@@ -77,14 +70,12 @@ Main_Firefox() {
 			Sleep, %FirefoxSleepAfterRun%
 		}
 	}
-	WinMove, Mozilla Firefox, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
 	If !FirefoxShow
 		WinHide, Mozilla Firefox
 	Return
 }
 FirefoxRestartTimmer:
-	Global Cfg_File
-	Loop, Read, %Cfg_File%
+	Loop, Read, pi.ini
 	{
 		IfInString, A_LoopReadLine, =
 		{
