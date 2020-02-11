@@ -122,13 +122,33 @@ GuiEscape:
 	GuiSubmit()
 Return
 StartMinimized:
-StartWithWindows:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+Return
 TrayShowHide:
-	GuiControlGet, GuiName ,Name, %A_GuiControl%
-	GuiControlGet, GuiValue ,, %A_GuiControl%
-	IniWrite, %GuiValue%, %Ini_File%, %Ini_Section%, %GuiName%
-	GuiSubmit()
-	GuiUpdate()
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	If OutVal
+		Menu, Tray, Icon
+	Else
+		Menu, Tray, NoIcon
+Return
+StartWithWindows:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	If OutVal
+	{
+		SplitPath, A_ScriptFullPath, , OutDir, , OutNameNoExt
+		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
+		IfNotExist, %LinkFile%
+			FileCreateShortcut, %A_ScriptFullPath%, %LinkFile%, %OutDir% ; Admin right ?
+	}
+	Else
+	{
+		SplitPath, A_Scriptname, , , , OutNameNoExt
+		LinkFile=%A_Startup%\%OutNameNoExt%.lnk
+		FileDelete, %LinkFile%
+	}
 Return
 ExitTool:
 ^`::
