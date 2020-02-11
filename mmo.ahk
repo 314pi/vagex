@@ -12,11 +12,7 @@ If Not A_IsAdmin
 ;======================================================================
 #Include variables.ahk
 Startup()
-IniRead, FirefoxRestartPeriod, %Ini_File%, %Ini_Section%, FirefoxRestartPeriod, 3600
-IniRead, FirefoxShow, %Ini_File%, %Ini_Section%, FirefoxShow, 1
 IniRead, MainTimmer, %Ini_File%, %Ini_Section%, MainTimmer, 300
-IniRead, VagexShow, %Ini_File%, %Ini_Section%, VagexShow, 0
-SetTimer, FirefoxRestartTimmer, % FirefoxRestartPeriod*1000
 SetTimer, GeneralTask, 15123
 SetTimer, RunMainTimmer, % MainTimmer*1000
 ;======================================================================
@@ -125,7 +121,6 @@ GuiEscape:
 	Gui, Submit
 	GuiSubmit()
 Return
-FluidstackKeepRunning:
 StartMinimized:
 StartWithWindows:
 TrayShowHide:

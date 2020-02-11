@@ -43,25 +43,16 @@ GuiUpdate() {
 	}
 	If CheckProgramInstalled("Mozilla Firefox")
 	{
-		GuiControl,, TxtFirefoxInstalled , Yes
 		GuiControl,, FirefoxAddon, &Addon
+		GuiControl,, TxtFirefoxInstalled , Yes
 		GuiControl,Enable, FirefoxKeepRunning
-		If FirefoxKeepRunning
-		{
-			GuiControl,Enable, FirefoxRestart
-			If FirefoxRestart
-				GuiControl,Enable, FirefoxRestartPeriod
-			Else
-				GuiControl,Disable, FirefoxRestartPeriod
-		} Else
-		{
-			GuiControl,Disable, FirefoxRestart
-			GuiControl,Disable, FirefoxRestartPeriod
-		}
+		GuiControl,Enable, FirefoxRestart
+		GuiControl,Enable, FirefoxRestartPeriod
 	}
 	Else
 	{
 		GuiControl,, FirefoxAddon, &Install
+		GuiControl,, TxtFirefoxInstalled , No
 		GuiControl,Disable, FirefoxKeepRunning
 		GuiControl,Disable, FirefoxRestart
 		GuiControl,Disable, FirefoxRestartPeriod
@@ -107,8 +98,10 @@ GuiUpdate() {
 	}
 	Else
 	{
+		GuiControl,, TxtFluidstackInstalled , No
 		GuiControl,Disable, FluidstackKeepRunning
 		GuiControl,Disable, FluidstackStartStop
+		GuiControl,Enable, FluidstackInstall
 	}
 	GuiSubmit()
 	Return

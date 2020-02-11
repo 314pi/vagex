@@ -1,3 +1,8 @@
+FluidstackKeepRunning:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	MainFluidstack()
+Return
 MainFluidstack() {
 	Global Ini_File, Ini_Section
 	IniRead, FluidstackKeepRunning, %Ini_File%, %Ini_Section%, FluidstackKeepRunning, 1

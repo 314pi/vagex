@@ -1,14 +1,31 @@
+IniRead, FirefoxRestartPeriod, %Ini_File%, %Ini_Section%, FirefoxRestartPeriod, 3600
+IniRead, FirefoxShow, %Ini_File%, %Ini_Section%, FirefoxShow, 1
+IniRead, VagexShow, %Ini_File%, %Ini_Section%, VagexShow, 0
+SetTimer, FirefoxRestartTimmer, % FirefoxRestartPeriod*1000
 FirefoxKeepRunning:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	MainFirefox()
+Return
 FirefoxRestart:
+	IniRead, FirefoxKeepRunning, %Ini_File%, %Ini_Section%, FirefoxKeepRunning, 0
+	IniRead, FirefoxRestart, %Ini_File%, %Ini_Section%, FirefoxRestart, 0
+	IniRead, FirefoxRestartPeriod, %Ini_File%, %Ini_Section%, FirefoxRestartPeriod, 3600
+	If FirefoxRestart & FirefoxKeepRunning
+		SetTimer, FirefoxRestartTimmer, % FirefoxRestartPeriod*1000
+	Else
+		SetTimer, FirefoxRestartTimmer, Off
+Return
 FirefoxRestartPeriod:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+Return
 VagexAutoClickWatchButton:
 VagexClickButtons:
 VagexKeepRunning:
-	GuiControlGet, GuiName ,Name, %A_GuiControl%
-	GuiControlGet, GuiValue ,, %A_GuiControl%
-	IniWrite, %GuiValue%, %Ini_File%, %Ini_Section%, %GuiName%
-	GuiSubmit()
-	GuiUpdate()
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	MainVagex()
 Return
 ^2::
 	Process, Exist , vagex.exe
@@ -34,6 +51,7 @@ Return
 		{
 			WinShow, Mozilla Firefox
 			WinMove, Mozilla Firefox, , A_ScreenWidth/2 + 50 , A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+			WinSet, TransColor, Off, Mozilla Firefox
 		}
 		Else
 			WinHide, Mozilla Firefox
@@ -94,6 +112,7 @@ MainVagex() {
 	Return
 }
 MainFirefox() {
+	Global Ini_File, Ini_Section
 	FirefoxShow = 1
 	Loop, Read, %Ini_File%
 	{
@@ -109,8 +128,10 @@ MainFirefox() {
 		If !ErrorLevel
 		{
 			RunWait, "firefox.exe"
-			Sleep, %FirefoxSleepAfterRun%
+			Sleep, % FirefoxSleepAfterRun * 1000
 		}
+		WinMove, Mozilla Firefox, , A_ScreenWidth/2 + 50 , A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+		WinSet, Transparent , 2, Mozilla Firefox
 	}
 	If !FirefoxShow
 		WinHide, Mozilla Firefox
