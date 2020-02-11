@@ -71,13 +71,11 @@ GuiUpdate() {
 		GuiControl,, TxtHitleapInstalled , Yes
 		GuiControl,Disable, HitleapInstall
 		GuiControl,Enable, HitleapKeepRunning
-		Process, Exist , simplewrapper.exe
-		If ErrorLevel
-			GuiControl,Enabled, HitleapHided
-		Else
-			GuiControl,Disable, HitleapHided
+		GuiControl,Enabled, HitleapHided
 	}
 	Else {
+		GuiControl,, TxtHitleapInstalled , No
+		GuiControl,Enable, HitleapInstall
 		GuiControl,Disable, HitleapHided
 		GuiControl,Disable, HitleapKeepRunning
 	}
@@ -85,22 +83,13 @@ GuiUpdate() {
 	{
 		GuiControl,, TxtHoneygainInstalled , Yes
 		GuiControl,Disable, HoneygainInstall
+		GuiControl,Enable, HoneygainHideTray
 		GuiControl,Enable, HoneygainKeepRunning
-		Process, Exist , Honeygain.exe
-		If !ErrorLevel
-		{
-			GuiControl,Disable, HoneygainHideTray
-		}
-		Else {
-			GuiControl,Enable, HoneygainHideTray
-			HoneygainTray := TrayIcon_GetInfo("Honeygain.exe")
-			HoneygainTrayID  := HoneygainTray[1].IDcmd
-			TrayIcon_Hide(HoneygainTrayID, , HoneygainHideTray)
-			Tray_Refresh()
-		}
 	}
 	Else
 	{
+		GuiControl,, TxtHoneygainInstalled , No
+		GuiControl,Enable, HoneygainInstall
 		GuiControl,Disable, HoneygainHideTray
 		GuiControl,Disable, HoneygainKeepRunning
 	}

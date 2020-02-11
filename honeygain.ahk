@@ -1,7 +1,30 @@
+HoneygainHideTray:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	Process, Exist , Honeygain.exe
+	If ErrorLevel
+	{
+		HoneygainTray := TrayIcon_GetInfo("Honeygain.exe")
+		HoneygainTrayID  := HoneygainTray[1].IDcmd
+		TrayIcon_Hide(HoneygainTrayID, , OutVal)
+		Tray_Refresh()
+	}
+Return
+HoneygainKeepRunning:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	MainHoneygain()
+Return
 MainHoneygain() {
-	Global Ini_File, Ini_Section
-	IniRead, HoneygainKeepRunning, %Ini_File%, %Ini_Section%, HoneygainKeepRunning, 1
-	IniRead, HoneygainSleepAfterRun, %Ini_File%, %Ini_Section%, HoneygainSleepAfterRun, 120123
+	Global Ini_File
+	Loop, Read, %Ini_File%
+	{
+		IfInString, A_LoopReadLine, =
+		{
+			StringSplit, magic, A_LoopReadLine, =
+			%magic1% := magic2
+		}
+	}
 	If HoneygainKeepRunning
 	{
 		Process, Exist , Honeygain.exe
@@ -12,9 +35,18 @@ MainHoneygain() {
 				FileCreateShortcut, %A_AppData%\Honeygain\Honeygain.exe, Honeygain.lnk, %A_AppData%\Honeygain\
 			}
 			Run, HoneyGain.lnk
-			Sleep, %HoneygainSleepAfterRun%
+			Sleep, % HoneygainSleepAfterRun * 1000
 		}
 	}
+	Process, Exist , Honeygain.exe
+	If ErrorLevel
+	{
+		HoneygainTray := TrayIcon_GetInfo("Honeygain.exe")
+		HoneygainTrayID  := HoneygainTray[1].IDcmd
+		TrayIcon_Hide(HoneygainTrayID, , HoneygainHideTray)
+		Tray_Refresh()
+	}
+	GuiUpdate()
 	Return
 }
 HoneygainReg() {

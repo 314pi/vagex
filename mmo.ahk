@@ -126,8 +126,6 @@ GuiEscape:
 	GuiSubmit()
 Return
 FluidstackKeepRunning:
-HoneygainHideTray:
-HoneygainKeepRunning:
 StartMinimized:
 StartWithWindows:
 TrayShowHide:

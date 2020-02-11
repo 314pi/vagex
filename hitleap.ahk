@@ -41,6 +41,7 @@ MainHitleap() {
 		WinHide, HitLeap Viewer
 	Else
 		WinShow, HitLeap Viewer
+	GuiUpdate()
 	Return
 }
 HitleapReg() {
