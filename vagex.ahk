@@ -1,6 +1,48 @@
-Main_Vagex() {
+FirefoxKeepRunning:
+FirefoxRestart:
+FirefoxRestartPeriod:
+VagexAutoClickWatchButton:
+VagexClickButtons:
+VagexKeepRunning:
+	GuiControlGet, GuiName ,Name, %A_GuiControl%
+	GuiControlGet, GuiValue ,, %A_GuiControl%
+	IniWrite, %GuiValue%, %Ini_File%, %Ini_Section%, %GuiName%
+	GuiSubmit()
+	GuiUpdate()
+Return
+^2::
+	Process, Exist , vagex.exe
+	If ErrorLevel
+	{
+		VagexShow:=!VagexShow
+		If VagexShow
+		{
+			WinShow, Vagex Viewer
+			Sleep, 1123
+			WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+		}
+		Else
+			WinMinimize, Vagex Viewer
+	}
+Return
+^3::
+	Process, Exist , firefox.exe
+	If ErrorLevel
+	{
+		FirefoxShow:=!FirefoxShow
+		If FirefoxShow
+		{
+			WinShow, Mozilla Firefox
+			WinMove, Mozilla Firefox, , A_ScreenWidth/2 + 50 , A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+		}
+		Else
+			WinHide, Mozilla Firefox
+	}
+Return
+MainVagex() {
+	Global Ini_File, Ini_Section
 	VagexShow = 0
-	Loop, Read, pi.ini
+	Loop, Read, %Ini_File%
 	{
 		IfInString, A_LoopReadLine, =
 		{
@@ -51,9 +93,9 @@ Main_Vagex() {
 	}
 	Return
 }
-Main_Firefox() {
+MainFirefox() {
 	FirefoxShow = 1
-	Loop, Read, pi.ini
+	Loop, Read, %Ini_File%
 	{
 		IfInString, A_LoopReadLine, =
 		{
@@ -75,7 +117,7 @@ Main_Firefox() {
 	Return
 }
 FirefoxRestartTimmer:
-	Loop, Read, pi.ini
+	Loop, Read, %Ini_File%
 	{
 		IfInString, A_LoopReadLine, =
 		{
@@ -92,7 +134,7 @@ FirefoxRestartTimmer:
 			WinClose ahk_group MyGroup
 			Sleep, %FirefoxSleepAfterRun%
 		}
-		Main_Firefox()
+		MainFirefox()
 	}
 Return
 VagexReg() {
@@ -116,7 +158,7 @@ VagexInstall() {
 		Clipboard:=VagexDownloadUrl
 		MsgBox Link copied, paste (Ctrl+V) into your browser to download Vagex setup file.
 	}
-	Gui_Update()
+	GuiUpdate()
 	Return
 }
 FirefoxAddon() {
@@ -145,6 +187,6 @@ FirefoxAddon() {
 		FirefoxAddonUrl :="https://addons.mozilla.org/addon/vagex2"
 		RunWait, firefox.exe %FirefoxAddonUrl%
 	}
-	Gui_Update()
+	GuiUpdate()
 	Return
 }

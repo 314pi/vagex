@@ -1,5 +1,19 @@
-Main_Hitleap() {
-	Loop, Read, pi.ini
+HitleapHided:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	If OutVal
+		WinHide, HitLeap Viewer
+	Else
+		WinShow, HitLeap Viewer
+Return
+HitleapKeepRunning:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	MainHitleap()
+Return
+MainHitleap() {
+	Global Ini_File
+	Loop, Read, %Ini_File%
 	{
 		IfInString, A_LoopReadLine, =
 		{
@@ -20,19 +34,13 @@ Main_Hitleap() {
 				FileCreateShortcut, %Hitleappath%, Hitleap.lnk, %Hitleapdir%, HitLeap-Viewer.lua Windows
 			}
 			Run, Hitleap.lnk
-			Sleep, %HitleapSleepAfterRun%
+			Sleep, % HitleapSleepAfterRun * 1000
 		}
 	}
 	If HitleapHided
-	{
-		WinMinimize, HitLeap Viewer
 		WinHide, HitLeap Viewer
-	}
 	Else
-	{
 		WinShow, HitLeap Viewer
-		WinRestore, HitLeap Viewer
-	}
 	Return
 }
 HitleapReg() {
@@ -50,6 +58,6 @@ HitleapInstall() {
 	DownloadProgress(HitleapDownloadUrl, save, message, 50)
 	Progress, Off
 	RunWait, %save%
-	Gui_Update()
+	GuiUpdate()
 	Return
 }

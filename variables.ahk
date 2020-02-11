@@ -1,10 +1,12 @@
 FileDelete, *.lnk
 FileDelete, *.application
 ;========================
-Favi 				:="mmo.ico"
-ToolName 			:="MMO Manager"
-ToolSize 			:="W230 H290"
-Tray_Menu_1 		:="Exit"
-Tray_Menu_2 		:="Make Money Online"
-Tray_Menu_Default 	:= Tray_Menu_2
-Tray_Tip 			:="Make Money Online Manager Tools"
+Favi 			:="mmo.ico"
+Ini_File		:="pi.ini"
+Ini_Section		:="PiTools"
+ToolName 		:="MMO Manager"
+ToolSize 		:="W230 H290"
+TrayMenu1 		:="Exit"
+TrayMenu2 		:="Make Money Online"
+TrayMenuDefault := TrayMenu2
+TrayTip 		:="Make Money Online Manager Tools"

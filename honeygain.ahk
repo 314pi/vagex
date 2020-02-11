@@ -1,6 +1,7 @@
-Main_Honeygain() {
-	IniRead, HoneygainKeepRunning, pi.ini, PiTools, HoneygainKeepRunning, 1
-	IniRead, HoneygainSleepAfterRun, pi.ini, PiTools, HoneygainSleepAfterRun, 120123
+MainHoneygain() {
+	Global Ini_File, Ini_Section
+	IniRead, HoneygainKeepRunning, %Ini_File%, %Ini_Section%, HoneygainKeepRunning, 1
+	IniRead, HoneygainSleepAfterRun, %Ini_File%, %Ini_Section%, HoneygainSleepAfterRun, 120123
 	If HoneygainKeepRunning
 	{
 		Process, Exist , Honeygain.exe
@@ -36,6 +37,6 @@ HoneygainInstall() {
 		Clipboard:=HoneygainDownloadUrl
 		MsgBox Link copied, paste (Ctrl+V) into your browser to download HoneyGain setup file.
 	}
-	Gui_Update()
+	GuiUpdate()
 	Return
 }

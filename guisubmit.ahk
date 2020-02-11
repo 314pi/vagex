@@ -1,5 +1,6 @@
-Gui_Submit() {
-	Loop, Read, pi.ini
+GuiSubmit() {
+	Global Ini_File, Ini_Section
+	Loop, Read, %Ini_File%
 	{
 		IfInString, A_LoopReadLine, =
 		{
@@ -7,7 +8,7 @@ Gui_Submit() {
 			%magic1% := magic2
 			GuiControlGet, %magic1% ,, %magic1%
 			If !ErrorLevel
-				IniWrite, % %magic1%, pi.ini, PiTools, %magic1%
+				IniWrite, % %magic1%, %Ini_File%, %Ini_Section%, %magic1%
 		}
 	}
 	If StartWithWindows

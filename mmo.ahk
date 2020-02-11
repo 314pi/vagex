@@ -7,24 +7,26 @@ SendMode Input	; Recommended for new scripts due to its superior speed and relia
 SetBatchLines -1
 SetTitleMatchMode, 2
 SetWorkingDir %A_ScriptDir%	 ; Ensures a consistent starting directory.
-If not A_IsAdmin
+If Not A_IsAdmin
 	Run *RunAs "%A_ScriptFullPath%"
 ;======================================================================
 #Include variables.ahk
-Check_Ini()
-IniRead, FirefoxShow, pi.ini, PiTools, FirefoxShow, 1
-IniRead, VagexShow, pi.ini, PiTools, VagexShow, 0
-SetTimer, FirefoxRestartTimmer, 3600000
-SetTimer, General_Task, 15123
-SetTimer, Main_Timmer, 312345
+Startup()
+IniRead, FirefoxRestartPeriod, %Ini_File%, %Ini_Section%, FirefoxRestartPeriod, 3600
+IniRead, FirefoxShow, %Ini_File%, %Ini_Section%, FirefoxShow, 1
+IniRead, MainTimmer, %Ini_File%, %Ini_Section%, MainTimmer, 300
+IniRead, VagexShow, %Ini_File%, %Ini_Section%, VagexShow, 0
+SetTimer, FirefoxRestartTimmer, % FirefoxRestartPeriod*1000
+SetTimer, GeneralTask, 15123
+SetTimer, RunMainTimmer, % MainTimmer*1000
 ;======================================================================
-Menu, Tray, Add, %Tray_Menu_2%, ShowTool
-Menu, Tray, Add, %Tray_Menu_1% , ExitTool
+Menu, Tray, Add, %TrayMenu2%, ShowTool
+Menu, Tray, Add, %TrayMenu1% , ExitTool
 Menu, Tray, Click, 1
-Menu, Tray, Default, %Tray_Menu_Default%
+Menu, Tray, Default, %TrayMenuDefault%
 Menu, Tray, Icon, %Favi%
 Menu, Tray, NoStandard
-Menu, Tray, Tip , %Tray_Tip%
+Menu, Tray, Tip , %TrayTip%
 Gui -MinimizeBox -MaximizeBox +AlwaysOnTop
 Gui Add, Button, hWndhBtnHide vBtnHide gBtnHide x75 y265 w80 h20, &Hide
 Gui Add, Tab3, x5 y5 w225 h260, General|Vagex|Hitleap|HoneyGain|FluidStack|About
@@ -54,28 +56,28 @@ Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 ;======================================================================
 Gui Tab, General
-Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y90 w200 h20, Start minimized
-Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y70 w200 h20, Start with Windows
-Gui Add, CheckBox, hWndhTrayShowHide vTrayShowHide gTrayShowHide x15 y110 w200 h20, Show/Hide tray icon (Ctrl + 0)
+Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y110 w200 h20, Start minimized
+Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y90 w200 h20, Start with Windows
+Gui Add, CheckBox, hWndhTrayShowHide vTrayShowHide gTrayShowHide x15 y130 w200 h20, Show/Hide tray icon (Ctrl + 0)
+Gui Add, Edit, hWndhMainTimmer vMainTimmer gMainTimmer x95 y70 w40 h20 +Right, 300
 Gui Add, Text, x15 y50 w200 h20 +0x200, Press Ctrl+1 Show Main Windows
+Gui Add, Text, x15 y70 w80 h20 +0x200, Main Timmer (s)
 ;======================================================================
 Gui Tab, Vagex
 Gui Add, Button, hWndhFirefoxAddon vFirefoxAddon gFirefoxAddon x160 y190 w60 h20, &Addon
-Gui Add, Button, hWndhVagexInstall vVagexInstall gVagexInstall x160 y90 w60 h20, &Install
+Gui Add, Button, hWndhVagexInstall vVagexInstall gVagexInstall x160 y70 w60 h20, &Install
 Gui Add, Button, hWndhVagexReg vVagexReg gVagexReg x160 y50 w60 h20, &Register
 Gui Add, CheckBox, hWndhFirefoxKeepRunning vFirefoxKeepRunning gFirefoxKeepRunning x15 y210 w200 h20, Keep Firefox running
-Gui Add, CheckBox, hWndhFirefoxRestart vFirefoxRestart gFirefoxRestart x25 y230 w110 h20, Restart affter every
-Gui Add, CheckBox, hWndhVagexAutoClickWatchButton vVagexAutoClickWatchButton gVagexAutoClickWatchButton x15 y130 w200 h20, Auto click Watch button
-Gui Add, CheckBox, hWndhVagexKeepRunning vVagexKeepRunning gVagexKeepRunning x15 y110 w200 h20, Keep Vagex running
-Gui Add, Edit, hWndhFirefoxRestartPeriod vFirefoxRestartPeriod gFirefoxRestartPeriod x140 y230 w40 h20 +Right, 3600
-Gui Add, GroupBox, x10 y170 w215 h90, Firefox Addons Viewer
-Gui Add, GroupBox, x10 y70 w215 h90, Vagex Viewer
+Gui Add, CheckBox, hWndhFirefoxRestart vFirefoxRestart gFirefoxRestart x15 y230 w100 h20, Restart every (s)
+Gui Add, CheckBox, hWndhVagexAutoClickWatchButton vVagexAutoClickWatchButton gVagexAutoClickWatchButton x15 y110 w80 h20, Click buttons:
+Gui Add, CheckBox, hWndhVagexKeepRunning vVagexKeepRunning gVagexKeepRunning x15 y90 w200 h20, Keep Vagex running
+Gui Add, Edit,  hWndhVagexClickButtons vVagexClickButtons gVagexClickButtons x100 y110 w110 h20, Watch
+Gui Add, Edit, hWndhFirefoxRestartPeriod vFirefoxRestartPeriod gFirefoxRestartPeriod x115 y230 w40 h20 +Right, 3600
 Gui Add, Text, x15 y190 w125 h20 +0x200, Firefox Installed:
-Gui Add, Text, x15 y90 w125 h20 +0x200, Vagex Installed:
-Gui Add, Text, x180 y230 w15 h20 +0x200, (s)
+Gui Add, Text, x15 y70 w125 h20 +0x200, Vagex Installed:
 Gui Font, Bold cRed
 Gui Add, Text, hWndhTxtFirefoxInstalled vTxtFirefoxInstalled  x130 y190 w25 h20 +0x200, No
-Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x130 y90 w25 h20 +0x200, No
+Gui Add, Text, hWndhTxtVagexInstalled vTxtVagexInstalled x130 y70 w25 h20 +0x200, No
 Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 ;======================================================================
@@ -90,13 +92,13 @@ Gui Add, Text, hWndhTxtHitleapInstalled vTxtHitleapInstalled x130 y80 w25 h20 +0
 Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 ;======================================================================
-IniRead, StartMinimized, pi.ini, PiTools, StartMinimized
+IniRead, StartMinimized, %Ini_File%, %Ini_Section%, StartMinimized
 If !StartMinimized
 {
-	Gui_Update()
+	GuiUpdate()
 	Gui Show, %ToolSize%, %ToolName%
 }
-GoSub, Main_Timmer
+GoSub, RunMainTimmer
 Return
 #Include cpuload.ahk
 #Include download.ahk
@@ -108,46 +110,38 @@ Return
 #Include honeygain.ahk
 #Include tray.ahk
 #Include vagex.ahk
-Main_Timmer:
-	SetTimer, Main_Timmer, Off
-	Main_Fluidstack()
-	Main_Honeygain()
-	Main_Hitleap()
-	Main_Vagex()
-	Main_Firefox()
-	SetTimer, Main_Timmer, On
+RunMainTimmer:
+	SetTimer, RunMainTimmer, Off
+	MainFluidstack()
+	MainHoneygain()
+	MainHitleap()
+	MainVagex()
+	MainFirefox()
+	SetTimer, RunMainTimmer, On
 Return
 BtnHide:
 GuiClose:
 GuiEscape:
 	Gui, Submit
-	Gui_Submit()
+	GuiSubmit()
 Return
-FirefoxKeepRunning:
-FirefoxRestart:
-FirefoxRestartPeriod:
 FluidstackKeepRunning:
-HitleapHided:
-HitleapKeepRunning:
 HoneygainHideTray:
 HoneygainKeepRunning:
 StartMinimized:
 StartWithWindows:
 TrayShowHide:
-VagexAutoClickWatchButton:
-VagexKeepRunning:
 	GuiControlGet, GuiName ,Name, %A_GuiControl%
 	GuiControlGet, GuiValue ,, %A_GuiControl%
-	IniWrite, %GuiValue%, pi.ini, PiTools, %GuiName%
-	Gui_Submit()
-	Gui_Update()
+	IniWrite, %GuiValue%, %Ini_File%, %Ini_Section%, %GuiName%
+	GuiSubmit()
+	GuiUpdate()
 Return
 ExitTool:
 ^`::
 	Gui, Submit
-	Gui_Submit()
+	GuiSubmit()
 	MsgBox , , %ToolName%, You are Exiting %ToolName%, 3
-
 	ExitApp
 Return
 ^0::
@@ -156,40 +150,17 @@ Return
 		Menu, Tray, Icon
 		GuiControl,, TrayShowHide, 1
 	}
-	Else {
+	Else
+	{
 		Menu, Tray, NoIcon
 		GuiControl,, TrayShowHide, 0
 	}
 Return
 ShowTool:
 ^1::
-	Menu, Tray, Icon
-	Gui_Update()
+	GuiUpdate()
 	Gui Show, %ToolSize%, %ToolName%
 Return
-^2::
-	Process, Exist , vagex.exe
-	if ErrorLevel
-	{
-		VagexShow:=!VagexShow
-		If VagexShow
-		{
-			WinShow, Vagex Viewer
-			Sleep, 1123
-			WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
-		}
-		Else
-			WinMinimize, Vagex Viewer
-	}
-Return
-^3::
-	Process, Exist , firefox.exe
-	if ErrorLevel
-	{
-		FirefoxShow:=!FirefoxShow
-		If FirefoxShow
-			WinShow, Mozilla Firefox
-		Else
-			WinHide, Mozilla Firefox
-	}
+MainTimmer:
+
 Return

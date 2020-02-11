@@ -1,8 +1,9 @@
-Main_Fluidstack() {
-	IniRead, FluidstackKeepRunning, pi.ini, PiTools, FluidstackKeepRunning, 1
+MainFluidstack() {
+	Global Ini_File, Ini_Section
+	IniRead, FluidstackKeepRunning, %Ini_File%, %Ini_Section%, FluidstackKeepRunning, 1
 	If FluidstackKeepRunning
 	{
-		FluidstackSvcStatus :=Check_Service_Running("FluidStackNode")
+		FluidstackSvcStatus :=CheckServiceRunning("FluidStackNode")
 		IfInString, FluidstackSvcStatus, Stop
 			FluidstackStartStop()
 	}
@@ -30,12 +31,12 @@ FluidstackInstall() {
 		Clipboard:=FluidstackDownloadUrl
 		MsgBox Link copied, paste (Ctrl+V) into your browser to download Fluidstack setup file.
 	}
-	Gui_Update()
+	GuiUpdate()
 	Return
 }
 FluidstackStartStop() {
-	Run startfs.exe
+	RunWait,sc start "FluidStackNode",,hide
 	Sleep, 15123
-	Gui_Update()
+	GuiUpdate()
 	Return
 }
