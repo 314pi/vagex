@@ -9,37 +9,26 @@ GuiUpdate() {
 			GuiControl,, %magic1% , %magic2%
 		}
 	}
+	GuiControl,, VagexClickButtons , % Trim(VagexClickButtons)
 	If TrayShowHide
-	{
 		Menu, Tray, Icon
-		GuiControl,, TrayShowHide, 1
-	}
 	Else
-	{
 		Menu, Tray, NoIcon
-		GuiControl,, TrayShowHide, 0
-	}
 	If CheckProgramInstalled("Vagex Viewer")
 	{
 		GuiControl,, TxtVagexInstalled , Yes
 		GuiControl,Disable, VagexInstall
+		GuiControl,Enable, VagexAutoClickWatchButton
+		GuiControl,Enable, VagexClickButtons
 		GuiControl,Enable, VagexKeepRunning
-		If VagexKeepRunning
-		{
-			GuiControl,Enable, VagexAutoClickWatchButton
-			GuiControl,Enable, VagexClickButtons
-		}
-		Else
-		{
-			GuiControl,Disable, VagexAutoClickWatchButton
-			GuiControl,Disable, VagexClickButtons
-		}
 	}
 	Else
 	{
-		GuiControl,Disable, VagexKeepRunning
+		GuiControl,, TxtVagexInstalled , No
 		GuiControl,Disable, VagexAutoClickWatchButton
 		GuiControl,Disable, VagexClickButtons
+		GuiControl,Disable, VagexKeepRunning
+		GuiControl,Enable, VagexInstall
 	}
 	If CheckProgramInstalled("Mozilla Firefox")
 	{
@@ -103,6 +92,5 @@ GuiUpdate() {
 		GuiControl,Disable, FluidstackStartStop
 		GuiControl,Enable, FluidstackInstall
 	}
-	GuiSubmit()
 	Return
 }

@@ -21,7 +21,13 @@ FirefoxRestartPeriod:
 	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
 Return
 VagexAutoClickWatchButton:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+Return
 VagexClickButtons:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+Return
 VagexKeepRunning:
 	GuiControlGet, OutVal ,, %A_GuiControl%
 	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
@@ -34,12 +40,12 @@ Return
 		VagexShow:=!VagexShow
 		If VagexShow
 		{
-			WinShow, Vagex Viewer
+			WinShow, Vagex Viewer,, Loading
 			Sleep, 1123
-			WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+			WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2, Loading
 		}
 		Else
-			WinMinimize, Vagex Viewer
+			WinMinimize, Vagex Viewer,, Loading
 	}
 Return
 ^3::
@@ -68,6 +74,7 @@ MainVagex() {
 			%magic1% := magic2
 		}
 	}
+	GuiControl,, VagexClickButtons , % Trim(VagexClickButtons)
 	If VagexKeepRunning
 	{
 		Process, Exist , vagex.exe
@@ -79,36 +86,33 @@ MainVagex() {
 				UrlDownloadToFile, %VagexDownloadUrl%, Vagex.application
 			}
 			RunWait, Vagex.application
-			Sleep, %VagexSleepAfterRun%
+			Sleep, % VagexSleepAfterRun * 1000
+			WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2, Loading
 		}
 		Else
 		{
 			If VagexAutoClickWatchButton
 			{
-				WinShow, Vagex Viewer
-				Sleep, 1123
-				ControlGet, PauseBtnVis, Visible,, %VagexPauseBtn% , Vagex Viewer
-				If PauseBtnVis
+				GuiControlGet, BtnList ,, VagexClickButtons
+				Loop, Parse, BtnList , `,
 				{
-					If !VagexShow
-						WinMinimize, Vagex Viewer
-					Return
-				}
-				ControlGet, WatchBtnVis, Visible,, %VagexWatchBtn% , Vagex Viewer
-				ControlGet, WatchXBtnVis, Visible,, %VagexWatchXBtn% , Vagex Viewer
-				If ( WatchBtnVis or WatchXBtnVis )
-				{
-					ControlClick, %VagexWatchBtn% , Vagex Viewer
+					WinClose , ahk_exe Vagex.exe, You must login
+					WinShow, Vagex Viewer,, Loading
 					Sleep, 1123
-					ControlClick, %WatchXBtnVis% , Vagex Viewer
-					FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Pressed Watch Button.`n, %A_MM%%A_YYYY%.log
-					If !VagexShow
-						WinMinimize, Vagex Viewer
-					Return
+					WinActivate, Vagex Viewer,, Loading
+					WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2, Loading
+					ControlGet, Btn2Clk, Visible ,, % Trim(A_LoopField) , Vagex Viewer,, Loading
+					If Btn2Clk
+					{
+						ControlClick, % Trim(A_LoopField) , Vagex Viewer
+						FileAppend, %A_DD%/%A_MM%/%A_YYYY%@%A_Hour%:%A_Min%:%A_Sec%: Clicked %A_LoopField%.`n, %A_MM%%A_YYYY%.log
+					}
 				}
 			}
 		}
 	}
+	If !VagexShow
+		WinMinimize, Vagex Viewer, , Loading
 	Return
 }
 MainFirefox() {
@@ -153,7 +157,7 @@ FirefoxRestartTimmer:
 		{
 			GroupAdd MyGroup, ahk_class MozillaWindowClass
 			WinClose ahk_group MyGroup
-			Sleep, %FirefoxSleepAfterRun%
+			Sleep, % FirefoxSleepAfterRun * 1000
 		}
 		MainFirefox()
 	}

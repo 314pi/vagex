@@ -7,6 +7,7 @@ Startup() {
 	FirefoxKeepRunning=0
 	FirefoxRestart=1
 	FirefoxRestartPeriod=3600
+	FirefoxShow=1
 	FirefoxSleepAfterRun=12
 	FluidstackKeepRunning=0
 	HitleapHided=1
@@ -22,12 +23,8 @@ Startup() {
 	VagexAutoClickWatchButton=1
 	VagexClickButtons=Watch, Xem
 	VagexKeepRunning=0
+	VagexShow=1
 	VagexSleepAfterRun=120
-	; Vagex Button ClassNN
-	VagexPauseBtn=WindowsForms10.BUTTON.app.0.34f5582_r9_ad14
-	VagexWatchBtn=WindowsForms10.BUTTON.app.0.34f5582_r9_ad15
-	VagexWatchXBtn=WindowsForms10.BUTTON.app.0.34f5582_r9_ad12xx
-	VagexAccBtn=WindowsForms10.BUTTON.app.0.34f5582_r9_ad16
 	)
 	IfNotExist, %Ini_File%
 		FileAppend ,% DefaultINI, %Ini_File%, UTF-8
@@ -45,7 +42,9 @@ GeneralTask() {
 	WinClose Vagex.exe - EXCEPTION
 	WinSet, Transparent , 2, Mozilla Firefox
 	WinMove, Mozilla Firefox, , A_ScreenWidth/2 + 50 , A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
-	WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2
+	WinMove, Vagex Viewer, , A_ScreenWidth/2, A_ScreenHeight/2 , A_ScreenWidth/2, A_ScreenHeight/2, Loading
+	WinHide, Vagex Viewer Loading
+	WinClose , ahk_exe Vagex.exe, You must login
 	Return
 }
 CheckProgramInstalled(Program) {

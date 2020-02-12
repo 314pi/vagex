@@ -100,7 +100,6 @@ Return
 #Include download.ahk
 #Include fluidstack.ahk
 #Include general.ahk
-#Include guisubmit.ahk
 #Include guiupdate.ahk
 #Include hitleap.ahk
 #Include honeygain.ahk
@@ -119,7 +118,10 @@ BtnHide:
 GuiClose:
 GuiEscape:
 	Gui, Submit
-	GuiSubmit()
+Return
+MainTimmer:
+	GuiControlGet, OutVal ,, %A_GuiControl%
+	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
 Return
 StartMinimized:
 	GuiControlGet, OutVal ,, %A_GuiControl%
@@ -153,7 +155,6 @@ Return
 ExitTool:
 ^`::
 	Gui, Submit
-	GuiSubmit()
 	MsgBox , , %ToolName%, You are Exiting %ToolName%, 3
 	ExitApp
 Return
@@ -174,6 +175,4 @@ ShowTool:
 	GuiUpdate()
 	Gui Show, %ToolSize%, %ToolName%
 Return
-MainTimmer:
 
-Return
