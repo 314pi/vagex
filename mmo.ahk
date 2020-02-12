@@ -122,6 +122,7 @@ Return
 MainTimmer:
 	GuiControlGet, OutVal ,, %A_GuiControl%
 	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	SetTimer, RunMainTimmer, % OutVal * 1000
 Return
 StartMinimized:
 	GuiControlGet, OutVal ,, %A_GuiControl%
