@@ -13,8 +13,11 @@ If Not A_IsAdmin
 #Include variables.ahk
 Startup()
 IniRead, MainTimmer, %Ini_File%, %Ini_Section%, MainTimmer, 300
-SetTimer, GeneralTask, 15123
-SetTimer, RunMainTimmer, % MainTimmer*1000
+IniRead, GeneralTaskTimmer, %Ini_File%, %Ini_Section%, GeneralTaskTimmer, 15
+MainTimmer := ( MainTimmer > 300 ? MainTimmer : 300 ) * 1000
+GeneralTaskTimmer := ( GeneralTaskTimmer > 15 ? GeneralTaskTimmer : 15 ) * 1000
+SetTimer, GeneralTask, % GeneralTaskTimmer * 1000
+SetTimer, RunMainTimmer, % MainTimmer * 1000
 ;======================================================================
 Menu, Tray, Add, %TrayMenu2%, ShowTool
 Menu, Tray, Add, %TrayMenu1% , ExitTool
@@ -55,9 +58,9 @@ Gui Tab, General
 Gui Add, CheckBox, hStartMinimized vStartMinimized gStartMinimized x15 y110 w200 h20, Start minimized
 Gui Add, CheckBox, hWndhStartWithWindows vStartWithWindows gStartWithWindows x15 y90 w200 h20, Start with Windows
 Gui Add, CheckBox, hWndhTrayShowHide vTrayShowHide gTrayShowHide x15 y130 w200 h20, Show/Hide tray icon (Ctrl + 0)
-Gui Add, Edit, hWndhMainTimmer vMainTimmer gMainTimmer x95 y70 w40 h20 +Right, 300
+Gui Add, Edit, hWndhMainTimmer vMainTimmer gMainTimmer x180 y70 w40 h20 +Right, 300
 Gui Add, Text, x15 y50 w200 h20 +0x200, Press Ctrl+1 Show Main Windows
-Gui Add, Text, x15 y70 w80 h20 +0x200, Main Timmer (s)
+Gui Add, Text, x15 y70 w165 h20 +0x200, Main Timmer (s)
 ;======================================================================
 Gui Tab, Vagex
 Gui Add, Button, hWndhFirefoxAddon vFirefoxAddon gFirefoxAddon x160 y190 w60 h20, &Addon
@@ -65,9 +68,9 @@ Gui Add, Button, hWndhVagexInstall vVagexInstall gVagexInstall x160 y70 w60 h20,
 Gui Add, Button, hWndhVagexReg vVagexReg gVagexReg x160 y50 w60 h20, &Register
 Gui Add, CheckBox, hWndhFirefoxKeepRunning vFirefoxKeepRunning gFirefoxKeepRunning x15 y210 w200 h20, Keep Firefox running
 Gui Add, CheckBox, hWndhFirefoxRestart vFirefoxRestart gFirefoxRestart x15 y230 w100 h20, Restart every (s)
-Gui Add, CheckBox, hWndhVagexAutoClickWatchButton vVagexAutoClickWatchButton gVagexAutoClickWatchButton x15 y110 w80 h20, Click buttons:
+Gui Add, CheckBox, hWndhVagexAutoClickWatchButton vVagexAutoClickWatchButton gVagexAutoClickWatchButton x15 y110 w85 h20, Click buttons:
 Gui Add, CheckBox, hWndhVagexKeepRunning vVagexKeepRunning gVagexKeepRunning x15 y90 w200 h20, Keep Vagex running
-Gui Add, Edit,  hWndhVagexClickButtons vVagexClickButtons gVagexClickButtons x100 y110 w110 h20, Watch
+Gui Add, Edit,  hWndhVagexClickButtons vVagexClickButtons gVagexClickButtons x100 y110 w120 h20, Watch
 Gui Add, Edit, hWndhFirefoxRestartPeriod vFirefoxRestartPeriod gFirefoxRestartPeriod x115 y230 w40 h20 +Right, 3600
 Gui Add, Text, x15 y190 w125 h20 +0x200, Firefox Installed:
 Gui Add, Text, x15 y70 w125 h20 +0x200, Vagex Installed:

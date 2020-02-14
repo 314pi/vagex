@@ -6,10 +6,11 @@ Startup() {
 	[PiTools]
 	FirefoxKeepRunning=0
 	FirefoxRestart=1
-	FirefoxRestartPeriod=3600
+	FirefoxRestartPeriod=1800
 	FirefoxShow=1
-	FirefoxSleepAfterRun=12
+	FirefoxSleepAfterRun=15
 	FluidstackKeepRunning=0
+	GeneralTaskTimmer=15
 	HitleapHided=1
 	HitleapKeepRunning=0
 	HitleapSleepAfterRun=5
@@ -24,7 +25,7 @@ Startup() {
 	VagexClickButtons=Watch, Xem
 	VagexKeepRunning=0
 	VagexShow=1
-	VagexSleepAfterRun=120
+	VagexSleepAfterRun=30
 	)
 	IfNotExist, %Ini_File%
 		FileAppend ,% DefaultINI, %Ini_File%, UTF-8
