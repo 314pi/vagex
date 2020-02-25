@@ -1,6 +1,7 @@
 #NoEnv	; Recommended for performance and compatibility with future AutoHotkey releases.
 #Persistent
 #SingleInstance Force
+AutoTrim, On
 DetectHiddenWindows, On
 FileInstall, mmo.ico, mmo.ico
 SendMode Input	; Recommended for new scripts due to its superior speed and reliability.
@@ -12,10 +13,10 @@ If Not A_IsAdmin
 ;======================================================================
 #Include variables.ahk
 Startup()
-IniRead, MainTimmer, %Ini_File%, %Ini_Section%, MainTimmer, 300
-IniRead, GeneralTaskTimmer, %Ini_File%, %Ini_Section%, GeneralTaskTimmer, 15
-MainTimmer := ( MainTimmer > 300 ? MainTimmer : 300 ) * 1000
-GeneralTaskTimmer := ( GeneralTaskTimmer > 15 ? GeneralTaskTimmer : 15 ) * 1000
+IniRead, MainTimmer, %IniFile%, %IniSection%, MainTimmer, 300
+IniRead, GeneralTaskTimmer, %IniFile%, %IniSection%, GeneralTaskTimmer, 15
+MainTimmer := ( MainTimmer > 300 ? MainTimmer : 300 )
+GeneralTaskTimmer := ( GeneralTaskTimmer > 15 ? GeneralTaskTimmer : 15 )
 SetTimer, GeneralTask, % GeneralTaskTimmer * 1000
 SetTimer, RunMainTimmer, % MainTimmer * 1000
 ;======================================================================
@@ -91,7 +92,7 @@ Gui Add, Text, hWndhTxtHitleapInstalled vTxtHitleapInstalled x130 y80 w25 h20 +0
 Gui Add, Text, x15 y50 w135 h20 +0x200, Do not have Account?
 Gui Font
 ;======================================================================
-IniRead, StartMinimized, %Ini_File%, %Ini_Section%, StartMinimized
+IniRead, StartMinimized, %IniFile%, %IniSection%, StartMinimized
 If !StartMinimized
 {
 	GuiUpdate()
@@ -124,16 +125,16 @@ GuiEscape:
 Return
 MainTimmer:
 	GuiControlGet, OutVal ,, %A_GuiControl%
-	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	IniWrite, %OutVal%, %IniFile%, %IniSection%, %A_GuiControl%
 	SetTimer, RunMainTimmer, % OutVal * 1000
 Return
 StartMinimized:
 	GuiControlGet, OutVal ,, %A_GuiControl%
-	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	IniWrite, %OutVal%, %IniFile%, %IniSection%, %A_GuiControl%
 Return
 TrayShowHide:
 	GuiControlGet, OutVal ,, %A_GuiControl%
-	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	IniWrite, %OutVal%, %IniFile%, %IniSection%, %A_GuiControl%
 	If OutVal
 		Menu, Tray, Icon
 	Else
@@ -141,7 +142,7 @@ TrayShowHide:
 Return
 StartWithWindows:
 	GuiControlGet, OutVal ,, %A_GuiControl%
-	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	IniWrite, %OutVal%, %IniFile%, %IniSection%, %A_GuiControl%
 	If OutVal
 	{
 		SplitPath, A_ScriptFullPath, , OutDir, , OutNameNoExt

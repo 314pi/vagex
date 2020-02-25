@@ -1,6 +1,6 @@
 HitleapHided:
 	GuiControlGet, OutVal ,, %A_GuiControl%
-	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	IniWrite, %OutVal%, %IniFile%, %IniSection%, %A_GuiControl%
 	If OutVal
 		WinHide, HitLeap Viewer
 	Else
@@ -8,12 +8,12 @@ HitleapHided:
 Return
 HitleapKeepRunning:
 	GuiControlGet, OutVal ,, %A_GuiControl%
-	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	IniWrite, %OutVal%, %IniFile%, %IniSection%, %A_GuiControl%
 	MainHitleap()
 Return
 MainHitleap() {
-	Global Ini_File
-	Loop, Read, %Ini_File%
+	Global IniFile
+	Loop, Read, %IniFile%
 	{
 		IfInString, A_LoopReadLine, =
 		{

@@ -1,0 +1,1387 @@
+<html lang="en"><head><script type="text/javascript">
+
+function switch2(a,b,c)
+{
+	//update the image straightaway
+	document.getElementById(a+b).setAttribute('src','images/'+c); 
+var http = new XMLHttpRequest();
+    var url = "vidgo.php";
+    var params = "do="+a+"&sid="+b;
+	var cc='';
+    http.open("POST", url, true);
+//alert("do="+a+"&sid="+b);
+    //Send the proper header information along with the request
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    http.onreadystatechange = function() {//Call a function when the state changes.
+        if(http.readyState == 4 && http.status == 200) {
+            if(http.responseText == 1){
+          //  alert(" successfully changed");
+
+			document.getElementById(a+b).setAttribute('src','images/'+c); 
+
+			document.getElementById('a'+a+b).setAttribute('onclick','switch2("'+a+'","'+b+'","'+cc+'");'); 
+		if(c=='s0.png'){cc='s1.png';}else if(c=='s1.png'){cc='s0.png';}
+		if(c=='p0.png'){cc='p1.png';}else if(c=='p1.png'){cc='p0.png';}
+
+				
+            }
+            else{
+       //     alert("Invalid Username or Password");
+		if(c=='s0.png'){cc='s1.png';}else if(c=='s1.png'){cc='s0.png';}
+		if(c=='p0.png'){cc='p1.png';}else if(c=='p1.png'){cc='p0.png';}
+			document.getElementById(a+b).setAttribute('src','images/'+cc); 
+            }
+        }
+        else{
+    //    alert("Error :Something went wrong");
+		if(c=='s0.png'){cc='s1.png';}else if(c=='s1.png'){cc='s0.png';}
+		if(c=='p0.png'){cc='p1.png';}else if(c=='p1.png'){cc='p0.png';}
+			document.getElementById(a+b).setAttribute('src','images/'+cc); 
+        }
+    }
+    http.send(params);
+}
+
+
+
+
+
+
+function vlchange(sid){
+	if (document.getElementById("vldiv"+sid).style.display=="block"){
+	document.getElementById("vldiv"+sid).style.display="none";
+	} else{
+	document.getElementById("vldiv"+sid).style.display="block";
+	}
+}
+
+function vlchange2(sid){
+var vlmin=	document.getElementById("vlmin"+sid).value;
+var vlmax=	document.getElementById("vlmax"+sid).value;
+	document.getElementById("vldiv"+sid).style.display="none";
+	document.getElementById('vlchange'+sid).innerHTML=+vlmin+'-'+vlmax+' s'; 
+var http = new XMLHttpRequest();
+    var url = "vidgo.php";
+    var params = "do=vl&sid="+sid+"&vlmin="+vlmin+"&vlmax="+vlmax;
+    http.open("POST", url, true);
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    http.onreadystatechange = function() {//Call a function when the state changes.
+        if(http.readyState == 4 && http.status == 200) {
+            if(http.responseText == 1){
+//            alert(" successfully changed");
+				
+            }
+            else{
+            }
+        }
+        else{
+//	document.getElementById('vlchange').innerHTML=''; 
+        }
+    }
+    http.send(params);
+
+}
+
+
+function mover1(sid) {
+
+	if (+document.getElementById("vlmin"+sid).value >= document.getElementById("vlmax"+sid).value){
+	document.getElementById("vlmax"+sid).value = +document.getElementById("vlmin"+sid).value 
+
+	}
+}
+function mover2(sid) {
+//alert(' moving '+document.getElementById("vlmin"+sid).value+'max'+document.getElementById("vlmax"+sid).value);
+	if (+document.getElementById("vlmax"+sid).value <= document.getElementById("vlmin"+sid).value){
+	document.getElementById("vlmin"+sid).value = +document.getElementById("vlmax"+sid).value 
+//alert(' moving in'+document.getElementById("vlmin"+sid).value+'max'+document.getElementById("vlmax"+sid).value);
+	}
+
+}
+
+
+function mvchange(sid){
+	if (document.getElementById("mvdiv"+sid).style.display=="block"){
+	document.getElementById("mvdiv"+sid).style.display="none";
+	} else{
+	document.getElementById("mvdiv"+sid).style.display="block";
+	}
+}
+
+function mvchange2(sid){
+var mvmin=	document.getElementById("mvmin"+sid).value;
+var mvmax=	document.getElementById("mvmax"+sid).value;
+	document.getElementById("mvdiv"+sid).style.display="none";
+	document.getElementById('mvfont'+sid).innerHTML=mvmax; 
+var http = new XMLHttpRequest();
+    var url = "vidgo.php";
+    var params = "do=mv&sid="+sid+"&mvmin="+mvmin+"&mvmax="+mvmax;
+    http.open("POST", url, true);
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    http.onreadystatechange = function() {//Call a function when the state changes.
+        if(http.readyState == 4 && http.status == 200) {
+            if(http.responseText == 1){
+//            alert(" successfully changed");
+            }
+            else{
+            }
+        }
+        else{
+//	document.getElementById('mvchange').innerHTML=''; 
+        }
+    }
+    http.send(params);
+}
+
+
+function mvover1(sid) {
+
+	if (+document.getElementById("mvmin"+sid).value >= document.getElementById("mvmax"+sid).value){
+	document.getElementById("mvmax"+sid).value = +document.getElementById("mvmin"+sid).value 
+
+	}
+}
+function mvover2(sid) {
+//alert(' moving '+document.getElementById("mvmin"+sid).value+'max'+document.getElementById("mvmax"+sid).value);
+	if (+document.getElementById("mvmax"+sid).value <= document.getElementById("mvmin"+sid).value){
+	document.getElementById("mvmin"+sid).value = +document.getElementById("mvmax"+sid).value 
+//alert(' moving in'+document.getElementById("mvmin"+sid).value+'max'+document.getElementById("mvmax"+sid).value);
+	}
+
+}
+
+function hexconvert(num) {
+var letter;
+	if (num==15) { letter="F";}
+	else if (num==14) { letter="E";}
+	else if (num==13) { letter="D";}
+	else if (num==12) { letter="C";}
+	else if (num==11) { letter="B";}
+	else if (num==10) { letter="A";}
+	else {letter=num;}
+return letter;
+}
+
+
+var pcount=1;
+var a1=13;
+var a2=15;
+var b1=15;
+var b2=16;
+var c1=15;
+var c2=15;
+var aa;
+var ab;
+var ba;
+var bb;
+var ca;
+var cb;
+
+function plasmid(){ 
+setTimeout(function() {
+try {
+	if (pcount<33){
+	a2=a2+1;
+		if (a2==16) {a2=0; a1=a1+1;}
+	b2=b2-1;
+		if (b2=="-1") {b2=15; b1=b1-1;}
+	} else if (pcount>32 && pcount<64) {
+	b2=b2+1;
+		if (b2==16) {b2=0; b1=b1+1;}
+	c2=c2-1;
+		if (c2=="-1") {c2=15; c1=c1-1;}
+	} else if (pcount>63) {
+	c2=c2+1;
+		if (c2==16) {c2=0; c1=c1+1;}
+	a2=a2-1;
+		if (a2=="-1") {a2=15; a1=a1-1;}
+	}
+	if(pcount==94){
+	pcount=1;
+	}
+pcount=pcount+1;
+//alert(' testing function, please ignore this message'+pcount);
+aa=hexconvert(a1);
+ab=hexconvert(a2);
+ba=hexconvert(b1);
+bb=hexconvert(b2);
+ca=hexconvert(c1);
+cb=hexconvert(c2);
+
+document.getElementById('plasmid').setAttribute('bgcolor',aa+ab+ba+bb+ca+cb);
+//document.getElementById('plasmid2').innerHTML=aa+ab+ba+bb+ca+cb+a1+a2+b1+b2+c1+c2;
+} catch (ex) {
+//	alert (' testing, please ignore this message '+ex.message);
+}
+plasmid();
+}
+, 100);
+}
+
+plasmid();
+
+
+
+function anv(num){
+	if (document.getElementById("anv"+num).style.display=="block"){
+	document.getElementById("anv"+num).style.display="none";
+	} else{
+	document.getElementById("anv"+num).style.display="block";
+		document.getElementById("surl").focus();
+	}
+
+}
+
+
+</script>
+
+
+
+
+
+
+<title>Vagex</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<meta name="referrer" content="no-referrer">
+<link rel="icon" type="image/png" href="favicon.png">
+<style type="text/css">
+<!--
+td {
+	font-family: "trebuchet MS", Arial, Verdana;
+	font-size: 13;
+	color: #2d2d2d;
+
+}
+p {
+	color: #4d4d4d;
+	text-decoration: none;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 13;
+}
+a {
+	color: #0099CC;
+	text-decoration: none;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 13;
+}
+a:hover {
+	color: #CC0000;
+	text-decoration: underline;
+}
+.footer a {
+	color: #666666;
+	text-decoration: none;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: 13;
+}
+.footer a:hover {
+	color: #333333;
+	text-decoration: underline;
+}
+.webforms {
+	height:18px;
+	font-family:tahoma;
+	font-size:13;
+	color:#626262;
+	padding-left:7px
+}
+h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 24;
+	font-weight: lighter;
+	color: red;
+}
+.button {
+	color: #FFFFFF;
+	background-color: #CCCCCC;
+	border-top-width: 2px;
+	border-right-width: 2px;
+	border-bottom-width: 2px;
+	border-left-width: 2px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #E4E4E4;
+	border-right-color: #999999;
+	border-bottom-color: #999999;
+	border-left-color: #E4E4E4;
+}
+.button a{
+	color: #999999;
+	text-decoration: none;
+}
+.button a:hover{
+	color: #000000;
+	text-decoration: none;
+}
+.vertsep {
+	border-right-width: 1px;
+	border-right-style: dotted;
+	border-right-color: #99CC00;
+	border-radius: 15px;
+}
+.thinbord {
+	border: 1px dotted #000000;
+}
+
+#bg_mask {
+  position: absolute;
+  top: 0;
+  right: 0;  bottom: 0;
+  left: 0;
+  margin: auto;
+  margin-top: 0px;
+  width: 681px;//981
+  height: 610px;
+  background : url("images/pixel.png") center;
+  z-index: 5;
+  visibility: hidden;
+} 
+#frontlayer {
+  position: absolute;
+  background-color: white;
+  visibility: hidden;
+  z-index: 6;
+} 
+#bg_mask2 {
+  position: absolute;
+  top: 0;
+  right: 0;  bottom: 0;
+  left: 0;
+  margin: auto;
+  margin-top: 0px;
+  width: 981px;
+  height: 610px;
+  background : url("images/pixel.png") center;
+  z-index: 5;
+  visibility: hidden;
+} 
+
+#frontlayer2 {
+  position: absolute;
+  background-color: white;
+  visibility: hidden;
+
+  z-index: 6;
+} #bg_mask3 {
+  position: absolute;
+  top: 0;
+  right: 0;  bottom: 0;
+  left: 0;
+  margin: auto;
+  margin-top: 0px;
+  width: 981px;
+  height: 610px;
+  background : url("images/pixel.png") center;
+  z-index: 5;
+  visibility: hidden;
+} 
+
+#frontlayer3 {
+  position: absolute;
+  visibility: hidden;
+  z-index: 6;
+
+}
+#topbar{
+  position: relative;
+  z-index: 6;
+
+  right: 0;  bottom: 0;
+  left: 0;
+pointer-events:none;
+}
+#zhlayer {
+  position: relative;
+  background-color: white;
+  visibility: hidden;
+  z-index: 2;
+display: none;
+} 
+#zhla {
+  position: relative;
+  background-color: white;
+  visibility: hidden;
+  z-index: 2;
+display: none;
+} 
+
+</style>
+</head>
+
+<body bgcolor="white" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<script language="javascript" type="text/javascript">
+
+
+
+var ball=document.getElementById('ball');
+//ball.addEventListener('touchstart', function(event) {  
+//alert(' testing: touch started');
+//});
+//ball.addEventListener('touchend', function(event) {  
+//alert(' testing: touch released');
+//});
+
+var hpos2=0;
+var hpos=0;
+var gpos3=0;
+var xpos=0;
+
+var scpage=0;
+var scpos=0;
+var scpos2=0;
+function scroll(){
+	setTimeout(function() {
+		try {
+			if(scpage==0){
+			window.scrollTo(0,0);
+			document.getElementById('topbar').style.position='Fixed';
+			document.getElementById('topbar').style.display='block';
+				if(document.getElementById('menubar')){
+			document.getElementById('menubar').style.top='5';
+			document.getElementById('menubar').style.position='Fixed';
+				}
+			scpage=1;
+			}
+			if(scpage==1 && (document.documentElement.scrollTop==scpos || scpos2==scpos) && xpos==0){
+				if(document.documentElement.scrollTop!=scpos){
+				//window.scrollTo(0,scpos2);
+				scpos2=0;
+				return;
+				} else if(document.documentElement.scrollTop==scpos){//scrollTop's current position working in i.e.
+
+
+				//window.scrollBy(0,0.25);
+				window.scrollTo(0,scpos2);
+				scpos2=scpos2+0.25;
+
+
+					//Move the scrolling pointer accordingly
+					 hpos2=(document.body.scrollHeight/39);
+					 hpos=Math.round(scpos2/hpos2);
+if(hpos>0){
+
+		var ascrolls=[];
+		ascrolls= document.getElementsByClassName('ascroll');
+		if (ascrolls.length>0){
+		var i;
+			for (i = 0; i < ascrolls.length; i++) {
+				if (ascrolls[i].outerHTML.indexOf('ascroll')!==-1){
+				ascrolls[i].innerHTML="|";
+				}
+			}
+		}
+					document.getElementById('ascroll'+hpos).innerHTML="<img  height='15' width='15' src='//vagex.com/img/arrowup.gif'>";
+}
+
+//	If (scpos2==100){ 
+//alert(scpos2+','+scpos+' height:'+document.body.offsetHeight); 
+//}
+					if(scpos2==document.body.scrollHeight){//bottom has reached
+					nscroll();
+					return;
+					}
+
+					
+				scpos=document.documentElement.scrollTop;
+		
+				}
+			}
+		} catch (ex) {
+		}
+	scroll();
+	}, 25);
+}
+
+var gpos=0;
+function ascroll(gpos){
+	var gpos2=(document.body.scrollHeight/39);
+	gpos3=(gpos2*gpos);
+	if(gpos==0){
+	window.scrollTo(0,1);
+
+	}else if(gpos>0){
+	window.scrollTo(0,gpos3);
+		
+		scpos2=gpos2;
+		hpos=gpos;
+		hpos2=gpos2;
+		scpos2=Math.round(hpos*hpos2);
+
+		var ascrolls=[];
+		ascrolls= document.getElementsByClassName('ascroll');
+		if (ascrolls.length>0){
+		var i;
+			for (i = 0; i < ascrolls.length; i++) {
+				if (ascrolls[i].outerHTML.indexOf('ascroll')!==-1){
+				ascrolls[i].innerHTML="|";
+				}
+			}
+		}
+//alert(gpos);
+	var gposl=gpos-1;
+	var gposr=gpos+1;
+	document.getElementById('ascroll'+gpos).innerHTML="<img  height='15' width='15' src='//vagex.com/img/arrowup.gif'>";
+
+	}
+}
+
+
+
+function xscroll(){
+xpos=1;
+}
+
+function oscroll(){
+	xpos=0;
+}
+
+function nscroll(){
+var vpage='/members/index.php';
+	if(vpage.indexOf('members/respect.php')!==-1){ location.href = "buy_credits.php"; }
+	else if(vpage.indexOf('members/buy_credits.php')!==-1){ location.href = "exchange.php"; }
+	else if(vpage.indexOf('members/exchange.php')!==-1){ location.href = "viewers.php"; }
+	else if(vpage.indexOf('members/viewers.php')!==-1){ location.href = "pimps.php"; }
+	else if(vpage.indexOf('members/pimps.php')!==-1){ location.href = "transactions.php"; }
+	else if(vpage.indexOf('members/transactions.php')!==-1){ location.href = "contact.php?supportc2=1"; }
+
+	else if(vpage.indexOf('contact.php?supportc2=12')!==-1){ location.href = "index.php"; }
+	else if(vpage.indexOf('contact.php?supportc2=1')!==-1){ location.href = "contact.php?supportc2=2"; }
+	else if(vpage.indexOf('contact.php?supportc2=2')!==-1){ location.href = "contact.php?supportc2=3"; }
+	else if(vpage.indexOf('contact.php?supportc2=3')!==-1){ location.href = "contact.php?supportc2=5"; }
+
+	else if(vpage.indexOf('contact.php?supportc2=5')!==-1){ location.href = "contact.php?supportc2=6"; }
+	else if(vpage.indexOf('contact.php?supportc2=6')!==-1){ location.href = "contact.php?supportc2=7"; }
+	else if(vpage.indexOf('contact.php?supportc2=7')!==-1){ location.href = "contact.php?supportc2=9"; }
+
+	else if(vpage.indexOf('contact.php?supportc2=9')!==-1){ location.href = "contact.php?supportc2=12"; }
+
+	else if(vpage.indexOf('members')!==-1){ location.href = "respect.php"; }
+}
+
+function scrollimg(scswitch){
+
+	if(scswitch==1){
+	document.getElementById('scrollkimg').setAttribute('src','//vagex.com/members/images/s0.png'); 
+	document.cookie = "autoscroll=0;path=/;";
+	document.getElementById('scrollk').setAttribute('href','javascript:scrollimg(0)'); 
+			window.scrollTo(0,1);
+	} else {	
+
+	document.getElementById('scrollkimg').setAttribute('src','//vagex.com/members/images/s1.png'); 
+	document.cookie = "autoscroll=1;path=/;";
+	document.getElementById('scrollk').setAttribute('href','javascript:scrollimg(1)'); 
+	scroll();
+
+	}
+
+}
+
+var scookie=0;
+if(scookie==1){
+scroll();
+}
+
+function show(id){
+//hideFrontLayer();
+if(id == 'link1'){
+//hideFrontLayer();
+// document.getElementById('bg_mask').style.visibility='visible';
+document.getElementById('frontlayer').style.visibility='visible';
+document.getElementById('frontlayer').style.position='relative';
+
+document.getElementById('frontlayer2').style.visibility='hidden';
+document.getElementById('frontlayer2').style.position='absolute'; 
+document.getElementById('frontlayer3').style.visibility='hidden'; 
+document.getElementById('frontlayer3').style.position='absolute';
+
+document.getElementById('main').style.display='none';
+document.getElementById('dbody').style.display='block';
+document.getElementById('fbar').setAttribute('background','//vagex.com/images/bar.jpg');
+document.getElementById('fbar').setAttribute('height','60');
+
+//document.getElementById('main').style.visibility='hidden';
+//document.getElementById('main').innerHTML='';
+//document.getElementById('main').innerHTML=document.getElementById('frontlayer').innerHTML;
+//document.getElementById('main').style.zIndex='6';
+
+		document.getElementById("email").focus();
+}
+if(id == 'link2'){
+//hideFrontLayer();
+ //document.getElementById('bg_mask2').style.visibility='visible';
+document.getElementById('frontlayer2').style.visibility='visible';
+document.getElementById('frontlayer2').style.position='relative';
+
+document.getElementById('frontlayer').style.visibility='hidden'; 
+document.getElementById('frontlayer').style.position='absolute';
+document.getElementById('frontlayer3').style.visibility='hidden'; 
+document.getElementById('frontlayer3').style.position='absolute';
+
+document.getElementById('main').style.display='none';
+document.getElementById('dbody').style.display='block';
+document.getElementById('fbar').setAttribute('background','//vagex.com/images/bar.jpg');
+document.getElementById('fbar').setAttribute('height','60');
+
+//document.getElementById('main').style.visibility='hidden';
+//document.getElementById('main').innerHTML='';
+
+//document.getElementById('main').innerHTML=document.getElementById('frontlayer2').innerHTML;
+//document.getElementById('main').style.zIndex='6';
+}
+if(id == 'link3'){
+//hideFrontLayer();
+
+document.getElementById('frontlayer3').style.visibility='visible';
+document.getElementById('frontlayer3').style.position='relative';
+
+document.getElementById('frontlayer').style.visibility='hidden'; 
+document.getElementById('frontlayer').style.position='absolute';
+document.getElementById('frontlayer2').style.visibility='hidden'; 
+document.getElementById('frontlayer2').style.position='absolute';
+
+
+document.getElementById('main').style.display='none';
+document.getElementById('dbody').style.display='none';
+document.getElementById('fbar').setAttribute('background','');
+document.getElementById('fbar').setAttribute('height','0');
+
+//document.getElementById('main').style.visibility='hidden';
+//document.getElementById('main').innerHTML='';
+
+
+//document.getElementById('main').style.visibility='visible';
+//document.getElementById('main').innerHTML=document.getElementById('frontlayer3').innerHTML;
+}
+}
+
+function showFrontLayer() {
+  document.getElementById('bg_mask').style.visibility='visible';
+  document.getElementById('frontlayer').style.visibility='visible';
+}
+function hideFrontLayer() {
+document.getElementById('main').style.visibility='visible ';
+  document.getElementById('bg_mask').style.visibility='hidden';
+  document.getElementById('frontlayer').style.visibility='hidden';
+ document.getElementById('bg_mask2').style.visibility='hidden';
+  document.getElementById('frontlayer2').style.visibility='hidden';
+ document.getElementById('bg_mask3').style.visibility='hidden';
+  document.getElementById('frontlayer3').style.visibility='hidden';
+document.getElementById('frontlayer').style.position='absolute';
+document.getElementById('frontlayer2').style.position='absolute';
+document.getElementById('frontlayer3').style.position='absolute';
+
+}
+
+function loginfocus() {
+		document.getElementById("email").focus();
+
+}
+
+
+if(0==1){
+scroll();
+}
+
+</script>
+
+<table align="center" width="100%" border="0"><tbody><tr><td width="77"></td><td>
+<table id="top" width="831" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tbody><tr valign="top">
+    <td width="780">
+<table width="100%" height="50%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
+   <tbody><tr height="50%">
+    <td bgcolor="ffffff" style="border-width=0;margin:3px;padding:6px;border-radius:9px;font-size:18px;" rowspan="2" valign="top" align="center"><a href="//vagex.com/"><img border="0" src="//vagex.com/images/yt.jpg" width="200" height="77"></a>
+
+</td>
+
+
+
+     <td style="border-width=0;margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;font-size:24px;" colspan="2" rowspan="1" valign="middle" align="center">
+<a href="/members/index.php"><p style="line-height:1;"><font color="4d4d4d" size="2.5">Members Area</font></p></a>
+<a href="//vagex.com//members/logout.php"><p style="line-height:1;"><font color="4d4d4d" size="2.5">Logout</font></p></a>
+             
+            <a href="javascript:scroll()"><p style="line-height:1;"><font color="4d4d4d" size="2.5">Scroll</font></p></a> 
+
+</td></tr></tbody></table>
+
+<div id="frontlayer3">
+
+          </div>
+        
+<div id="dbody">
+<table height="100%" width="831" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tbody><tr valign="top">
+    <td height="100%">
+	<table height="100%" border="0" align="right" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
+	<tbody><tr>
+        <td height="25" colspan="2" background="//vagex.com/images/sideimgl.gif" align="right" valign="top">&nbsp;</td>
+        </tr>
+	<tr>
+        <td height="100%" width="15" background="//vagex.com/images/sideimg.gif" align="left" valign="top">&nbsp;</td>
+	<td width="10"></td>        </tr>
+	</tbody></table>
+	</td>
+    <td width="780">
+
+	<table width="780" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
+	<tbody><tr>
+        <td height="15" background="//vagex.com/images/sideimg.gif" valign="top">&nbsp;</td>
+        </tr>
+        <tr>
+        <td height="300" align="center" valign="top">
+		<table width="760" border="0" cellspacing="0" cellpadding="0">
+        <tbody><tr>
+        <td>
+
+
+<div id="frontlayer">
+
+<script language="javascript" type="text/javascript">
+
+
+function showzhlayer() {
+  document.getElementById('zhlayer').style.visibility='visible';
+  document.getElementById('zhlayer').style.display='block';
+//document.getElementById('zhlink1').innerHTML='';
+}
+function hidezhlayer() {
+  document.getElementById('zhlayer').style.visibility='hidden';
+  document.getElementById('zhlayer').style.display='none';
+document.getElementById('email').style.display='block';
+
+document.getElementById('zhlink1').innerHTML='<font color=4B874E>Verified. You were faster than 97 percent.</font>';
+}
+
+</script>
+
+
+
+
+<table height="174" width="177" border="0" align="center" cellpadding="0" cellspacing="0">
+
+
+
+
+
+<tbody><tr align="center" bgcolor="#ffffff"> 
+<td><table width="100%" height="100%" border="0" cellspacing="0" cellpadding="4">
+<tbody><tr><td colspan="2" height="9" align="center">
+<form action="/members/index.php?v=&amp;apiid=" method="post">
+</form></td></tr>
+
+<tr><td height="50px" width="100%" colspan="2" align="center" class="boxtext" style="margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;">
+
+
+
+
+<input style="border-width:0;border:0;text-align:center;height:50px;width:250px;font-size:24px" type="text" id="email" name="email" size="20" maxlength="100" placeholder="UserID or Email">
+
+
+
+</td></tr>
+
+<tr><td height="50px" colspan="2" align="center" class="boxtext" style="margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;">
+<input style="border-width:0;border:0;text-align:center;height:50px;width:250px;font-size:24px" type="password" name="passwd" size="20" maxlength="20" placeholder="Password"></td>
+
+
+
+
+
+</tr><tr height="20"><td width="90%" align="right">Save<input style="height:15px;width:15px" size="10" type="checkbox" name="save" checked=""></td>
+<td align="left" class="boxtext" style="border-width:0;border:0;text-align:center;margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;"><input type="hidden" name="lform" value="sent"> 
+<input style="background-color:ffffff;border-width:0;border:0;text-align:center;height:40px;width:65px;font-size:18px" size="10" name="submit" type="submit" value="Login">
+</td></tr>
+
+        
+      </tbody></table></td>
+  </tr>
+            <tr> 
+            <td align="center" class="boxtext"><a href="/lost.php"><br><br>Lost Password?</a></td>
+          </tr>
+<tr>
+            <td align="center" class="boxtext"><a href="/signup.php"><br><br>Sign Up?</a></td>
+          </tr>
+ 
+</tbody></table>
+<p>&nbsp;</p>
+</div>
+
+
+<div id="main">
+<style type="text/css">
+#support {
+  position: relative;
+  visibility: visible;
+  z-index: 6;
+  display: none;
+
+}
+
+</style>
+
+<script type="text/javascript">
+var shold=0;
+  function stoggle() 
+    {
+          if (document.getElementById("support").style.display=="block" && shold=="0"){
+	document.getElementById("support").style.display="none";
+	} else if ( document.getElementById("support").style.display=="none" && shold=="0"){// 
+	           document.getElementById("support").style.display="block";
+	}
+    }
+  function stoggle3() 
+    {
+          if (document.getElementById("support").style.display=="block" ){
+	document.getElementById("support").style.display="none";
+	} else if ( document.getElementById("support").style.display=="none"){// 
+	           document.getElementById("support").style.display="block";
+	}
+	shold=1;
+}
+
+
+</script>
+
+<script type="text/javascript">
+
+  function menugoover(v) 
+    {
+	window['val'+v]=1;
+	
+
+	document.getElementById("mtd"+v).setAttribute('bgcolor','red');
+
+	setTimeout(function() {
+		if (window['val'+v]==1){
+      document.getElementById("menugo"+v).style.display="block";
+      document.getElementById("menugo"+v).style.position="absolute";
+		window['val'+v]=0;
+		}
+	}, 5000);
+}
+  function menugoout(v) 
+    {
+	window['val'+v]=0;
+	let mcolor=document.getElementById("mtd"+v).getAttribute('tag');
+	document.getElementById("mtd"+v).setAttribute('bgcolor',mcolor);
+           document.getElementById("menugo"+v).style.display="none";
+}
+
+</script>
+<div id="menubar" style="position:relative;pointer-events:auto;z-index:7;"><table align="center" width="100%" border="0" cellpadding="3"><tbody><tr class="menu"><td id="mtd1" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;" align="center" tag="F1E0FF" bgcolor="F1E0FF" onmouseover="javascript:menugoover(1);" onmouseout="javascript:menugoout(1);" onclick="document.location.href='/members/respect.php';">
+<div id="menugo1" style="display:none"><table align="center" width="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: #ffffFF"><td onmouseover="document.location.href='/members/respect.php';" align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000">&gt;&gt;</font></td></tr></tbody></table></div>
+<table align="center" width="100%" height="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: ffffff "><td align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000"><font><b> <font color="000000"><b>Level: 14</b></font><br><img border="0" height="15" width="77" src="images/star1.png"> </b></font></font></td></tr></tbody></table></td><td id="mtd2" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;" align="center" tag="F1E0FF" bgcolor="F1E0FF" onmouseover="javascript:menugoover(2);" onmouseout="javascript:menugoout(2);" onclick="document.location.href='/members/buy_credits';">
+<div id="menugo2" style="display:none"><table align="center" width="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: #ffffFF"><td onmouseover="document.location.href='/members/buy_credits';" align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000">&gt;&gt;</font></td></tr></tbody></table></div>
+<table align="center" width="100%" height="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: ffffff "><td align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000"><font><b> Buy Credits:</b> <img src="images/yt2.jpg" height="15" width="15"> <br>841</font></font></td></tr></tbody></table></td><td id="mtd3" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;" align="center" tag="F1E0FF" bgcolor="F1E0FF" onmouseover="javascript:menugoover(3);" onmouseout="javascript:menugoout(3);" onclick="document.location.href='/members/vgold';">
+<div id="menugo3" style="display:none"><table align="center" width="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: #ffffFF"><td onmouseover="document.location.href='/members/vgold';" align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000">&gt;&gt;</font></td></tr></tbody></table></div>
+<table align="center" width="100%" height="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: ffffff "><td align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000"><font><b> vgold</b> <br>0.00000</font></font></td></tr></tbody></table></td><td id="mtd4" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;" align="center" tag="F1E0FF" bgcolor="F1E0FF" onmouseover="javascript:menugoover(4);" onmouseout="javascript:menugoout(4);" onclick="document.location.href='/members/exchange.php';">
+<div id="menugo4" style="display:none"><table align="center" width="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: #ffffFF"><td onmouseover="document.location.href='/members/exchange.php';" align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000">&gt;&gt;</font></td></tr></tbody></table></div>
+<table align="center" width="100%" height="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: ffffff "><td align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000"><font><b> Exchange <br><img height="25" width="37" src="images/vgex2-w.png" border="0"></b></font></font></td></tr></tbody></table></td><td id="mtd5" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;" align="center" tag="F1E0FF" bgcolor="F1E0FF" onmouseover="javascript:menugoover(5);" onmouseout="javascript:menugoout(5);" onclick="document.location.href='/members/contact.php?supportc2=1';">
+<div id="menugo5" style="display:none"><table align="center" width="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: #ffffFF"><td onmouseover="document.location.href='/members/contact.php?supportc2=1';" align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000">&gt;&gt;</font></td></tr></tbody></table></div>
+<table align="center" width="100%" height="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: ffffff "><td align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000"><font><b> Community </b></font></font></td></tr></tbody></table></td></tr></tbody></table><table cellpadding="0" cellspacing="0" valign="bottom" width="100%" border="0"><tbody><tr>
+<td id="mtd7" tag="4d4d4d" bgcolor="4d4d4d" onmouseover="javascript:menugoover(7);" onmouseout="javascript:menugoout(7);" valign="bottom" style="margin:3px;padding:6px;border:solid 2.5px #4d4d4d;border-radius:9px;" align="left">
+<div id="menugo7" style="display:none"><table onmouseover="document.location.href='index.php';" align="center" width="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: #ffffff "><td align="center" valign="middle" style="margin:3px;padding:6px;border:0;border-radius:9px;height:50px;"><font color="000000">&gt;&gt;</font></td></tr></tbody></table></div>
+<font color="#ffffff" onmouseover="this.style.color='4d4d4d'" onmouseout="this.style.color='#ffffff" onclick="document.location.href='index.php';" face="verdana" style="text-decoration: none"><b onclick="document.location.href='';">User account: #458167</b></font><font color="white" face="verdana"> : : Members Area </font></td>
+<td></td>
+
+<td bgcolor="4d4d4d" valign="bottom" style="margin:3px;padding:6px;border:solid 2.5px #4d4d4d;border-radius:9px;" align="right"><a href="contact.php?supportc2=458167"><font color="#ffffff" face="verdana" style="text-decoration: none"><b>@458167</b></font></a> <font color="#ffffff" face="verdana" style="text-decoration: none">:</font>
+<a href="javascript:stoggle3()"><font color="#ffffff" onmouseover="javascript:stoggle()" onmouseout="javascript:stoggle()" face="verdana" style="text-decoration: none"><b>Support Area</b></font></a></td></tr></tbody></table></div><p></p><div style="display:none;" id="support"><script type="text/javascript">
+
+function att(uid,parentid) {
+var aa = uid.toString();
+var pid=parentid.toString();
+		document.getElementById("supportmsg").focus();
+		document.getElementById("supportmsg").value=document.getElementById("supportmsg").value+"@"+aa+" ";
+		document.getElementById("parentid").value=pid;
+
+}
+
+function private() {
+		document.getElementById("supportmsg").focus();
+		document.getElementById("supportmsg").value=document.getElementById("supportmsg").value+" #private ";
+}
+
+
+function supgo(){
+try {
+var suppmsg=	document.getElementById("supportmsg").value+'';
+var suppv=	document.getElementById("supportv").value;
+var pid=	document.getElementById("parentid").value;
+var http = new XMLHttpRequest();
+var url = "supgo.php";
+var params = "do=go&suppmsg="+suppmsg+"&suppv="+suppv+"&suppref="+pid;
+
+//alert(params);
+	http.open("POST", url, true);
+	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	http.onreadystatechange = function() {
+		if(http.readyState == 4 && http.status == 200) {
+			if(http.responseText == 1){
+   //       alert(" successfully posted");
+			document.getElementById("supnew").style.display='block'; 
+			document.getElementById("supnew2").innerHTML=suppmsg; 
+			document.getElementById("supnew3a").style.display='block'; 
+			document.getElementById("supnew3b").innerHTML=suppmsg; 
+			document.getElementById("supportmsg").value="";
+			document.getElementById("parentid").value="0";
+			} else {
+
+			}
+		} else {
+
+		}
+	}
+	http.send(params);
+} catch (ex) {
+
+}
+
+}
+
+
+ 
+function load_data()
+{
+try {
+var suppv=	document.getElementById("supportv").value;
+var pid=	document.getElementById("parentid").value;
+var http = new XMLHttpRequest();
+var url = "supdata.php";
+var params = "do=go&supporteid="+suppv+"&suppref="+pid;
+
+//alert(params);
+http.open("POST", url, true);
+http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	http.onreadystatechange = function() {
+		if(http.readyState == 4 && http.status == 200) {
+			if(http.responseText != ""){
+			document.getElementById("supdata").innerHTML=http.responseText; 
+			document.getElementById("supdata").style.display='block'; 
+			} else {
+			}
+		} else {
+		}
+	}
+http.send(params);
+} catch (ex) {
+
+}
+
+}
+
+
+
+
+</script>
+<br><table width="100%" border="0" cellspacing="3" cellpadding="10" id="order_data"><tbody><tr><td style="margin:3px;padding:6px;border:solid 2.5px #4d4d4d;border-radius:9px;" align="left"><table width="100%"><tbody><tr>
+<td><div id="supnew" style="display:none">
+tuongmai2010</div><div id="supnew2"></div>  
+</td></tr></tbody></table><table><tbody><tr id="437452" bgcolor="#FFFFFF"><td><table width="100%"><tbody><tr><td align="left"><a href="#supportmsg" onclick="att(&quot;437452&quot;,&quot;14764&quot;)">437452</a>:<a target="_blank" href="http://vagex.com/members/userinfo.php?userid=437452&amp;v=1&amp;note=14783">Info</a>  @463492  change new youtube account then u can earn credits    - <i>18/02 15:21</i> - <a href="contact.php?supportc2=9&amp;sthread=14764">Thread</a> </td></tr></tbody></table></td></tr></tbody></table><table><tbody><tr id="473343" bgcolor="#FFFFFF"><td><table width="100%"><tbody><tr><td align="left"><a href="#supportmsg" onclick="att(&quot;473343&quot;,&quot;14779&quot;)">473343</a>:<a target="_blank" href="http://vagex.com/members/userinfo.php?userid=473343&amp;v=1&amp;note=14779">Info</a>  Hello. Please unlock my IP. I have no other way out. I can’t accumulate points to pay a fine and I can’t buy them because Pay Pal doesn’t work in our country .. Once again, I don’t know for what reason my IP was blocked. thanks    - <i>18/02 14:08</i></td></tr></tbody></table></td></tr></tbody></table><table><tbody><tr id="62865" bgcolor="#FEFFD1"><td><table width="100%"><tbody><tr><td align="left"><a href="#supportmsg" onclick="att(&quot;vip4o&quot;,&quot;14762&quot;)">vip4o</a>:<a target="_blank" href="http://vagex.com/members/userinfo.php?userid=62865&amp;v=1&amp;note=14767">Info</a>  @457281  - If no one else before you has used this new IP address on the new machine for Vagex, then its no problem to use it.    - <i>18/02 05:09</i> - <a href="contact.php?supportc2=9&amp;sthread=14762">Thread</a> </td></tr></tbody></table></td></tr></tbody></table><table><tbody><tr id="62865" bgcolor="#FEFFD1"><td><table width="100%"><tbody><tr><td align="left"><a href="#supportmsg" onclick="att(&quot;vip4o&quot;,&quot;14764&quot;)">vip4o</a>:<a target="_blank" href="http://vagex.com/members/userinfo.php?userid=62865&amp;v=1&amp;note=14766">Info</a>  @463492  - Your youtube account is not registered on Vagex system through auto comment with vagex viewer 4. The easyest way is to change your youtube account with another.    - <i>18/02 05:05</i> - <a href="contact.php?supportc2=9&amp;sthread=14764">Thread</a> </td></tr></tbody></table></td></tr></tbody></table><table><tbody><tr id="463492" bgcolor="#FFFFFF"><td><table width="100%"><tbody><tr><td align="left"><a href="#supportmsg" onclick="att(&quot;463492&quot;,&quot;14764&quot;)">463492</a>:<a target="_blank" href="http://vagex.com/members/userinfo.php?userid=463492&amp;v=1&amp;note=14764">Info</a>  Error detected: this YouTube username has completed Max views for Pending status    - <i>18/02 01:25</i> - <a href="contact.php?supportc2=9&amp;sthread=14764">Thread</a> </td></tr></tbody></table></td></tr></tbody></table><table><tbody><tr id="457281" bgcolor="#FFFFFF"><td><table width="100%"><tbody><tr><td align="left"><a href="#supportmsg" onclick="att(&quot;457281&quot;,&quot;14763&quot;)">457281</a>:<a target="_blank" href="http://vagex.com/members/userinfo.php?userid=457281&amp;v=1&amp;note=14763">Info</a>      - <i>18/02 00:28</i></td></tr></tbody></table></td></tr></tbody></table><table><tbody><tr id="457281" bgcolor="#FFFFFF"><td><table width="100%"><tbody><tr><td align="left"><a href="#supportmsg" onclick="att(&quot;457281&quot;,&quot;14762&quot;)">457281</a>:<a target="_blank" href="http://vagex.com/members/userinfo.php?userid=457281&amp;v=1&amp;note=14762">Info</a>  I used 2 ip on 2 machines, now I give up 1 ip 1 machine and replace it with 1 ip 1 new machine.  Is it illegal (I respect 11)    - <i>18/02 00:28</i> - <a href="contact.php?supportc2=9&amp;sthread=14762">Thread</a> </td></tr></tbody></table></td></tr></tbody></table><table><tbody><tr id="476792" bgcolor="#FFFFFF"><td><table width="100%"><tbody><tr><td align="left"><a href="#supportmsg" onclick="att(&quot;476792&quot;,&quot;14759&quot;)">476792</a>:<a target="_blank" href="http://vagex.com/members/userinfo.php?userid=476792&amp;v=1&amp;note=14759">Info</a>  что такое уровень уважения, как его поднять и зависит ли от него количество получаемых кредитов за просмотр? и от чего вообще зависит это количество?    - <i>17/02 16:26</i></td></tr></tbody></table></td></tr></tbody></table><table><tbody><tr id="459322" bgcolor="#FFFFFF"><td><table width="100%"><tbody><tr><td align="left"><a href="#supportmsg" onclick="att(&quot;459322&quot;,&quot;14747&quot;)">459322</a>:<a target="_blank" href="http://vagex.com/members/userinfo.php?userid=459322&amp;v=1&amp;note=14747">Info</a>  vagex viewer issues and show error must login but im login already    - <i>17/02 05:30</i></td></tr></tbody></table></td></tr></tbody></table><a href="javascript:load_data()"> Refresh Posts!</a>
+<img onload="javascript:load_data()"><table width="100%"><tbody><tr><td align="left"><div id="supdata"></div></td></tr></tbody></table></td></tr><tr><td colspan="2" style="margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;" align="center"><a href="contact.php?supportc2=9&amp;mp=20">Show 20 More</a></td></tr><tr><td colspan="2" style="margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;" align="center"><a href="contact.php?supportc2=9&amp;tp=1">Translate Posts: Off</a></td></tr></tbody></table><table width="100%" border="0" cellspacing="3" cellpadding="10"><tbody><tr><td><div style="position:fixed;z-index:6;bottom:50;right:0;left:0;pointer-events:none;"><br><table width="120px" border="0" cellspacing="3" cellpadding="10"><tbody><tr><td colspan="2"><div id="supnew3a" style="display:none"><table width="100%" cellpadding="0" cellspacing="0">
+<tbody><tr bgcolor="#ffffff">
+<td style="margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;"><div id="supnew3b"></div></td></tr>
+</tbody></table></div></td></tr><tr bgcolor="#FFC4FB"><td valign="middle" style="pointer-events:auto;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;">
+<form action="/members/index.php" method="POST"><table cellpadding="0" cellspacing="0" border="0"><tbody><tr><td align="right">
+</td><td valign="bottom" align="right">
+<table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td align="right" valign="bottom" style="">
+<textarea placeholder="" style="background-color:#ffffff;border-width=0;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;" id="supportmsg" cols="30" rows="7" name="supportmsg"></textarea>
+</td></tr></tbody></table>
+<input type="hidden" id="supportv" name="supportv" value="9"><input type="hidden" id="parentid" name="parentid" value=""></td>
+
+<td align="center" valign="middle">
+
+<a href="javascript:private()"><font size="2" face="verdana">Private?</font></a><br><br>
+<br>
+<a href="javascript:supgo()">Post</a></td></tr></tbody></table></form></td></tr></tbody></table></div></td></tr></tbody></table></div><table height="50%" width="100%"><tbody><tr valign="middle"><td align="left"><font face="verdana"></font></td><td align="right"></td></tr></tbody></table><p><table cellspacing="0" cellpadding="0" width="300" height="300" align="center" border="0"><tbody><tr>
+<td id="plasmid" bgcolor="E6F9FF" width="100%" style="margin:3px;padding:0px;border-radius:100%;" align="center"><div id="plasmid2"></div>
+<table cellpadding="0" border="0" cellspacing="0" align="center" width="100%"><tbody><tr style="height:40px;"><td colspan="3" align="center" valign="middle"><font><b>tuongmai2010 </b></font><a href="/members/edit.php"> Edit <img height="15" width="15" src="/img/arrow.gif" border="0"></a></td></tr>
+<tr style="height:40px"><td align="center" valign="middle" colspan="3"><a href="/members/promo.php"><font color="black" size="3"> Promotion: <b>0</b></font> <img height="15" width="15" src="/img/arrow.gif" border="0"></a> </td></tr>	
+
+
+
+<tr style="height:40px">
+<td align="center" valign="middle" colspan="3"><a href="/members/viewers.php"><font color="black" size="3"> Viewers:<font> <b>1</b></font> <img height="15" width="15" src="/img/arrow.gif" border="0"></font></a></td></tr>
+
+
+
+
+
+	
+
+
+</tbody></table>
+</td></tr></tbody></table></p><p></p><table align="center" width="100%" cellpadding="0" cellspacing="0"><tbody><tr><td align="center" valign="middle" height="45" style="margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;"><a href="javascript:anv(1);"><img height="15" width="15" src="images/yt2.jpg" border="0" alt=" Add New Video"><font color="black" size="2"> Add New Video </font></a><div id="anv1" style="display:none"><script type="text/javascript">
+
+function vidmover1(sid) {
+	if (+document.getElementById("vlmin0").value >= document.getElementById("vlmax0").value){
+	document.getElementById("vlmax0").value = +document.getElementById("vlmin0").value 
+	}
+}
+function vidmover2(sid) {
+	if (+document.getElementById("vlmax0").value <= document.getElementById("vlmin0").value){
+	document.getElementById("vlmin0").value = +document.getElementById("vlmax0").value 
+	}
+}
+function vidmover3(sid) {
+	if (+document.getElementById("mvmin0").value >= document.getElementById("mvmax0").value){
+	document.getElementById("mvmax0").value = +document.getElementById("mvmin0").value 
+	}
+}
+function vidmover4(sid) {
+	if (+document.getElementById("mvmax0").value <= document.getElementById("mvmin0").value){
+	document.getElementById("mvmin0").value = +document.getElementById("mvmax0").value 
+	}
+}
+
+</script>
+
+[2 / 10] <p></p><font color="#FFAE35" size="1"></font><table width="100%"><form action="index.php" method="post"></form>
+<input type="hidden" name="fform" value="site">
+<input type="hidden" name="sid" value="0">
+<tbody><tr><td height="50px" width="100%" align="center" class="boxtext" colspan="3">
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:600px;font-size:24px" type="text" maxlength="43" id="surl" name="surl" placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx" alt=" video link">
+</td></tr>
+<tr><td></td></tr><tr><td align="center" colspan="3">
+View Length: (1 - Credit / 30 - seconds)<br>
+Minimum: 30<input style="border:1;" type="range" name="length" min="30" max="300" id="vlmin0" value="270" step="30" onchange="vidmover1();">300
+</td></tr>
+<tr><td align="center" colspan="3">
+Maximum: 30<input style="border:1;" type="range" name="length2" min="30" max="300" id="vlmax0" value="300" step="30" onchange="vidmover2();">300
+</td></tr><tr><td></td></tr><tr><td align="center" colspan="3">
+Daily Views: <br>
+Minimum: 50<input style="border:1;" type="range" name="minviewsday" min="50" max="1000" id="mvmin0" value="500" step="1" onchange="vidmover3();">1000
+</td></tr>
+<tr><td align="center" valign="top" colspan="3">
+Maximum: 50<input style="border:1;" type="range" name="maxviewsday" min="50" max="1000" id="mvmax0" value="1000" step="1" onchange="vidmover4();">1000
+</td></tr><tr><td></td></tr>
+
+<tr><td height="55" align="left" valign="middle" style="font-size:24px" colspan="1"><font face="verdana">Daily IP View Limit:</font></td><td></td>
+<td align="left"><font face="verdana"><select style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:383px;font-size:24px" name="dailyip" alt="daily ip">
+					<option value="1">1
+					</option><option value="2" selected="">2
+					</option><option value="3">3
+					</option><option value="4">4
+					</option><option value="5">5</option></select></font></td></tr>
+<tr><td></td></tr>
+
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Likes</font></td><td></td>
+<td height="55" style="font-size:24px" align="left"><input style="height:15;width:15" type="checkbox" name="like" checked=""> (5 - Credits)  Maximum: 
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:120px;font-size:24px" class="cleardefault" type="text" size="6" maxlength="5" name="maxlikes" value="1000"></td></tr>
+		
+<tr><td></td></tr>
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Subscribers</font></td><td></td>
+<td height="55" style="font-size:24px" align="left"><input style="height:15;width:15" type="checkbox" name="subscribe" checked=""> (5 - Credits)  Maximum: 
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:120px;font-size:24px" class="cleardefault" type="text" size="6" maxlength="5" name="maxsubs" value="1000"></td></tr>
+<tr><td></td></tr>
+
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Comments</font></td><td></td><td height="55" style="font-size:24px" align="left"> (10 - Credits)  </td></tr>
+<tr><td></td></tr>
+ 
+<tr><td height="55" align="left" valign="middle" style="font-size:24px"><font face="verdana">Language:</font></td><td></td>
+<td align="left">
+<select style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:383px;font-size:24px" name="slang"><option value="English" selected="">English</option><option value="Arabic">Arabic</option><option value="Chinese">Chinese</option><option value="Czech">Czech</option><option value="Danish">Danish</option><option value="Dutch">Dutch</option><option value="Estonian">Estonian</option><option value="Finnish">Finnish</option><option value="French">French</option><option value="German">German</option><option value="Greek">Greek</option><option value="Hebrew">Hebrew</option><option value="Hungarian">Hungarian</option><option value="Icelandic">Icelandic</option><option value="Italian">Italian</option><option value="Japanese">Japanese</option><option value="Korean">Korean</option><option value="Latvian">Latvian</option><option value="Lithuanian">Lithuanian</option><option value="Norwegian">Norwegian</option><option value="Polish">Polish</option><option value="Portuguese">Portuguese</option><option value="Romanian">Romanian</option><option value="Russian">Russian</option><option value="Spanish">Spanish</option><option value="Swedish">Swedish</option><option value="Turkish">Turkish</option></select></td></tr>
+
+<tr><td></td></tr>		
+
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Allocate Credits:</font></td><td></td><td colspan="2" align="left">
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:120px;font-size:24px" type="text" maxlength="6" name="pluscred" value="841.00">  (Or allocate afterwards )</td></tr>
+
+<tr><td></td></tr>
+
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Auto-Allocate</font></td><td></td><td colspan="2" align="left">
+<input style="height:15;width:15" type="checkbox" name="autoallocate" checked=""> <font color="#36934E" size="1"></font></td></tr>
+
+<input style="height:15;width:15" type="hidden" name="ads" value="on"> <tr><td align="right"><input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:40px;width:65px;font-size:18px" size="10" type="submit" value="Add"></td><td></td>
+<form action="index.php" method="post"></form><input type="hidden" name="fform" value="nope"><td align="left">&nbsp;&nbsp;
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:40px;width:110px;font-size:18px" size="10" type="submit" value="Cancel"></td></tr></tbody></table><p></p></div></td></tr><tr style="background-color: #DDDDFF"><td onclick="document.location.href='allocate.php'" ;="" align="center" valign="middle" height="45" style="margin:3px;padding:6px;border:0;border-radius:9px;">
+<table align="center" width="100%" cellpadding="0" cellspacing="0"><tbody><tr style="background-color: #ffffFF"><td align="center" valign="middle" height="45" style="margin:3px;padding:6px;border:0;border-radius:9px;"><a href="allocate.php"><img height="15" width="15" src="/img/arrowdown.gif" border="0" alt=" Allocate"><font color="black" size="2"> Allocate </font></a></td></tr></tbody></table></td></tr><tr style="background-color: FFE6E5"><td style="margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;" align="center">
+<table width="100%" border="0"><tbody><tr><td align="left" width="1px"><a href="index.php?ord=2829947"><b>1</b></a></td><td align="left"><font size="2">tam thoi he niem </font></td>
+<td rowspan="2" align="center"><font size="2" color="#FFBB00"><b><a href="http://vagex.com/members/sitereport.php?sid=2829947"><img height="24" width="30" src="http://vagex.com/img/eye2.png" border="0"></a><br>Views: <a href="http://vagex.com/members/sitereport.php?sid=2829947">15981</a> <br><font color="#4d4d4d" size="1"><a id="mvchange2829947" href="javascript:void(0)" onclick="javascript:mvchange(&quot;2829947&quot;);"><font color="#82bfbb" size="1">17/<font id="mvfont2829947" color="#4d4d4d" size="1">1000</font></font></a></font></b></font></td>
+<td align="center" rowspan="2"><font>Length:<br><a id="vlchange2829947" href="javascript:void(0)" onclick="javascript:vlchange(&quot;2829947&quot;);"><font color="black">270-300 - seconds</font></a></font></td><td align="center" rowspan="2"><a href="//vagex.com/members/likes.php?sid=2829947">Likes:<br>202 <br><font color="#82BFBB" size="1">[1000]</font></a><br><a href="javascript:void(0)" id="alike2829947" onclick="switch2(&quot;like&quot;,&quot;2829947&quot;,&quot;s0.png&quot;);"><img id="like2829947" width="30" height="15" src="images/s1.png" value="0"></a></td><td align="center" rowspan="2"><a href="//vagex.com/members/subscribers.php?sid=2829947">Subs:<br>132 <br><font color="#82BFBB" size="1">[1000]</font></a><br><a href="javascript:void(0)" id="asub2829947" onclick="switch2('sub','2829947','s0.png');"><img id="sub2829947" width="30" height="15" src="images/s1.png"></a></td><td align="center" rowspan="2"><table cellspacing="0" cellpadding="0"><tbody><tr><td style="background:url(//vagex.com/img/cmt2.png);background-size:cover;background-repeat:no-repeat;" align="center" valign="middle" height="30" width="30" onclick="document.location.href=&quot;http://vagex.com/members/cmt.php?sid=2829947&quot;;"><a href="http://vagex.com/members/cmt.php?sid=2829947"><font color="4d4d4d">0</font></a></td></tr></tbody></table></td><td rowspan="2" align="center">Credits:<br><font color="#FF3730"><b>46 <br><font color="#82BFBB" size="1">[Auto-Allocate]</font><br>
+<a id="aaa2829947" href="javascript:void(0)" onclick="switch2(&quot;aa&quot;,&quot;2829947&quot;,&quot;s0.png&quot;);"><img id="aa2829947" width="30" height="15" src="images/s1.png"></a>
+</b></font></td><td align="center" rowspan="2">
+<a id="app2829947" href="javascript:void(0)" onclick="switch2(&quot;pp&quot;,&quot;2829947&quot;,&quot;p0.png&quot;);">
+<img id="pp2829947" width="30" height="30" src="images/p1.png"></a></td><td rowspan="2"><a href="site.php?sid=2829947"><img height="15" width="15" src="/img/arrow.gif" border="0" alt="Change"><font color="black" size="2">Edit</font></a> <a href="index.php?ssd=2829947"><img title="Delete" height="30" width="30" src="images/sdelete.png"></a></td></tr><tr style="background-color: FFE6E5"><td width="35%" align="left" colspan="2"><a target="_blank" href="https://www.anonym.to/?http://www.youtube.com/watch?v=f0PE9ud18jE"><font size="1">http://www.youtube.com/watch?v=f0PE9ud18jE</font></a></td></tr><tr><td colspan="10"><b>View Count for last 10 Days: YouTube(+Vagex): </b>4717(+17) : 4622(+503) : 4492(+502) : 4303(+610) : 4297(+205) : 4312(+205) : 4226(+411) : 4117(+407) : 3939(+409) : 3922(+103) : </td></tr><tr><td colspan="10">
+<div style="display:none;" id="vldiv2829947">
+<table style="background-color: E2E2E2" border="0" width="100%" align="center" cellspacing="0" cellpadding="0"><tbody><tr><td align="center" valign="bottom">
+<font color="black">The duration of this video is: 12452.</font><br><br>
+View Length: (1 - Credit / 30 - seconds)<br>
+Minimum: 30<input style="border:1;" type="range" name="vlmin2829947" min="30" max="300" id="vlmin2829947" value="270" step="30" onchange="mover1(2829947);">300
+</td></tr>
+<tr><td align="center" valign="top">
+Maximum: 30<input style="border:1;" type="range" name="vlmax2829947" min="30" max="300" id="vlmax2829947" value="300" step="30" onchange="mover2(2829947);">300
+</td></tr>
+<tr><td align="center" valign="top">
+<a href="javascript:vlchange2(2829947)">Update</a>
+</td></tr></tbody></table></div></td></tr><tr><td colspan="10"><div style="display:none;" id="mvdiv2829947">
+<table style="background-color: E2E2E2" border="0" width="100%" align="center" cellspacing="0" cellpadding="0"><tbody><tr><td align="center" valign="bottom">
+Daily Views: <br>
+Minimum: 50<input style="border:1;" type="range" name="mvmin2829947" min="50" max="1000" id="mvmin2829947" value="500" step="1" onchange="mvover1(2829947);">1000
+</td></tr>
+<tr><td align="center" valign="top">
+Maximum: 50<input style="border:1;" type="range" name="mvmax2829947" min="50" max="1000" id="mvmax2829947" value="1000" step="1" onchange="mvover2(2829947);">1000
+</td></tr>
+<tr><td align="center" valign="top">
+<a href="javascript:mvchange2(2829947)">Update</a>
+</td></tr></tbody></table></div></td></tr></tbody></table></td></tr><tr><td colspan="8"></td><td></td></tr><tr><td colspan="9" valign="middle" height="45" style="margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;" align="center"><a href="javascript:anv(2);"><img height="15" width="15" src="images/yt2.jpg" border="0" alt=" Add New Video"><font color="black" size="2"> Add New Video </font></a><div id="anv2" style="display:none"><script type="text/javascript">
+
+function vidmover1(sid) {
+	if (+document.getElementById("vlmin0").value >= document.getElementById("vlmax0").value){
+	document.getElementById("vlmax0").value = +document.getElementById("vlmin0").value 
+	}
+}
+function vidmover2(sid) {
+	if (+document.getElementById("vlmax0").value <= document.getElementById("vlmin0").value){
+	document.getElementById("vlmin0").value = +document.getElementById("vlmax0").value 
+	}
+}
+function vidmover3(sid) {
+	if (+document.getElementById("mvmin0").value >= document.getElementById("mvmax0").value){
+	document.getElementById("mvmax0").value = +document.getElementById("mvmin0").value 
+	}
+}
+function vidmover4(sid) {
+	if (+document.getElementById("mvmax0").value <= document.getElementById("mvmin0").value){
+	document.getElementById("mvmin0").value = +document.getElementById("mvmax0").value 
+	}
+}
+
+</script>
+
+[2 / 10] <p></p><font color="#FFAE35" size="1"></font><table width="100%"><form action="index.php" method="post"></form>
+<input type="hidden" name="fform" value="site">
+<input type="hidden" name="sid" value="0">
+<tbody><tr><td height="50px" width="100%" align="center" class="boxtext" colspan="3">
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:600px;font-size:24px" type="text" maxlength="43" id="surl" name="surl" placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx" alt=" video link">
+</td></tr>
+<tr><td></td></tr><tr><td align="center" colspan="3">
+View Length: (1 - Credit / 30 - seconds)<br>
+Minimum: 30<input style="border:1;" type="range" name="length" min="30" max="300" id="vlmin0" value="270" step="30" onchange="vidmover1();">300
+</td></tr>
+<tr><td align="center" colspan="3">
+Maximum: 30<input style="border:1;" type="range" name="length2" min="30" max="300" id="vlmax0" value="300" step="30" onchange="vidmover2();">300
+</td></tr><tr><td></td></tr><tr><td align="center" colspan="3">
+Daily Views: <br>
+Minimum: 50<input style="border:1;" type="range" name="minviewsday" min="50" max="1000" id="mvmin0" value="500" step="1" onchange="vidmover3();">1000
+</td></tr>
+<tr><td align="center" valign="top" colspan="3">
+Maximum: 50<input style="border:1;" type="range" name="maxviewsday" min="50" max="1000" id="mvmax0" value="1000" step="1" onchange="vidmover4();">1000
+</td></tr><tr><td></td></tr>
+
+<tr><td height="55" align="left" valign="middle" style="font-size:24px" colspan="1"><font face="verdana">Daily IP View Limit:</font></td><td></td>
+<td align="left"><font face="verdana"><select style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:383px;font-size:24px" name="dailyip" alt="daily ip">
+					<option value="1">1
+					</option><option value="2" selected="">2
+					</option><option value="3">3
+					</option><option value="4">4
+					</option><option value="5">5</option></select></font></td></tr>
+<tr><td></td></tr>
+
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Likes</font></td><td></td>
+<td height="55" style="font-size:24px" align="left"><input style="height:15;width:15" type="checkbox" name="like" checked=""> (5 - Credits)  Maximum: 
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:120px;font-size:24px" class="cleardefault" type="text" size="6" maxlength="5" name="maxlikes" value="1000"></td></tr>
+		
+<tr><td></td></tr>
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Subscribers</font></td><td></td>
+<td height="55" style="font-size:24px" align="left"><input style="height:15;width:15" type="checkbox" name="subscribe" checked=""> (5 - Credits)  Maximum: 
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:120px;font-size:24px" class="cleardefault" type="text" size="6" maxlength="5" name="maxsubs" value="1000"></td></tr>
+<tr><td></td></tr>
+
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Comments</font></td><td></td><td height="55" style="font-size:24px" align="left"> (10 - Credits)  </td></tr>
+<tr><td></td></tr>
+ 
+<tr><td height="55" align="left" valign="middle" style="font-size:24px"><font face="verdana">Language:</font></td><td></td>
+<td align="left">
+<select style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:383px;font-size:24px" name="slang"><option value="English" selected="">English</option><option value="Arabic">Arabic</option><option value="Chinese">Chinese</option><option value="Czech">Czech</option><option value="Danish">Danish</option><option value="Dutch">Dutch</option><option value="Estonian">Estonian</option><option value="Finnish">Finnish</option><option value="French">French</option><option value="German">German</option><option value="Greek">Greek</option><option value="Hebrew">Hebrew</option><option value="Hungarian">Hungarian</option><option value="Icelandic">Icelandic</option><option value="Italian">Italian</option><option value="Japanese">Japanese</option><option value="Korean">Korean</option><option value="Latvian">Latvian</option><option value="Lithuanian">Lithuanian</option><option value="Norwegian">Norwegian</option><option value="Polish">Polish</option><option value="Portuguese">Portuguese</option><option value="Romanian">Romanian</option><option value="Russian">Russian</option><option value="Spanish">Spanish</option><option value="Swedish">Swedish</option><option value="Turkish">Turkish</option></select></td></tr>
+
+<tr><td></td></tr>		
+
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Allocate Credits:</font></td><td></td><td colspan="2" align="left">
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:50px;width:120px;font-size:24px" type="text" maxlength="6" name="pluscred" value="841.00">  (Or allocate afterwards )</td></tr>
+
+<tr><td></td></tr>
+
+<tr><td height="55" align="left" style="font-size:24px"><font face="verdana">Auto-Allocate</font></td><td></td><td colspan="2" align="left">
+<input style="height:15;width:15" type="checkbox" name="autoallocate" checked=""> <font color="#36934E" size="1"></font></td></tr>
+
+<input style="height:15;width:15" type="hidden" name="ads" value="on"> <tr><td align="right"><input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:40px;width:65px;font-size:18px" size="10" type="submit" value="Add"></td><td></td>
+<form action="index.php" method="post"></form><input type="hidden" name="fform" value="nope"><td align="left">&nbsp;&nbsp;
+<input style="text-align:center;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:40px;width:110px;font-size:18px" size="10" type="submit" value="Cancel"></td></tr></tbody></table><p></p></div></td></tr></tbody></table><p></p><table width="100%"><tbody><tr><td width="50%" style="margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;" align="center"><p align="center"><b><font>Views received last 7 days:</font></b><br><table><tbody><tr><td>2020-02-20</td><td align="left"><img src="/img/stripe.gif" border="0" width="51" height="10"> 17  </td></tr><tr><td>2020-02-19</td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"> 503  </td></tr><tr><td>2020-02-18</td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"> 502  </td></tr><tr><td>2020-02-17</td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"> 610  </td></tr><tr><td>2020-02-15</td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"> 205  </td></tr><tr><td>2020-02-14</td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"> 205  </td></tr><tr><td>2020-02-13</td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"> 411  </td></tr></tbody></table></p></td></tr></tbody></table><table width="100%"><tbody><tr><td width="50%" style="margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;" align="center"><p align="center"><b><font>Credits Earned last 7 days:</font></b><br><table border="0" align="center"><tbody><tr><td><font>2020-02-20</font></td><td align="left"><img src="/img/stripe.gif" border="0" width="264" height="10"><font> 88  </font></td></tr><tr><td><font>2020-02-19</font></td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"><font> 1543  </font></td></tr><tr><td><font>2020-02-18</font></td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"><font> 4675  </font></td></tr><tr><td><font>2020-02-16</font></td><td align="left"><img src="/img/stripe.gif" border="0" width="48" height="10"><font> 16  </font></td></tr><tr><td><font>2020-02-15</font></td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"><font> 1814  </font></td></tr><tr><td><font>2020-02-14</font></td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"><font> 2402  </font></td></tr><tr><td><font>2020-02-13</font></td><td align="left"><img src="/img/stripe.gif" border="0" width="400" height="10"><font> 3683  </font></td></tr></tbody></table></p></td></tr></tbody></table><br><br>
+</div>
+</td>
+              </tr>
+            </tbody></table></td>
+        </tr>
+        
+        
+        
+      </tbody></table></td>
+    <td height="100%">
+
+<table height="100%" border="0" align="left" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
+	<tbody><tr>
+        <td height="25" colspan="2" background="//vagex.com/images/sideimgr.gif" align="left" valign="top">&nbsp;</td>
+        </tr>
+	<tr>
+	<td width="10"></td>        <td height="100%" align="right" width="15" background="//vagex.com/images/sideimg.gif" valign="top">&nbsp;</td>
+
+        </tr>
+	</tbody></table>
+
+	</td>
+    
+    
+  </tr>
+  
+  
+</tbody></table>
+
+</div>
+      
+
+          <table align="center" style="background-color:ffffff;" width="830" border="0" cellspacing="0" cellpadding="0">
+              <tbody><tr><td colspan="4" height="60" background="//vagex.com/images/bar.jpg" valign="top" id="fbar" align="right"></td></tr>
+
+      
+<script type="text/javascript">
+
+var langnum=20;
+var langpass=0;
+
+function langdo(){ 
+setTimeout(function() {
+try {
+	if((document.getElementById('mainlang').innerHTML=="English") ){
+	langpass=1;
+	}
+
+	if(langpass==1){
+langnum=Math.floor(Math.random() * 63) + 1
+document.getElementById('mainlang').innerHTML=document.getElementById(langnum).innerHTML;
+	}
+} catch (ex) {
+}
+langdo();
+}
+, 700);
+}
+
+langdo();
+
+function langhold() {
+	if (langpass==1) {
+document.getElementById('mainlang').innerHTML="English.";
+langpass=0;
+	}
+}
+</script>
+
+
+              <tr valign="top" align="right">
+<td align="center" width="40px" valign="middle" style="border-width=0;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:40px;font-size:18px;">
+<a href="/contact.php"><font color="4d4d4d">Contact</font></a></td>
+
+<td align="center" width="40px" valign="middle" style="border-width=0;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:40px;font-size:18px;">
+<a href="/info.php"><font color="4d4d4d">Info</font></a></td>
+
+<td bgcolor="ffffff" align="center" width="40px" valign="middle" style="border-width=0;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:40px;font-size:18px;">
+<a href="//vagex.com/members/vgold"><img width="40" height="30" src="//vagex.com/members/images/vgold-s.png"></a></td>
+
+
+              <td rowspan="2" align="center" valign="middle" style="border-width=0;margin:3px;padding:6px;border:solid 3px #4d4d4d;border-radius:9px;height:40px;font-size:18px;">
+
+<form id="languagef" name="languagef" method="post" action="/members/index.php">
+<select onchange="this.form.submit()" onclick="javascript:langhold()" id="language" name="language" style="background-color:#ffffff;border-width=0;margin:3px;padding:6px;border:0;border-radius:9px;height:40px;width:120px;font-size:18px;" aria-label="Input Language Selection Dropdown">
+ <option selected="" id="mainlang" value="vag">vag</option> 
+<option id="mainlang" value="vag">English</option><option id="1" value="af">Afrikaans</option><option id="2" value="ar">العربية</option>
+<option id="3" value="bn-BD">বাংলা</option><option id="4" value="bs-Latn">Bosanski (latinski)</option><option id="5" value="bg">Български</option>
+<option id="6" value="yue">粵語</option><option id="7" value="ca">Català</option>
+<option id="8" value="zh-Hans">中文 (简体)</option><option id="9" value="zh-Hant">中文 (繁體)</option>
+<option id="10" value="hr">Hrvatski</option><option id="11" value="cs">Čeština</option><option id="12" value="da">Dansk</option>
+<option id="13" value="nl">Nederlands</option><option id="14" value="vag">English</option><option id="15" value="et">Eesti</option>
+<option id="16" value="fj">Viti</option><option id="17" value="fil">Filipino</option><option id="18" value="fi">Suomi</option>
+<option id="19" value="fr">Français</option><option id="20" value="de">Deutsch</option><option id="21" value="el">Ελληνικά</option>
+<option id="22" value="ht">Kreyol Ayisyen</option><option id="23" value="he">עברית</option><option id="24" value="hi">हिंदी</option>
+<option id="25" value="mww">Hmoob Daw</option><option id="26" value="hu">Magyar</option><option id="27" value="is">Íslenska</option>
+<option id="28" value="id">Indonesian</option><option id="29" value="it">Italiano</option><option id="30" value="ja">日本語</option>
+<option id="31" value="sw">Kiswahili</option><option id="32" value="tlh">Klingon</option><option id="33" value="ko">한국어</option>
+<option id="34" value="lv">Latviešu</option><option id="35" value="lt">Lietuvių</option><option id="36" value="mg">Malagasy</option>
+<option id="37" value="ms">Bahasa Melayu (Latin)</option><option id="38" value="mt">Maltese</option><option id="39" value="no">Norske bokmål</option>
+<option id="40" value="fa">فارسی</option><option id="41" value="pl">Polski</option><option id="42" value="pt">Português</option>
+<option id="43" value="otq">Queretaro Otomi</option><option id="44" value="ro">Română</option><option id="45" value="ru">Русский</option>
+<option id="46" value="sm">Samoa</option><option id="47" value="sr-Cyrl">српски (ћирилица)</option><option id="48" value="sr-Latn">Српски (латиница)</option>
+<option id="49" value="sk">Slovenčina</option><option id="50" value="sl">Slovenščina</option><option id="51" value="es">Español</option>
+<option id="52" value="sv">Svenska</option><option id="53" value="ty">Tahiti</option><option id="54" value="ta">தமிழ்</option>
+<option id="55" value="te">తెలుగు</option><option id="56" value="th">ภาษาไทย</option><option id="57" value="to">Tonga</option>
+<option id="58" value="tr">Türkçe</option><option id="59" value="uk">Українська</option><option id="60" value="ur">اردو</option>
+<option id="61" value="vi">Việt</option><option id="62" value="cy">Cymreig</option><option id="63" value="yua">Yucatec Maya</option></select>
+
+</form>
+
+
+
+</td></tr>
+
+
+  
+<tr>
+<td align="center">
+<div id="topbar" style="display:none">
+<table><tbody><tr>
+<td style="margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;pointer-events:auto;" align="center" bgcolor="white">
+Auto<br>
+<a href="javascript:scrollimg(0)" id="scrollk"><img id="scrollkimg" width="30" height="" src="//vagex.com/members/images/s0.png" value="0"></a>
+</td>
+
+<td style="margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;pointer-events:auto;" align="center" bgcolor="white">
+ <a id="oscrollo" onmouseover="javascript:oscroll();">oo</a> 
+</td>
+
+
+<td style="margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;pointer-events:auto;" align="center" bgcolor="white">
+
+<a id="ascroll0" onmouseover="javascript:ascroll(0);">|</a><a id="ascroll0" onmouseover="javascript:ascroll(0);">|</a><a id="ascroll0" onmouseover="javascript:ascroll(0);">|</a>
+ <a class="ascroll" id="ascroll1" onmouseover="javascript:ascroll(1);">|</a><a class="ascroll" id="ascroll2" onmouseover="javascript:ascroll(2);">|</a>
+<a class="ascroll" id="ascroll3" onmouseover="javascript:ascroll(3);">|</a><a class="ascroll" id="ascroll4" onmouseover="javascript:ascroll(4);">|</a><a class="ascroll" id="ascroll5" onmouseover="javascript:ascroll(5);">|</a>
+<a class="ascroll" id="ascroll6" onmouseover="javascript:ascroll(6);">|</a><a class="ascroll" id="ascroll7" onmouseover="javascript:ascroll(7);">|</a><a class="ascroll" id="ascroll8" onmouseover="javascript:ascroll(8);">|</a>
+<a class="ascroll" id="ascroll9" onmouseover="javascript:ascroll(9);">|</a>
+<a class="ascroll" id="ascroll10" onmouseover="javascript:ascroll(10);">|</a><a class="ascroll" id="ascroll11" onmouseover="javascript:ascroll(11);">|</a><a class="ascroll" id="ascroll12" onmouseover="javascript:ascroll(12);">|</a>
+<a class="ascroll" id="ascroll13" onmouseover="javascript:ascroll(13);">|</a><a class="ascroll" id="ascroll14" onmouseover="javascript:ascroll(14);">|</a><a class="ascroll" id="ascroll15" onmouseover="javascript:ascroll(15);">|</a>
+<a class="ascroll" id="ascroll16" onmouseover="javascript:ascroll(16);">|</a><a class="ascroll" id="ascroll17" onmouseover="javascript:ascroll(17);">|</a><a class="ascroll" id="ascroll18" onmouseover="javascript:ascroll(18);">|</a>
+<a class="ascroll" id="ascroll19" onmouseover="javascript:ascroll(19);">|</a>
+<a class="ascroll" id="ascroll20" onmouseover="javascript:ascroll(20);">|</a><a class="ascroll" id="ascroll21" onmouseover="javascript:ascroll(21);">|</a><a class="ascroll" id="ascroll22" onmouseover="javascript:ascroll(22);">|</a>
+<a class="ascroll" id="ascroll23" onmouseover="javascript:ascroll(23);">|</a><a class="ascroll" id="ascroll24" onmouseover="javascript:ascroll(24);">|</a><a class="ascroll" id="ascroll25" onmouseover="javascript:ascroll(25);">|</a>
+<a class="ascroll" id="ascroll26" onmouseover="javascript:ascroll(26);">|</a><a class="ascroll" id="ascroll27" onmouseover="javascript:ascroll(27);">|</a><a class="ascroll" id="ascroll28" onmouseover="javascript:ascroll(28);">|</a>
+<a class="ascroll" id="ascroll29" onmouseover="javascript:ascroll(29);">|</a>
+<a class="ascroll" id="ascroll30" onmouseover="javascript:ascroll(30);">|</a><a class="ascroll" id="ascroll31" onmouseover="javascript:ascroll(31);">|</a><a class="ascroll" id="ascroll32" onmouseover="javascript:ascroll(32);">|</a>
+<a class="ascroll" id="ascroll33" onmouseover="javascript:ascroll(33);">|</a><a class="ascroll" id="ascroll34" onmouseover="javascript:ascroll(34);">|</a><a class="ascroll" id="ascroll35" onmouseover="javascript:ascroll(35);">|</a>
+<a class="ascroll" id="ascroll36" onmouseover="javascript:ascroll(36);">|</a><a class="ascroll" id="ascroll37" onmouseover="javascript:ascroll(37);">|</a><a class="ascroll" id="ascroll38" onmouseover="javascript:ascroll(38);">|</a>
+<a class="ascroll" id="ascroll39" onmouseover="javascript:ascroll(39);">|</a>
+
+
+</td>
+
+<td style="margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;pointer-events:auto;" align="center" bgcolor="white">
+ <a id="xscrollx" onmouseover="javascript:xscroll();">xx</a>
+</td>
+
+
+<td style="margin:3px;padding:6px;border:solid 1px #4d4d4d;border-radius:9px;pointer-events:auto;" align="center" bgcolor="white">
+ <a onmouseover="javascript:nscroll();">&gt;&gt;</a>
+</td>
+
+
+</tr></tbody></table></div>
+</td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+            </tbody></table>
+
+</td></tr></tbody></table>
+
+</td></tr></tbody></table></body></html>

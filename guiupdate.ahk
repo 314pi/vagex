@@ -1,6 +1,6 @@
 GuiUpdate() {
-	Global Ini_File
-	Loop, Read, %Ini_File%
+	Global IniFile
+	Loop, Read, %IniFile%
 	{
 		IfInString, A_LoopReadLine, =
 		{

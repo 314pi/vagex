@@ -1,6 +1,6 @@
 HoneygainHideTray:
 	GuiControlGet, OutVal ,, %A_GuiControl%
-	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	IniWrite, %OutVal%, %IniFile%, %IniSection%, %A_GuiControl%
 	Process, Exist , Honeygain.exe
 	If ErrorLevel
 	{
@@ -12,12 +12,12 @@ HoneygainHideTray:
 Return
 HoneygainKeepRunning:
 	GuiControlGet, OutVal ,, %A_GuiControl%
-	IniWrite, %OutVal%, %Ini_File%, %Ini_Section%, %A_GuiControl%
+	IniWrite, %OutVal%, %IniFile%, %IniSection%, %A_GuiControl%
 	MainHoneygain()
 Return
 MainHoneygain() {
-	Global Ini_File
-	Loop, Read, %Ini_File%
+	Global IniFile
+	Loop, Read, %IniFile%
 	{
 		IfInString, A_LoopReadLine, =
 		{

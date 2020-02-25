@@ -1,1 +1,1 @@
-WinSet, Transparent , 0, ahk_exe firefox.exe
+RunWait, %ComSpec% /c ""phantomjs.exe" "--cookies-file=cookies.txt" "vagex.js" >"text.txt"",, Hide
